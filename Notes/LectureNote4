@@ -1,0 +1,47 @@
+LectureNote4                                                            Wed, Jan 18
+
+for assignment1:
+we will have an array for the rooms 
+each room will have a position(x,y) and length and width
+choose a point in room0 and room1 connect them
+
+#include <stdio.h>
+#include <stdlib.h>/* rand() adn srand() */
+#include <time.h> /* time() */
+
+
+int main(int argc, char *argv[])
+{
+int seed;
+
+if(argc == 2){
+ seed = atoi(argv[1]);
+}
+else{
+ seed = time(NULL);
+}
+printf("Seed is %d\n", seed);
+srand(seed); /*seed*/ 
+
+
+printf("%d\n", (signed) rand() % 201 - 100);
+return 0;
+})
+
+
+clean:
+	rm -f hello hello_user hello.class times_tables
+
+
+
+
+#include<stdio.h>
+int main(int argc, char *argv[])
+{
+printf("");
+printf();
+return 0;
+}
+
+
+cp -Rv /some dir/ a name

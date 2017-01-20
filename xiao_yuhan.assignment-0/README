@@ -1,0 +1,32 @@
+README
+
+included:
+GameOfLife.c
+this README
+Makefile
+CHANGELOG
+
+Project Description: Conway's Game of Life. Program shows cells which breed and die as time goes by according to specific rules.
+Author: Yuhan Xiao
+Date: Jan 16, 2017
+
+
+Relevant Functions:
+#include<string.h> for functions strcmp() and strcpy().
+#include<strlib.h> for function atoi().
+#include<unistd.h> for function usleep().
+1. execute: Main part to play this game.
+2. addToArray: Add a point(cell) at the end of an array called "alive".
+3. print: Output the game.
+4. create: Create the very first time world.
+5. findNeighbors: Find the number of alive neighbors of a cell on point(a,b)
+
+Data Structures:
+1. Structure stands for each cell
+struct point
+
+2. First 2D-Array to print and edit.
+char table[24][80];
+
+3. Second 2D-Array to print and edit.
+char newTable[24][80];

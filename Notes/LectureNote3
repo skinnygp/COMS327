@@ -1,0 +1,37 @@
+LecutureNote3                                                           Fri, Jan 13
+
+we need two buffers(two worlds)
+
+int count;
+for(j = 0; j < 24; j++){
+for(i = 0; i < 80; ++i){
+count = 0;
+count all the neighbors and assign to count
+if(count < 2) ...
+else if(count == 3) ...
+else ...
+
+
+#include <unistd.h>
+while(1){
+print();
+usleep(83333);
+} 
+
+
+#include <stdlib.h>
+atoi(char[])
+
+Makefile
+
+target: dependencies
+	command
+	another command...
+
+
+hello: hello.c
+	gcc -o hello hello.c -Wall -Werror -ggdb
+
+
+in terminal: make
+

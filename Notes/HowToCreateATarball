@@ -1,0 +1,7 @@
+cp -R Assignment0/ \xiao_yuhan.assignment-0
+tar cvfz \xiao_yuhan.assignment-0.tar.gz xiao_yuhan.assignment-0/
+
+test if it works:
+mkdir test
+cd test
+gzip -dc \../xiao_yuhan.assignment-0.tar.gz |tar xvf -

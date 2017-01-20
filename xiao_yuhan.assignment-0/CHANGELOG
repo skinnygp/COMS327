@@ -1,0 +1,12 @@
+CHANGELOG
+Author: Yuhan Xiao
+
+Day One  (Jan 10, 2017): Started reading the description of this assignment.
+Day Two  (Jan 11, 2017): Started project.
+Day Two  (Jan 11, 2017): Developed Main method and a structure for each cell.
+Day Three(Jan 12, 2017): Developed methods 'create', 'addToArray', 'print' and 'checkAlive'.
+Day Three(Jan 12, 2017): Found and fixed Bug: Cannot initialize a variable in a for loop in C language.
+Day Four (Jan 13, 2017): Developed methods 'execute', 'initialTable', 'initialNewTable', 'findNeighbors'.
+Day Four (Jan 13, 2017): Found and fixed Bug: Cannot use a same name for two different variables even though they are in different method, because finally they are the same one.
+Day Four (Jan 13, 2017): Program runs correctly.
+Day Five (Jan 16, 2017): Completed README and created the tarball.

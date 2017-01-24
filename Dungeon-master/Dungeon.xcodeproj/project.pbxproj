@@ -1,0 +1,269 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		492F9DD91A9BB0D600137683 /* heap.c in Sources */ = {isa = PBXBuildFile; fileRef = 492F9DCE1A9BB0D600137683 /* heap.c */; };
+		492F9DDA1A9BB0D600137683 /* rlg229.c in Sources */ = {isa = PBXBuildFile; fileRef = 492F9DD21A9BB0D600137683 /* rlg229.c */; };
+		492F9DDB1A9BB0D600137683 /* dungeon.c in Sources */ = {isa = PBXBuildFile; fileRef = 492F9DD51A9BB0D600137683 /* dungeon.c */; };
+		492F9DDC1A9BB0D600137683 /* move.c in Sources */ = {isa = PBXBuildFile; fileRef = 492F9DD61A9BB0D600137683 /* move.c */; };
+		492F9DDD1A9BB0D600137683 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 492F9DD71A9BB0D600137683 /* Makefile */; };
+		492F9DDE1A9BB0D600137683 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 492F9DD81A9BB0D600137683 /* utils.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		492F9DC21A9BB0BA00137683 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		492F9DC41A9BB0BA00137683 /* Dungeon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dungeon; sourceTree = BUILT_PRODUCTS_DIR; };
+		492F9DCE1A9BB0D600137683 /* heap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = heap.c; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/heap.c"; sourceTree = "<group>"; };
+		492F9DCF1A9BB0D600137683 /* move.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = move.h; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/move.h"; sourceTree = "<group>"; };
+		492F9DD01A9BB0D600137683 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utils.h; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/utils.h"; sourceTree = "<group>"; };
+		492F9DD11A9BB0D600137683 /* macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = macros.h; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/macros.h"; sourceTree = "<group>"; };
+		492F9DD21A9BB0D600137683 /* rlg229.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rlg229.c; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/rlg229.c"; sourceTree = "<group>"; };
+		492F9DD31A9BB0D600137683 /* dungeon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dungeon.h; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/dungeon.h"; sourceTree = "<group>"; };
+		492F9DD41A9BB0D600137683 /* heap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = heap.h; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/heap.h"; sourceTree = "<group>"; };
+		492F9DD51A9BB0D600137683 /* dungeon.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dungeon.c; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/dungeon.c"; sourceTree = "<group>"; };
+		492F9DD61A9BB0D600137683 /* move.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = move.c; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/move.c"; sourceTree = "<group>"; };
+		492F9DD71A9BB0D600137683 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/Makefile"; sourceTree = "<group>"; };
+		492F9DD81A9BB0D600137683 /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utils.c; path = "../../../Downloads/(to run on mac, uncomment line 1 in dungeon.c)/utils.c"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		492F9DC11A9BB0BA00137683 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		492F9DBB1A9BB0BA00137683 = {
+			isa = PBXGroup;
+			children = (
+				492F9DC61A9BB0BA00137683 /* Dungeon */,
+				492F9DC51A9BB0BA00137683 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		492F9DC51A9BB0BA00137683 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				492F9DC41A9BB0BA00137683 /* Dungeon */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		492F9DC61A9BB0BA00137683 /* Dungeon */ = {
+			isa = PBXGroup;
+			children = (
+				492F9DCE1A9BB0D600137683 /* heap.c */,
+				492F9DCF1A9BB0D600137683 /* move.h */,
+				492F9DD01A9BB0D600137683 /* utils.h */,
+				492F9DD11A9BB0D600137683 /* macros.h */,
+				492F9DD21A9BB0D600137683 /* rlg229.c */,
+				492F9DD31A9BB0D600137683 /* dungeon.h */,
+				492F9DD41A9BB0D600137683 /* heap.h */,
+				492F9DD51A9BB0D600137683 /* dungeon.c */,
+				492F9DD61A9BB0D600137683 /* move.c */,
+				492F9DD71A9BB0D600137683 /* Makefile */,
+				492F9DD81A9BB0D600137683 /* utils.c */,
+			);
+			path = Dungeon;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		492F9DC31A9BB0BA00137683 /* Dungeon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 492F9DCB1A9BB0BA00137683 /* Build configuration list for PBXNativeTarget "Dungeon" */;
+			buildPhases = (
+				492F9DC01A9BB0BA00137683 /* Sources */,
+				492F9DC11A9BB0BA00137683 /* Frameworks */,
+				492F9DC21A9BB0BA00137683 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Dungeon;
+			productName = Dungeon;
+			productReference = 492F9DC41A9BB0BA00137683 /* Dungeon */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		492F9DBC1A9BB0BA00137683 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Wang Wang";
+				TargetAttributes = {
+					492F9DC31A9BB0BA00137683 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 492F9DBF1A9BB0BA00137683 /* Build configuration list for PBXProject "Dungeon" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 492F9DBB1A9BB0BA00137683;
+			productRefGroup = 492F9DC51A9BB0BA00137683 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				492F9DC31A9BB0BA00137683 /* Dungeon */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		492F9DC01A9BB0BA00137683 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				492F9DDD1A9BB0D600137683 /* Makefile in Sources */,
+				492F9DD91A9BB0D600137683 /* heap.c in Sources */,
+				492F9DDB1A9BB0D600137683 /* dungeon.c in Sources */,
+				492F9DDE1A9BB0D600137683 /* utils.c in Sources */,
+				492F9DDC1A9BB0D600137683 /* move.c in Sources */,
+				492F9DDA1A9BB0D600137683 /* rlg229.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		492F9DC91A9BB0BA00137683 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		492F9DCA1A9BB0BA00137683 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		492F9DCC1A9BB0BA00137683 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		492F9DCD1A9BB0BA00137683 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		492F9DBF1A9BB0BA00137683 /* Build configuration list for PBXProject "Dungeon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				492F9DC91A9BB0BA00137683 /* Debug */,
+				492F9DCA1A9BB0BA00137683 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		492F9DCB1A9BB0BA00137683 /* Build configuration list for PBXNativeTarget "Dungeon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				492F9DCC1A9BB0BA00137683 /* Debug */,
+				492F9DCD1A9BB0BA00137683 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 492F9DBC1A9BB0BA00137683 /* Project object */;
+}

@@ -1,3 +1,60 @@
 LectureNote4							Fri, Jan 20
 
+int c2f(int c)
+{
+  return 9 * c / 5 + 32;
+}
+
+int f2c(int f)
+{
+ return (f - 32) * 5 / 9;
+}
+
+
+
+gcc *.o -o main
+
+Makefile:
+
+fc: f2c.o c2f.o main.o
+        gcc f2c.c c2f.c main.o -o fc
+
+f2c.o: f2c.c fc.h
+        gcc -ggdb -Wall f2c.c -c
+
+c2f.o: c2f.c fc.h
+        gcc -ggdb -Wall c2f.c -c
+
+main.o: mian,c fc.h
+        gcc - ggdb -Wall main.c -c
+
+clean: 
+        rm -f *.o fc *~
+
+
+*Stages of Compilation
+**Last time talked about gcc switches -Wall, -Werror, -g, -ggdb, and -o
+
+***Processing
+ALWAYS runs befor conpilar
+gcc -E or cpp
+
+gcc -S
+
+gcc -c /* make a .o file*/
+
+hexdump -C /*to see the binary file*/
+
+gcc hello.o -o hello
+
+
+int array[8];
+request storage for 8 contiguoms integers "array" holds the address
+
+int matrix[4][4];
+conceptully is 4 * 4
+physically is 16
+
+
+
 

@@ -1,0 +1,46 @@
+LectureNote6                 					Mon, Jan 23
+
+go through the row first
+
+array[5] is stored at the address in array + 5 times the size of an int.
+
+matrix[2][1] is stored at 2 * size of a row + 1 * size of an item
+
+(array + 5) is the address of array[5]
+
+((int *)matrix) + (2*4) + 1 is the address of matrix[2][1]
+computer automatically mutiplies by size of item
+
+(array + 5) == &array[5] the address
+
+*(array + 5) == array[5] the value
+
+& is the address operator(ampersanal)
+* is the dereference operator
+
+typedef time time_t
+
+struct room {
+ int x_pos;
+ int y_pos;
+ int x_size;
+ int y_size;
+};
+
+struct room r;
+r.x_pos = 1;
+r.y_pos = 11;
+
+struct room *p;
+p = &r;
+
+p -> x_size = 5; /* Equivalent to (*p).x_size = 5 */
+p -> y_size = 7;
+
+Dynamic allocation
+malloc(size_t size);
+free(void *ptr);
+calloc(size_t nmemb, size_t size);
+realloc(void *ptr, size_t size);
+
+

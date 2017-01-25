@@ -3,7 +3,14 @@ Author: Yuhan Xiao
 
 Day One  (Jan 19, 2017): Started reading the description of this assignment.
 Day One  (Jan 19, 2017): Started project.
+
 Day Two  (Jan 22, 2017): Created structure for room and a 2D-array to display dungeon.
- 
+Day Two  (Jan 22, 2017): Done method createEmptyDungeon() to create an empty dungeon and method randomRoom() to random positions and size for a room and return it.
+
+Day Three(Jan 23, 2017): Done methods addRoom(), finfNeighbors() and addRoomsToDungeon() to add random rooms into our dungeon.
+Day Three(Jan 23, 2017): Done methods randomPoint(), connectTwoRooms() and to connect rooms with corridors.
+
+Day Four (Jan 24, 2017): Find and fix bug: some rooms cannot be connected because corridor will stop building when hit another corridor. Fixed it by adding new method findClosestRoom() to connect every room with closest room.
+Day Four (Jan 25, 2017): Finished README and Makefile.
 
 

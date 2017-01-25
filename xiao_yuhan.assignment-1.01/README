@@ -1,0 +1,34 @@
+README
+
+included:
+Dungeon.c
+this README
+Makefile
+CHANGELOG
+
+Project Description: Dungeon generator. Generate the map of our dungeon.
+Note: Run ./Dungeon to start after Makefile. At least 10 rooms and at most 20 rooms(too many rooms are bad).
+Author: Yuhan Xiao
+Date: Jan 25, 2017
+
+Relevant Functions:
+#include <stdlib.h> for rand() and srand()
+#include <time.h> for time()
+void createEmptyDungeon(void);
+room_t randomRoom();
+void addRoom(void);
+int findNeighbors(int a, int b);
+void addRoomsToDungeon(room_t r);
+void printDungeon(void);
+point_t randomPoint(room_t r);
+void connectTwoRooms(room_t start, room_t end);
+int findClosestRoomX(room_t room);
+int findClosestRoomY(room_t room);
+
+
+Data Structures:
+struct point point_t
+struct room room_t
+char dungeon[105][160]
+room_t rooms[18]
+

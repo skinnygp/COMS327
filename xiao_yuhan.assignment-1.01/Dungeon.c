@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 /**
- * rand() adn srand()
+ * rand() and srand()
  */
 #include <stdlib.h>
 /**
@@ -43,7 +43,7 @@ char dungeon[105][160];
 /**
  * All rooms in the dungeon
  */
-room_t rooms[18];
+room_t rooms[20];
 
 /**
  * the number of rooms exist in this dungeon
@@ -79,7 +79,6 @@ int main(int argc, char *argv[])
     seed = time(NULL);
   }
   srand(seed); /*seed*/
-  room_t temp = randomRoom();
   tryTimes = 0;
   createEmptyDungeon();
   /**
@@ -89,7 +88,7 @@ int main(int argc, char *argv[])
   while(tryTimes < 60 || rooms[9].isCreated == 0){
     addRoom();
   }
-  int num, numb;
+  int num;
   /**
    * connect 1 to 2; 2 to 3; 3 to 4 ... n to n+1
    */
@@ -131,7 +130,6 @@ int findClosestRoomX(room_t room)
       }
     }
   }
-  printf("%d\n", minIndex);
   return minIndex;
 }
 
@@ -155,7 +153,6 @@ int findClosestRoomY(room_t room)
       }
     }
   }
-  printf("%d\n", minIndex);
   return minIndex;
 }
 /**
@@ -252,7 +249,7 @@ void createEmptyDungeon(void)
  */
 void addRoomsToDungeon(room_t r)
 {
-  int i, j, k, check;
+  int i, j, check;
   check = 0;
   for(j = r.y; j < r.y + r.height; ++j){
     for(i = r.x; i < r.x + r.width; ++i){
@@ -325,8 +322,8 @@ void addRoom(void)
   */
   x_1 = add.x;
   y_1 = add.y;
-  x_2 = add.x + add.width;
-  y_2 = add.y + add.height;
+  x_2 = x_1 + add.width;
+  y_2 = y_1 + add.height;
   if(x_2 >= 159 || y_2 >= 104){
     return;
   }

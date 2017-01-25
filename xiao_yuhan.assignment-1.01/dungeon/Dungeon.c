@@ -1,3 +1,9 @@
+/**
+ * @author Yuhan Xiao
+ * @lastModifiedTime 10:12PM, Jan 24, 2017.
+ */
+
+
 #include <stdio.h>
 /**
  * rand() adn srand()
@@ -9,6 +15,14 @@
 #include <time.h>
 
 /**
+ * struct for point
+ */
+typedef struct point {
+  int x;
+  int y;
+} point_t;
+
+/**
  * struct for room
  */
 typedef struct room {
@@ -17,9 +31,13 @@ typedef struct room {
   int width;
   int height;
   int isCreated;
+  int isConnected;
+  point_t forConnect;
 } room_t;
+
+
 /**
- * create dungeon
+ * Map for dungeon
  */
 char dungeon[105][160];
 /**
@@ -42,6 +60,180 @@ void addRoom(void);
 int findNeighbors(int a, int b);
 void addRoomsToDungeon(room_t r);
 void printDungeon(void);
+point_t randomPoint(room_t r);
+void connectTwoRooms(room_t start, room_t end);
+int findClosestRoomX(room_t room);
+int findClosestRoomY(room_t room);
+
+/**
+ * Dungeon generator: random a map for this dungeon.
+ */
+int main(int argc, char *argv[])
+{
+  numberOfRooms = 0;
+  int seed;
+  if(argc == 2){
+    seed = atoi(argv[1]);
+  }
+  else{
+    seed = time(NULL);
+  }
+  srand(seed); /*seed*/
+  room_t temp = randomRoom();
+  tryTimes = 0;
+  createEmptyDungeon();
+  /**
+   * While tryTimes is less than 60 and the 10th room has not been created
+   * Create rooms for this dungeon
+   */
+  while(tryTimes < 60 || rooms[9].isCreated == 0){
+    addRoom();
+  }
+  int num, numb;
+  /**
+   * connect 1 to 2; 2 to 3; 3 to 4 ... n to n+1
+   */
+  for(num = 0; num < numberOfRooms-1; ++num){
+    connectTwoRooms(rooms[num], rooms[num+1]);
+    rooms[num].isConnected = 1;
+    rooms[num+1].isConnected = 1;
+  }
+  /**
+   * connect the closest rooms in both X and Y direction
+   */
+  for(num = 0; num < numberOfRooms; ++num){
+    int needConnectX = findClosestRoomX(rooms[num]);
+    int needConnectY = findClosestRoomX(rooms[num]);
+    connectTwoRooms(rooms[num], rooms[needConnectX]);
+    connectTwoRooms(rooms[num], rooms[needConnectY]);
+  }
+  printDungeon();
+  return 0;
+}
+
+/**
+ * find the closest room in X direction
+ */
+int findClosestRoomX(room_t room)
+{
+  point_t point = room.forConnect;
+  int x_pos = point.x;
+  int minDistance = 10000;
+  int minIndex = 0;
+  int number;
+  for(number = 0; number < numberOfRooms-1; ++number){
+    int xxx = rooms[number].forConnect.x;
+    if(xxx != x_pos){
+      int distance = (xxx - x_pos) * (xxx - x_pos);
+      if(minDistance >= distance){
+        minIndex = number;
+        minDistance = distance;
+      }
+    }
+  }
+  printf("%d\n", minIndex);
+  return minIndex;
+}
+
+/**
+ * find the closest room in Y direction
+ */
+int findClosestRoomY(room_t room)
+{
+  point_t point = room.forConnect;
+  int y_pos = point.y;
+  int minDistance = 10000;
+  int minIndex = 0;
+  int number;
+  for(number = 0; number < numberOfRooms-1; ++number){
+    int yyy = rooms[number].forConnect.y;
+    if(yyy != y_pos){
+      int distance = (yyy - y_pos) * (yyy - y_pos);
+      if(minDistance >= distance){
+        minIndex = number;
+        minDistance = distance;
+      }
+    }
+  }
+  printf("%d\n", minIndex);
+  return minIndex;
+}
+/**
+ * random a point in a room
+ */
+point_t randomPoint(room_t r)
+{
+  point_t p;
+  p.x = rand() % (r.width) + r.x;
+  p.y = rand() % (r.height) + r.y;
+  return p;
+}
+
+/**
+ * connect two rooms with corridors
+ */
+void connectTwoRooms(room_t start, room_t end)
+{
+  int i, j, x_start, x_end, y_start, y_end;
+  int randomD;
+  randomD = rand() % 1;
+  x_start = start.forConnect.x;
+  x_end = end.forConnect.x;
+  y_start = start.forConnect.y;
+  y_end = end.forConnect.y;
+  if(randomD == 0){
+    if(x_start - x_end < 0){
+      for(i = x_start; i < x_end; ++i){
+        if(dungeon[y_start][i] == '#') return;
+        if(dungeon[y_start][i] == ' ') dungeon[y_start][i] = '#';
+      }
+    }
+    else{
+      for(i = x_start; i > x_end; --i){
+        if(dungeon[y_start][i] == '#') return;
+        if(dungeon[y_start][i] == ' ') dungeon[y_start][i] = '#';
+      }
+    }
+    if(y_start - y_end < 0){
+      for(j = y_start; j < y_end; ++j){
+        if(dungeon[j][x_end] == '#') return;
+        if(dungeon[j][x_end] == ' ') dungeon[j][x_end] = '#';
+      }
+    }
+    else{
+      for(j = y_start; j > y_end; --j){
+        if(dungeon[j][x_end] == '#') return;
+        if(dungeon[j][x_end] == ' ') dungeon[j][x_end] = '#';
+      }
+    }
+  }
+  else{
+    if(y_start - y_end < 0){
+      for(j = y_start; j < y_end; ++j){
+        if(dungeon[j][x_end] == '#') return;
+        if(dungeon[j][x_end] == ' ') dungeon[j][x_end] = '#';
+      }
+    }
+    else{
+      for(j = y_start; j > y_end; --j){
+        if(dungeon[j][x_end] == '#') return;
+        if(dungeon[j][x_end] == ' ') dungeon[j][x_end] = '#';
+      }
+    }
+    if(x_start - x_end < 0){
+      for(i = x_start; i < x_end; ++i){
+        if(dungeon[y_start][i] == '#') return;
+        if(dungeon[y_start][i] == ' ') dungeon[y_start][i] = '#';
+      }
+    }
+    else{
+      for(i = x_start; i > x_end; --i){
+        if(dungeon[y_start][i] == '#') return;
+        if(dungeon[y_start][i] == ' ') dungeon[y_start][i] = '#';
+      }
+    }
+  }
+}
 
 /**
  * create an empty dungeon
@@ -86,6 +278,7 @@ void addRoomsToDungeon(room_t r)
       ++a;
     }
     rooms[a] = r;
+    ++numberOfRooms;
   }
 }
 
@@ -109,11 +302,12 @@ void printDungeon(void)
 room_t randomRoom()
 {
   room_t temp;
-  temp.x = rand() % 160;
-  temp.y = rand() % 105;
+  temp.x = rand() % 160 + 1;
+  temp.y = rand() % 105 + 1;
   temp.width = rand() % (50 - 7) + 7;
   temp.height = rand() % (26 - 5) + 5;
   temp.isCreated = 1;
+  temp.forConnect = randomPoint(temp);
   ++tryTimes;
   return temp;
 }
@@ -133,7 +327,7 @@ void addRoom(void)
   y_1 = add.y;
   x_2 = add.x + add.width;
   y_2 = add.y + add.height;
-  if(x_2 > 159 || y_2 > 104){
+  if(x_2 >= 159 || y_2 >= 104){
     return;
   }
   else{
@@ -141,6 +335,9 @@ void addRoom(void)
   }
 }
 
+/**
+ * count the number of neighbors of a point
+ */
 int findNeighbors(int a, int b)
 {
   int count = 0;
@@ -212,27 +409,4 @@ int findNeighbors(int a, int b)
     if(dungeon[b-1][a-1] == '.') ++count;
   }
   return count;
-}
-
-int main(int argc, char *argv[])
-{
-  int seed;
-  if(argc == 2){
-    seed = atoi(argv[1]);
-  }
-  else{
-    seed = time(NULL);
-  }
-  srand(seed); /*seed*/
-  room_t temp = randomRoom();
-  tryTimes = 0;
-  createEmptyDungeon();
-  while(tryTimes < 50 || rooms[9].isCreated == 0){
-    if(rooms[17].isCreated == 1){
-      break;
-    }
-    addRoom();
-  }
-  printDungeon();
-  return 0;
 }

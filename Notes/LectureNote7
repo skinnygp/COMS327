@@ -1,0 +1,46 @@
+LectureNote7						Fri, Jan 27
+
+**File I/O
+**** FILE *fopen(const char *path, const char *mode);
+	used to open a file
+	path is the path to the file
+	mode is the file access mode (read, write, append, or read/write)
+	read == "r"
+	write == "w"
+	append == "a"
+	binary == "b"
+	returns NULL on failure
+*** int fclose(FILE *fp);
+	Closes a file previously opened by fopen()
+*** int fprintf(FILE *stream, const char *format, ...);
+	Just like prinf(), but first parameter is a FILE *
+*** int fscanf(FILE *stream, const char *format, ...);
+	analogous to printf, but for reading
+	to read an int (from standard input: fscanf(stdin, "%d", &i))
+*** char *fgets(char *s, int size, FILE *stream);
+	Reads one line at a time, up to sizebytes, where size is the ammount of storage available in s; analogous function called gets()
+*** size_t fwrite(const void *ptr, size_t sizem, size_t smemb, FILE *stream);
+	0x00 00 00 07
+	Writes binary data to file from ptr, each element is size bytes, there are nmemb elements, write to stream
+*** size_t fread(void *ptr, size_t size, size_t smemb, FILE *stream)
+	analogous to fwrite, but reads
+
+gdb for debugging
+run
+bt: back trace
+print s
+print *s
+n : step through
+s : step into a function call
+
+start
+watch
+cont
+quit
+
+valgrind ./name
+
+
+
+
+ 

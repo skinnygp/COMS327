@@ -29,18 +29,18 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  if (strcmp(argv[1], "-wt")) {
+  if (!strcmp(argv[1], "-wt")) {
     action = action_write_text;
 
   }
-  else if(strcmp(argv[1], "-rt")){
+  else if(!strcmp(argv[1], "-rt")){
     action = action_read_text;
   }
 
-  else if(strcmp(argv[1], "-wb")){
+  else if(!strcmp(argv[1], "-wb")){
     action = action_write_binary;
   }
-  else if(strcmp(argv[1], "-rb")){
+  else if(!strcmp(argv[1], "-rb")){
     action = action_read_binary;
   }
   else{

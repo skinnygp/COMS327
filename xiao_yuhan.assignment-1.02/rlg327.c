@@ -706,6 +706,10 @@ typedef enum action{
 
 int main(int argc, char *argv[])
 {
+  char *dir_second = ".rlg327/Dungeon";
+  char *dir_first;
+  char *dir_file;
+  int length;
   FILE *f;
   action_t action;
   action_t action_second;
@@ -721,40 +725,76 @@ int main(int argc, char *argv[])
       return -1;
     }
     /* check the first action*/
-    if (strcmp(argv[1], "--save")) {
+    if (!strcmp(argv[1], "--save")) {
       action = action_save;
     }
-    else if (strcmp(argv[1], "--load")) {
+    else if (!strcmp(argv[1], "--load")) {
       action = action_load;
     }
     else {
-      fprintf(stderr, "Unrecongnized ");
+      fprintf(stderr, "Unrecongnized.\n");
       return -1;
     }
     /* check if there is a second action*/
     if (argv[2]){
-      if (strcmp(argv[2], "--save")) {
+      if (!strcmp(argv[2], "--save")) {
         action_second = action_save;
       }
-      else if (strcmp(argv[2], "--load")) {
+      else if (!strcmp(argv[2], "--load")) {
         action_second = action_load;
       }
       else {
-        fprintf(stderr, "Unrecongnized ");
+        fprintf(stderr, "Unrecongnized.\n");
         return -1;
       }
     }
 
+    if(!(dir_first = getenv("HOME"))){
+      fprintf(stderr, "HOME is not found!");
+      return -1;
+    }
+
+    char *slash = "/";
+    length =  strlen(dir_first) + strlen(dir_second) + 2 ;
+    dir_file = malloc(length * sizeof(*dir_file));
+    strcpy(dir_file, dir_first);
+    strcat(dir_file, slash);
+    strcat(dir_file, dir_second);
+
     if (action == action_save || action_second == action_save){
-      if (!(f = fopen(argv[2], "w"))) {
+      if (!(f = fopen(dir_file, "w"))) {
         fprintf(stderr, "Failed to open %s.\n", argv[2]);
       }
     }
     if (action == action_load || action_second == action_load){
-      if (!(f = fopen(argv[2], "r"))) {
+      if (!(f = fopen(dir_file, "r"))) {
         fprintf(stderr, "Failed to open %s.\n", argv[2]);
       }
     }
+    free(dir_file);
+
+    switch(action){
+    case action_load:
+      char *semantic[11];
+      uint32_t version;
+      uint32_t size;
+      fread(semantic, sizeof(semantic), 1, f);
+      fread(&version, sizeof(version), 1, f);
+      fread(&size, sizeof(size), 1, f);
+
+      
+      &s.i = be32toh(i);
+      fread(&s.i, sizeof (s.i), 1, f);
+      fread(&s.j, sizeof (s.j), 1, f);
+      fread(&s.k, sizeof (s.k), 1, f);
+      break;
+    case action_save:
+      i = htobe32(s.i);
+      fwrite(&s.i, sizeof (s.i), 1, f);
+      fwrite(&s.j, sizeof (s.j), 1, f);
+      fwrite(&s.k, sizeof (s.k), 1, f);
+      break;
+  }
 
 
   }

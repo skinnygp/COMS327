@@ -699,40 +699,44 @@ void init_dungeon(dungeon_t *d)
 
 int read_dungeon(dungeon_t *d, FILE *f)
 {
-  uint32_t x, y;
-  uint8_t open;
+  int x, y;
+  uint8_t wall;
 
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
-      fread(&open, sizeof (open), 1, f);
-      // fread(&room, sizeof (room), 1, f);
-      // fread(&corr, sizeof (corr), 1, f);
-      // fread(&d->hardness[y][x], sizeof (d->hardness[y][x]), 1, f);
-      if (open) {
+      fread(&wall, sizeof (wall), 1, f);
+      if (!wall) {
+        d->map[y][x] = ter_floor;
+      }
+      else {
+        if(wall == 255){
+          d->map[y][x] = ter_wall_immutable;
+        }
         d->map[y][x] = ter_wall;
       }
-      // else if (corr) {
-      //   d->map[y][x] = ter_floor_hall;
-      // } else if (y == 0 || y == DUNGEON_Y - 1 ||
-      //            x == 0 || x == DUNGEON_X - 1) {
-      //   d->map[y][x] = ter_wall_immutable;
-      // }
-      else {
-        d->map[y][x] = ter_floor_room;
-      }
+      d->hardness[y][x] = wall;
     }
   }
   return 0;
 }
 int read_rooms(dungeon_t *d, FILE *f)
 {
-  uint32_t i;
-  uint32_t x, y;
+  int i;
+  d->num_rooms = 40;
   for (i = 0; i < d->num_rooms; i++) {
     fread(&d->rooms[i].position[dim_x], 1, 1, f);
     fread(&d->rooms[i].position[dim_y], 1, 1, f);
     fread(&d->rooms[i].size[dim_x], 1, 1, f);
     fread(&d->rooms[i].size[dim_y], 1, 1, f);
+  }
+  char room_map[DUNGEON_Y][DUNGEON_X];
+  int x, y;
+  for (i = 0; i < d->num_rooms; i++) {
+    printf("%d %d %d %d\n", d->rooms[i].position[dim_x], d->rooms[i].position[dim_y],d->rooms[i].size[dim_x],d->rooms[i].size[dim_y]);
+    if(!d->rooms[i].position[dim_x] == 0){
+      
+    }
+
   }
 
 
@@ -816,7 +820,7 @@ int main(int argc, char *argv[])
     free(dir_file);
     uint32_t version;
     uint32_t size;
-    char semantic[11];
+    char semantic[12];
     switch(action){
     case action_general:
     case action_load:

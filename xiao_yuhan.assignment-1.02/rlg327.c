@@ -697,6 +697,48 @@ void init_dungeon(dungeon_t *d)
   empty_dungeon(d);
 }
 
+int read_dungeon(dungeon_t *d, FILE *f)
+{
+  uint32_t x, y;
+  uint8_t open;
+
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      fread(&open, sizeof (open), 1, f);
+      // fread(&room, sizeof (room), 1, f);
+      // fread(&corr, sizeof (corr), 1, f);
+      // fread(&d->hardness[y][x], sizeof (d->hardness[y][x]), 1, f);
+      if (open) {
+        d->map[y][x] = ter_wall;
+      }
+      // else if (corr) {
+      //   d->map[y][x] = ter_floor_hall;
+      // } else if (y == 0 || y == DUNGEON_Y - 1 ||
+      //            x == 0 || x == DUNGEON_X - 1) {
+      //   d->map[y][x] = ter_wall_immutable;
+      // }
+      else {
+        d->map[y][x] = ter_floor_room;
+      }
+    }
+  }
+  return 0;
+}
+int read_rooms(dungeon_t *d, FILE *f)
+{
+  uint32_t i;
+  uint32_t x, y;
+  for (i = 0; i < d->num_rooms; i++) {
+    fread(&d->rooms[i].position[dim_x], 1, 1, f);
+    fread(&d->rooms[i].position[dim_y], 1, 1, f);
+    fread(&d->rooms[i].size[dim_x], 1, 1, f);
+    fread(&d->rooms[i].size[dim_y], 1, 1, f);
+  }
+
+
+  return 0;
+}
+
 
 typedef enum action{
   action_load,
@@ -772,27 +814,28 @@ int main(int argc, char *argv[])
       }
     }
     free(dir_file);
-
+    uint32_t version;
+    uint32_t size;
+    char semantic[11];
     switch(action){
+    case action_general:
     case action_load:
-      char *semantic[11];
-      uint32_t version;
-      uint32_t size;
       fread(semantic, sizeof(semantic), 1, f);
       fread(&version, sizeof(version), 1, f);
       fread(&size, sizeof(size), 1, f);
+      read_dungeon(&d, f);
+      read_rooms(&d, f);
 
-      
-      &s.i = be32toh(i);
-      fread(&s.i, sizeof (s.i), 1, f);
-      fread(&s.j, sizeof (s.j), 1, f);
-      fread(&s.k, sizeof (s.k), 1, f);
+      // &s.i = be32toh(i);
+      // fread(&s.i, sizeof (s.i), 1, f);
+      // fread(&s.j, sizeof (s.j), 1, f);
+      // fread(&s.k, sizeof (s.k), 1, f);
       break;
     case action_save:
-      i = htobe32(s.i);
-      fwrite(&s.i, sizeof (s.i), 1, f);
-      fwrite(&s.j, sizeof (s.j), 1, f);
-      fwrite(&s.k, sizeof (s.k), 1, f);
+      // i = htobe32(s.i);
+      // fwrite(&s.i, sizeof (s.i), 1, f);
+      // fwrite(&s.j, sizeof (s.j), 1, f);
+      // fwrite(&s.k, sizeof (s.k), 1, f);
       break;
   }
 
@@ -812,7 +855,7 @@ int main(int argc, char *argv[])
     render_dungeon(&d);
     delete_dungeon(&d);
   }
-
+  render_dungeon(&d);
 
   return 0;
 }

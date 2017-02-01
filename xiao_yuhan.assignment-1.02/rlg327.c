@@ -697,14 +697,53 @@ void init_dungeon(dungeon_t *d)
   empty_dungeon(d);
 }
 
-int read_dungeon(dungeon_t *d, FILE *f)
+ /*
+  * function to load dungeon date from a file
+  * @author Yuhan Xiao
+  */
+int load(dungeon_t *d)
 {
-  int x, y;
-  uint8_t wall;
+  /* for the directory of the saving file*/
+  FILE *f;
+  char *dir_file;
+  char *dir_first; /* fist part: dir for HOME*/
+  char *dir_second = ".rlg327/Dungeon";
+  uint32_t dir_length; /* The length of the directory */
 
+  /* get the HOME directory*/
+  dir_first = getenv("HOME");
+
+  char *slash = "/";
+  dir_length = strlen(dir_first) + strlen(dir_second) + strlen(slash) + 1;
+  dir_file = malloc(dir_length * sizeof(*dir_file));
+  strcpy(dir_file, dir_first);
+  strcat(dir_file, slash);
+  strcat(dir_file, dir_second);
+
+  if (!(f = fopen(dir_file, "r"))) {
+    fprintf(stderr, "Failed to open %s.\n", dir_file);
+  }
+  free(dir_file);
+
+  /* load bytes 0-11*/
+  char semantic[12];
+  fread(semantic, sizeof(semantic), 1, f);
+
+  /* load bytes 12-15*/
+  uint32_t version;
+  fread(&version, sizeof(version), 1, f);
+
+  /* load bytes 16-19*/
+  uint32_t size;
+  fread(&size, sizeof(size), 1, f);
+
+  /* load bytes 20–16819*/
+  uint32_t x, y;
+  uint8_t wall;
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
-      fread(&wall, sizeof (wall), 1, f);
+      fread(&wall, sizeof(wall), 1, f);
+      d->hardness[y][x] = wall;
       if (!wall) {
         d->map[y][x] = ter_floor;
       }
@@ -712,36 +751,111 @@ int read_dungeon(dungeon_t *d, FILE *f)
         if(wall == 255){
           d->map[y][x] = ter_wall_immutable;
         }
-        d->map[y][x] = ter_wall;
+        else d->map[y][x] = ter_wall;
       }
-      d->hardness[y][x] = wall;
     }
   }
-  return 0;
-}
-int read_rooms(dungeon_t *d, FILE *f)
-{
-  int i;
-  d->num_rooms = 40;
-  for (i = 0; i < d->num_rooms; i++) {
-    fread(&d->rooms[i].position[dim_x], 1, 1, f);
-    fread(&d->rooms[i].position[dim_y], 1, 1, f);
-    fread(&d->rooms[i].size[dim_x], 1, 1, f);
-    fread(&d->rooms[i].size[dim_y], 1, 1, f);
+
+  /* load bytes 16820–end */
+  d->num_rooms = 0;
+  while(fread(&d->rooms[d->num_rooms].position[dim_x], 1, 1, f)){
+    fread(&d->rooms[d->num_rooms].position[dim_y], 1, 1, f);
+    fread(&d->rooms[d->num_rooms].size[dim_x], 1, 1, f);
+    fread(&d->rooms[d->num_rooms].size[dim_y], 1, 1, f);
+    ++d->num_rooms;
   }
+  /* put the rooms' information into an empty map*/
   char room_map[DUNGEON_Y][DUNGEON_X];
-  int x, y;
-  for (i = 0; i < d->num_rooms; i++) {
-    printf("%d %d %d %d\n", d->rooms[i].position[dim_x], d->rooms[i].position[dim_y],d->rooms[i].size[dim_x],d->rooms[i].size[dim_y]);
-    if(!d->rooms[i].position[dim_x] == 0){
-      
+  uint32_t i;
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      room_map[y][x] = ' ';
     }
-
   }
-
-
+  for (i = 0; i < d->num_rooms; i++) {
+    uint32_t x_destination = d->rooms[i].position[dim_x] + d->rooms[i].size[dim_x];
+    uint32_t y_destination = d->rooms[i].position[dim_y] + d->rooms[i].size[dim_y];
+    for (y = d->rooms[i].position[dim_y]; y < y_destination; y++) {
+      for (x = d->rooms[i].position[dim_x]; x < x_destination; x++) {
+        room_map[y][x] = '.';
+      }
+    }
+  }
+  /* display rooms and corridors with different character*/
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      if(d->map[y][x] == ter_floor && room_map[y][x] == '.'){
+        d->map[y][x] = ter_floor_room;
+      }
+      else if(d->map[y][x] == ter_floor && room_map[y][x] == ' '){
+        d->map[y][x] = ter_floor_hall;
+      }
+    }
+  }
+  fclose(f);
   return 0;
 }
+
+/*
+ * function to write dungeon date into a file
+ * @author Yuhan Xiao
+ */
+int save(dungeon_t *d)
+{
+  /* for the directory of the saving file*/
+  FILE *f;
+  char *dir_file;
+  char *dir_first; /* fist part: dir for HOME*/
+  char *dir_second = ".rlg327/Dungeon";
+  uint32_t dir_length; /* The length of the directory */
+
+  /* get the HOME directory*/
+  dir_first = getenv("HOME");
+
+  char *slash = "/";
+  dir_length = strlen(dir_first) + strlen(dir_second) + strlen(slash) + 1 ;
+  dir_file = malloc(dir_length * sizeof(*dir_file));
+  strcpy(dir_file, dir_first);
+  strcat(dir_file, slash);
+  strcat(dir_file, dir_second);
+
+  if (!(f = fopen(dir_file, "w"))) {
+    fprintf(stderr, "Failed to open %s.\n", dir_file);
+  }
+  free(dir_file);
+
+  /* save bytes 0-11*/
+  char semantic[12] = "RLG327-S2017";
+  fwrite(semantic, sizeof(semantic), 1, f);
+
+  /* save bytes 12-15*/
+  uint32_t version = 0;
+  fwrite(&version, sizeof(version), 1, f);
+
+  /* save bytes 16-19*/
+  uint32_t size = 4 * DUNGEON_X * DUNGEON_Y + 4 * d->num_rooms;
+  fwrite(&size, sizeof(size), 1, f);
+
+  /* save bytes 20–16819*/
+  uint32_t x, y;
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      uint8_t for_save= d->hardness[y][x];
+      fwrite(&for_save, sizeof(for_save), 1, f);
+    }
+  }
+  /* save bytes 16820–end */
+  uint32_t i;
+  for(i = 0; i < d->num_rooms; i++){
+    fwrite(&d->rooms[i].position[dim_x], 1, 1, f);
+    fwrite(&d->rooms[i].position[dim_y], 1, 1, f);
+    fwrite(&d->rooms[i].size[dim_x], 1, 1, f);
+    fwrite(&d->rooms[i].size[dim_y], 1, 1, f);
+  }
+  fclose(f);
+  return 0;
+}
+
 
 
 typedef enum action{
@@ -752,16 +866,19 @@ typedef enum action{
 
 int main(int argc, char *argv[])
 {
-  char *dir_second = ".rlg327/Dungeon";
-  char *dir_first;
-  char *dir_file;
-  int length;
-  FILE *f;
   action_t action;
   action_t action_second;
   dungeon_t d;
   struct timeval tv;
   uint32_t seed;
+
+  gettimeofday(&tv, NULL);
+  seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
+
+  printf("Using seed: %u\n", seed);
+  srand(seed);
+
+  init_dungeon(&d);
 
   action = action_second = action_general;
 
@@ -778,7 +895,7 @@ int main(int argc, char *argv[])
       action = action_load;
     }
     else {
-      fprintf(stderr, "Unrecongnized.\n");
+      fprintf(stderr, "Action Unrecongnized.\n");
       return -1;
     }
     /* check if there is a second action*/
@@ -790,76 +907,51 @@ int main(int argc, char *argv[])
         action_second = action_load;
       }
       else {
-        fprintf(stderr, "Unrecongnized.\n");
+        fprintf(stderr, "Second Action Unrecongnized.\n");
         return -1;
       }
     }
 
-    if(!(dir_first = getenv("HOME"))){
-      fprintf(stderr, "HOME is not found!");
-      return -1;
-    }
-
-    char *slash = "/";
-    length =  strlen(dir_first) + strlen(dir_second) + 2 ;
-    dir_file = malloc(length * sizeof(*dir_file));
-    strcpy(dir_file, dir_first);
-    strcat(dir_file, slash);
-    strcat(dir_file, dir_second);
-
-    if (action == action_save || action_second == action_save){
-      if (!(f = fopen(dir_file, "w"))) {
-        fprintf(stderr, "Failed to open %s.\n", argv[2]);
+    /* If there is no second action*/
+    if(action_second == action_general ){
+      switch(action){
+      case action_general:
+      case action_load:
+        load(&d);
+        render_dungeon(&d);
+        break;
+      case action_save:
+        gen_dungeon(&d);
+        save(&d);
+        render_dungeon(&d);
+        break;
       }
     }
-    if (action == action_load || action_second == action_load){
-      if (!(f = fopen(dir_file, "r"))) {
-        fprintf(stderr, "Failed to open %s.\n", argv[2]);
+    /* There is a second action*/
+    else{
+      if(action == action_save && action_second == action_save){
+        fprintf(stderr, "Cannot have two same actions");
       }
+      else if(action == action_load && action_second == action_load){
+        fprintf(stderr, "Cannot have two same actions");
+      }
+      else if(action == action_load && action_second == action_save){
+        load(&d);
+        render_dungeon(&d);
+        save(&d);
+      }
+      else if(action == action_save && action_second == action_load){
+        load(&d);
+        render_dungeon(&d);
+        save(&d);
+      }
+      else fprintf(stderr, "System error");
     }
-    free(dir_file);
-    uint32_t version;
-    uint32_t size;
-    char semantic[12];
-    switch(action){
-    case action_general:
-    case action_load:
-      fread(semantic, sizeof(semantic), 1, f);
-      fread(&version, sizeof(version), 1, f);
-      fread(&size, sizeof(size), 1, f);
-      read_dungeon(&d, f);
-      read_rooms(&d, f);
-
-      // &s.i = be32toh(i);
-      // fread(&s.i, sizeof (s.i), 1, f);
-      // fread(&s.j, sizeof (s.j), 1, f);
-      // fread(&s.k, sizeof (s.k), 1, f);
-      break;
-    case action_save:
-      // i = htobe32(s.i);
-      // fwrite(&s.i, sizeof (s.i), 1, f);
-      // fwrite(&s.j, sizeof (s.j), 1, f);
-      // fwrite(&s.k, sizeof (s.k), 1, f);
-      break;
   }
-
-
-  }
-
-
   else{
-    gettimeofday(&tv, NULL);
-    seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
-
-    printf("Using seed: %u\n", seed);
-    srand(seed);
-
-    init_dungeon(&d);
     gen_dungeon(&d);
     render_dungeon(&d);
-    delete_dungeon(&d);
   }
-  render_dungeon(&d);
 
   return 0;
 }

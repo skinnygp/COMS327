@@ -57,7 +57,7 @@ macros.h,611
 # define frand(173,7872
 # define structdup(180,7984
 
-rlg327.c,1774
+rlg327.c,1760
 # define rand_under(19,395
 # define rand_range(23,538
 typedef struct corridor_path 25,612
@@ -111,11 +111,11 @@ int gen_dungeon(653,20799
 void render_dungeon(663,20921
 void delete_dungeon(691,21528
 void init_dungeon(695,21567
-int read_dungeon(700,21624
-int read_rooms(722,22061
-typedef enum action{action743,22613
-  action_load,744,22634
-  action_save,745,22649
-  action_general,746,22664
-} action_t;747,22682
-int main(749,22695
+int load(704,21702
+int save(803,24431
+typedef enum action{action861,25951
+  action_load,862,25972
+  action_save,863,25987
+  action_general,864,26002
+} action_t;865,26020
+int main(867,26033

@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     fread(&s.k, sizeof (s.k), 1, f);
     break;
   case action_write_text:
-    fprint(f, "%d %d %d", s.i, s.j, s.k);
+    fprintf(f, "%d %d %d", s.i, s.j, s.k);
     break;
   case action_write_binary:
     fwrite(&s.i, sizeof (s.i), 1, f);

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <endian.h>
+
 /* ./fileio -wt <file>*
    ./fileio -rt <file>*
    ./fileio -wb <file>*
@@ -43,7 +45,6 @@ int main(int argc, char *argv[])
   }
   else{
     fprintf(stderr, "Unrecongnized ");
-
     return -1;
   }
 
@@ -64,6 +65,7 @@ int main(int argc, char *argv[])
     fscanf(f, "%d %d %d", &s.i, &s.j, &s.k);
     break;
   case action_read_binary:
+    &s.i = be32toh(i);
     fread(&s.i, sizeof (s.i), 1, f);
     fread(&s.j, sizeof (s.j), 1, f);
     fread(&s.k, sizeof (s.k), 1, f);
@@ -72,6 +74,7 @@ int main(int argc, char *argv[])
     fprintf(f, "%d %d %d", s.i, s.j, s.k);
     break;
   case action_write_binary:
+    i = htobe32(s.i);
     fwrite(&s.i, sizeof (s.i), 1, f);
     fwrite(&s.j, sizeof (s.j), 1, f);
     fwrite(&s.k, sizeof (s.k), 1, f);

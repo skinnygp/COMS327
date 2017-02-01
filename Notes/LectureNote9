@@ -1,0 +1,43 @@
+LEctureNote9							Wed, Feb 1
+
+break first search
+
+add four more direction for monsters
+
+C String:
+A string is a array of characters
+char *s = "COM S 327";
+some where in the disk:'C' 'O' 'M' ' ' 'S' ' ' '3' '2' '7' '\0'
+'\0' == 0 == NULL
+
+char a[7] = "rlg327";
+'r' 'l' 'g' '3' '2' '7' '\0'
+
+declared with array notation: on stack (if in a function)
+				in data segmet (if global)
+					(mutable storage)
+
+declared with pointer notation: in the text segment(immutable storage)
+
+
+char a[6] = "rlg327" computer will not write the null terminator
+char s[6];
+strcpy(s, a); computer cannot find the null terminator so it will not stop unitl program crash or memory full
+
+char *home;
+home = getenc("HOME");
+char path[80];
+strcpy(path, home);
+strcat(path, "/.rlg/dungeon");
+
+chara[] = "Hello";
+a[3] = 'p';
+a[4] = '\0';
+printf(a) -> "Help";
+
+sprintf(char *s, const char *format, ...);
+
+sprinf(a, "Hello %s", "Colin"); ---> error cause it is just 6 bits long
+	but it will contain "Hello Colin"
+
+snprintf((a, 6, ....)

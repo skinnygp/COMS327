@@ -1,5 +1,7 @@
 /**
  * Main part of this code is from my professor: Jeremy Sheaffer
+ * new things added: function save(dungeon *d), load(dungeon *d) and main()
+ * added by Yuhan Xiao
  */
 
 #include <stdio.h>
@@ -705,9 +707,9 @@ int load(dungeon_t *d)
 {
   /* for the directory of the saving file*/
   FILE *f;
-  char *dir_file;
+  char *dir_target;
   char *dir_first; /* fist part: dir for HOME*/
-  char *dir_second = ".rlg327/Dungeon";
+  char *dir_second = ".rlg327/dungeon";
   uint32_t dir_length; /* The length of the directory */
 
   /* get the HOME directory*/
@@ -715,15 +717,15 @@ int load(dungeon_t *d)
 
   char *slash = "/";
   dir_length = strlen(dir_first) + strlen(dir_second) + strlen(slash) + 1;
-  dir_file = malloc(dir_length * sizeof(*dir_file));
-  strcpy(dir_file, dir_first);
-  strcat(dir_file, slash);
-  strcat(dir_file, dir_second);
+  dir_target = malloc(dir_length * sizeof(*dir_target));
+  strcpy(dir_target, dir_first);
+  strcat(dir_target, slash);
+  strcat(dir_target, dir_second);
 
-  if (!(f = fopen(dir_file, "r"))) {
-    fprintf(stderr, "Failed to open %s.\n", dir_file);
+  if (!(f = fopen(dir_target, "r"))) {
+    fprintf(stderr, "Failed to open %s.\n", dir_target);
   }
-  free(dir_file);
+  free(dir_target);
 
   /* load bytes 0-11*/
   char semantic[12];
@@ -804,9 +806,9 @@ int save(dungeon_t *d)
 {
   /* for the directory of the saving file*/
   FILE *f;
-  char *dir_file;
+  char *dir_target;
   char *dir_first; /* fist part: dir for HOME*/
-  char *dir_second = ".rlg327/Dungeon";
+  char *dir_second = ".rlg327/dungeon";
   uint32_t dir_length; /* The length of the directory */
 
   /* get the HOME directory*/
@@ -814,15 +816,15 @@ int save(dungeon_t *d)
 
   char *slash = "/";
   dir_length = strlen(dir_first) + strlen(dir_second) + strlen(slash) + 1 ;
-  dir_file = malloc(dir_length * sizeof(*dir_file));
-  strcpy(dir_file, dir_first);
-  strcat(dir_file, slash);
-  strcat(dir_file, dir_second);
+  dir_target = malloc(dir_length * sizeof(*dir_target));
+  strcpy(dir_target, dir_first);
+  strcat(dir_target, slash);
+  strcat(dir_target, dir_second);
 
-  if (!(f = fopen(dir_file, "w"))) {
-    fprintf(stderr, "Failed to open %s.\n", dir_file);
+  if (!(f = fopen(dir_target, "w"))) {
+    fprintf(stderr, "Failed to open %s.\n", dir_target);
   }
-  free(dir_file);
+  free(dir_target);
 
   /* save bytes 0-11*/
   char semantic[12] = "RLG327-S2017";
@@ -856,8 +858,7 @@ int save(dungeon_t *d)
   return 0;
 }
 
-
-
+/* types for actions*/
 typedef enum action{
   action_load,
   action_save,
@@ -931,9 +932,11 @@ int main(int argc, char *argv[])
     else{
       if(action == action_save && action_second == action_save){
         fprintf(stderr, "Cannot have two same actions");
+        return -1;
       }
       else if(action == action_load && action_second == action_load){
         fprintf(stderr, "Cannot have two same actions");
+        return -1;
       }
       else if(action == action_load && action_second == action_save){
         load(&d);
@@ -945,7 +948,10 @@ int main(int argc, char *argv[])
         render_dungeon(&d);
         save(&d);
       }
-      else fprintf(stderr, "System error");
+      else {
+        fprintf(stderr, "System error");
+        return -1;
+      }
     }
   }
   else{

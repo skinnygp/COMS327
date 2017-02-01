@@ -1,0 +1,31 @@
+README
+Author: Yuhan Xiao
+Date: Jan 31, 2017
+
+included:
+heap.c
+heap.h
+macros.h
+rlg327.c
+this README
+Makefile
+CHANGELOG
+
+Project Description: Add functions to save dungeon on the disk and read dungeon from disk.
+Note:
+* Used Jeremy's code from Assignment-1.01. 
+* Places that are written by me: Function load(dungeon_t *d), Function save(dungeon_t *d), typedef enum action and main().
+* The data file will be saved to HOME/.rlg327/dungeon once used --save switch.
+* The dungeon data will be read from HOME/.rlg327/dungeon once used --load switch.
+* All tests passed except those oversize ones: adventure.rlg327, goodwork.rlg327 and hello.rlg327
+
+Relevant Functions:
+[Line: 706] load(dungeon_t *d): Load dungeon data from the target file.
+[Line: 805] save(dungeon_t *d): Save dungeon data to the target file. 
+
+Data Structures:
+[Line: 862] typedef enum action{
+  		action_general,
+  		action_save,
+  		action_load,
+	    }action_t;

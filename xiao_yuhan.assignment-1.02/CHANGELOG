@@ -1,0 +1,27 @@
+CHANGELOG
+Author: Yuhan Xiao
+
+Day One   (Jan 26, 2017): Started reading the description of this assignment.
+Day One   (Jan 26, 2017): Started reading Jeremy's code for Assignment-1.02.
+Day One   (Jan 26, 2017): Started Project and I used Jeremy's code since my code doesn't have hardness for dungeon.
+
+Day Two   (Jan 27, 2017) To Day Four (Jan 29, 2017): Keep understanding Jeremy's code and the description for Assignment-1.02.
+
+Day Five  (Jan 30, 2017): Typedef enum for action which include general, save and load.
+Day Five  (Jan 30, 2017): Created function load(dungeon *d).
+Day Five  (Jan 30, 2017): Find and fix bug: The length of the directory of the file for loading has to plus one for NULL.
+Day Five  (Jan 30, 2017): Understood the meanings of uint32_t(4 bytes) and uint8_t(one byte).
+Day Five  (Jan 30, 2017): Function can only output dungeon with ter_wall and ter_floor.
+
+Day Six   (Jan 31, 2017): Used the data for rooms to find corridors and display it.
+Day Six   (Jan 31, 2017): Finished load(dungeon *d) and it works good.
+Day Six   (Jan 31, 2017): Created function save(dungeon *d).
+Day Six   (Jan 31, 2017): Kind of same with function load. Change fread() to fwrite().
+Day Six   (Jan 31, 2017): Finished save(dungeon *d) and it works good.
+Day Six   (Jan 31, 2017): Found and fixed bug: When --save --load at the same time, file will save the whole dungeon with '#'. The reason is I didn't close the file after load it. So I fixed this bug by adding fclose(f) at the end of functions load() and save();
+Day Six   (Jan 31, 2017): Tests all passed except those oversize ones(adventure.rlg327, goodjob.rlg327 and hello.rlg327).
+
+Day Seven (Jan 25, 2017): Changed code to write all  data in network order (big-endian).
+Day Seven (Jan 25, 2017): Finished README and Makefile.
+
+

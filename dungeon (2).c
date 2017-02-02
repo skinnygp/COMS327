@@ -121,7 +121,7 @@ int connect_two_points_recursive(dungeon_t *d, pair_t e1, pair_t e2)
   min_y = ((e1[dim_y] < e2[dim_y]) ? e1 : e2);
   max_y = ((min_y == e1) ? e2 : e1);
 
-  if ((max_x[dim_x] - min_x[dim_x]) + 
+  if ((max_x[dim_x] - min_x[dim_x]) +
       (max_y[dim_y] - min_y[dim_y]) < 15
 ) {
     return connect_two_points(d, min_x, max_x, min_y, max_y);
@@ -485,7 +485,7 @@ int write_dungeon_map(dungeon_t *d, FILE *f)
 
       /* And the fourth byte is the hardness */
       fwrite(&d->hardness[y][x], sizeof (d->hardness[y][x]), 1, f);
-      
+
     }
   }
 

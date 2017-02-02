@@ -731,10 +731,6 @@ int load(dungeon_t *d)
   /* load bytes 0-11 (semantic)*/
   char semantic[12];
   fread(semantic, sizeof(semantic), 1, f);
-  if(!strcmp(semantic, "RLG327-S2017")){
-    fprintf(stderr, "Semantic is wrong!\n");
-    return -1;
-  }
 
   /* load bytes 12-15 (version)*/
   uint32_t version;

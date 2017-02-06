@@ -13,10 +13,15 @@ CHANGELOG
 
 Project Description: Add functions to save dungeon on the disk and read dungeon from disk.
 Note:
-* Used Jeremy's code from Assignment-1.01. 
+* Used Jeremy's code from Assignment-1.01.
+* After make, there is a TAGS file and after run ./rlg327, there are three pgm files will be created. Those are all from Jeremy's code, not mine.
 * Places that are written by me: Function load(dungeon_t *d), Function save(dungeon_t *d), typedef enum action and main().
 * The data file will be saved to HOME/.rlg327/dungeon once used --save switch.
+* If there is no HOME/.rlg327 directory, --save will print error for opening this file.
 * The dungeon data will be read from HOME/.rlg327/dungeon once used --load switch.
+* If there is no HOME/.rlg327/dungeon, --load will print error for opening this file.
+* My code can only tell if the file is in right version but it cannot tell if it is the right semantic(But that doesn't matter I guess).
+* --load and --save work well. Cannot use two same actions. You can type --load --save to load the file, display it and edit it over and over again.
 * All tests passed except those oversize ones: adventure.rlg327, goodwork.rlg327 and hello.rlg327
 
 Relevant Functions:

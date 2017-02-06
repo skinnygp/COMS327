@@ -1,0 +1,69 @@
+LectureNote10									Fri, Feb 3
+
+Signed integers stored as two's complement
+32-bit 3 = 0000 0000 0000 0000 0000 0000 0000 0011
+compliment it: 1111 1111 1111 1111 1111 1111 1111 1100
+and add 1: 1111 1111 1111 1111 1111 1111 1111 1101 and this is -3
+
+floats are usually 32-bit IEEE 754
+1-bit signm 8-bit exponent, 23-bit mantissa
+value is -1^(s)*2^(e-127)*1.m
+where s is the sign bit, e is the biased exponent, and m is the matissa
+the mantissa is the level of precision, while the exponent is essentially the range
+
+what every computer scientist should know about floating point:
+*** specail value
+	NaN -- not a number
+	+-infinity
+	+-0 -- two zeros; which direction did you round from
+	sub-normal -- special values where 1's place of the mantissa is zero
+***double are 64-bit IEEEE 754
+1-bit sign, 11-bit exponent, 52-bit mantissa
+*bitwise operators
+**and 
+	operator is &
+	like logical nad, but on individual bits, 1 if both bits are 1
+1111 1101 1001 0001 0110 0111 0111 0100
+0110 1100 0011 1010 1111 0111 0100 1110 &
+---------------------------------------
+0110 1100 0001 0000 0110 0111 0100 0100
+
+**or
+	operator is |
+1111 1101 1001 0001 0110 0111 0111 0100
+0110 1100 0011 1010 1111 0111 0100 1110 |
+---------------------------------------
+1111 1101 1011 1011 1111 0111 0111 1110
+
+**xor
+        operator is |
+1111 1101 1001 0001 0110 0111 0111 0100
+0110 1100 0011 1010 1111 0111 0100 1110 ^
+---------------------------------------
+1001 0001 1010 1011 1001 0000 0011 1010
+
+**not
+        operator is ~
+~1111 1101 1001 0001 0110 0111 0111 0100
+
+.......
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

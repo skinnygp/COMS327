@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-// #include <endian.h>
+#include <endian.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <limits.h>
@@ -709,8 +709,8 @@ int load(dungeon_t *d)
   FILE *f;
   char *dir_target;
   char *dir_first; /* fist part: dir for HOME*/
-  char *dir_second = ".rlg327/dungeon";
-  uint32_t dir_length; /* The length of the directory */
+  char *dir_second = ".rlg327/dungeon"; /* second part: dir for ./rlg327/dungeon */
+  uint32_t dir_length; /* The length of the directory*/
 
   /* get the HOME directory*/
   dir_first = getenv("HOME");
@@ -724,7 +724,6 @@ int load(dungeon_t *d)
 
   if (!(f = fopen(dir_target, "r"))) {
     fprintf(stderr, "Failed to open %s.\n", dir_target);
-    return -1;
   }
   free(dir_target);
 
@@ -734,20 +733,19 @@ int load(dungeon_t *d)
 
   /* load bytes 12-15 (version)*/
   uint32_t version;
-  // uint32_t version_load;
+  uint32_t version_load;
   fread(&version, sizeof(version), 1, f);
-  // version_load = be32toh(version);
-  // if(!version_load == 0){
-  //   fprintf(stderr, "Version is wrong!\n");
-  // }
+  version_load = be32toh(version);
+  if(!version_load == 0){
+    fprintf(stderr, "Version is wrong!\n");
+    return -1;
+  }
 
   /* load bytes 16-19 (size)*/
   uint32_t size;
-  // uint32_t size_load;
   fread(&size, sizeof(size), 1, f);
-  // size_load = be32toh(size);
 
-  /* load bytes 20–16819*/
+  /* load bytes 20-16819(map)*/
   uint32_t x, y;
   uint8_t wall;
   for (y = 0; y < DUNGEON_Y; y++) {
@@ -766,7 +764,7 @@ int load(dungeon_t *d)
     }
   }
 
-  /* load bytes 16820–end */
+  /* load bytes 16820-end */
   d->num_rooms = 0;
   while(fread(&d->rooms[d->num_rooms].position[dim_x], 1, 1, f)){
     fread(&d->rooms[d->num_rooms].position[dim_y], 1, 1, f);
@@ -816,8 +814,8 @@ int save(dungeon_t *d)
   FILE *f;
   char *dir_target;
   char *dir_first; /* fist part: dir for HOME*/
-  char *dir_second = ".rlg327/dungeon";
-  uint32_t dir_length; /* The length of the directory */
+  char *dir_second = ".rlg327/dungeon"; /* second part: dir for .rlg327/dungeon*/
+  uint32_t dir_length; /* The length of the directory*/
 
   /* get the HOME directory*/
   dir_first = getenv("HOME");
@@ -840,17 +838,15 @@ int save(dungeon_t *d)
 
   /* save bytes 12-15*/
   uint32_t version = 0;
-  fwrite(&version, sizeof(version), 1, f);
-  // uint32_t version_save = htobe32(version);
-  // fwrite(&version_save, sizeof(version_save), 1, f);
+  uint32_t version_save = htobe32(version);
+  fwrite(&version_save, sizeof(version_save), 1, f);
 
   /* save bytes 16-19*/
   uint32_t size = 4 * DUNGEON_X * DUNGEON_Y + 4 * d->num_rooms;
-  fwrite(&size, sizeof(size), 1, f);
-  // uint32_t size_save = htobe32(size);
-  // fwrite(&size_save, sizeof(size_save), 1, f);
+  uint32_t size_save = htobe32(size);
+  fwrite(&size_save, sizeof(size_save), 1, f);
 
-  /* save bytes 20–16819*/
+  /* save bytes 20-16819*/
   uint32_t x, y;
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
@@ -858,7 +854,7 @@ int save(dungeon_t *d)
       fwrite(&for_save, sizeof(for_save), 1, f);
     }
   }
-  /* save bytes 16820–end */
+  /* save bytes 16820-end */
   uint32_t i;
   for(i = 0; i < d->num_rooms; i++){
     fwrite(&d->rooms[i].position[dim_x], 1, 1, f);
@@ -966,6 +962,7 @@ int main(int argc, char *argv[])
       }
     }
   }
+  /* If there is no arguments but ./rlg327*/
   else{
     gen_dungeon(&d);
     render_dungeon(&d);

@@ -21,7 +21,7 @@ Day Six   (Jan 31, 2017): Finished save(dungeon *d) and it works good.
 Day Six   (Jan 31, 2017): Found and fixed bug: When --save --load at the same time, file will save the whole dungeon with '#'. The reason is I didn't close the file after load it. So I fixed this bug by adding fclose(f) at the end of functions load() and save();
 Day Six   (Jan 31, 2017): Tests all passed except those oversize ones(adventure.rlg327, goodjob.rlg327 and hello.rlg327).
 
-Day Seven (Jan 25, 2017): Changed code to write all  data in network order (big-endian).
-Day Seven (Jan 25, 2017): Finished README and Makefile.
+Day Seven (Jan 25, 2017): Changed code to write all data in network order (big-endian).
+Day Seven (Jan 25, 2017): Finished README and CHANGELOG (Makfile has already been made by Jeremy).
 
 

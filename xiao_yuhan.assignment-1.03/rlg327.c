@@ -26,12 +26,19 @@ typedef struct corridor_path {
   int32_t cost;
 } corridor_path_t;
 
-typedef struct monsters_path {
+typedef struct non_tunneling_distance {
   heap_node_t *hn;
   uint8_t pos[2];
   uint8_t from[2];
   int32_t cost;
-} monsters_path;
+} non_tunneling_distance_t;
+
+typedef struct tunneling_distance {
+  heap_node_t *hn;
+  uint8_t pos[2];
+  uint8_t from[2];
+  int32_t cost;
+} tunneling_distance_t;
 
 typedef enum dim {
   dim_x,

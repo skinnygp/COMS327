@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <endian.h>
+// #include <endian.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <limits.h>
@@ -26,6 +26,13 @@ typedef struct corridor_path {
   int32_t cost;
 } corridor_path_t;
 
+typedef struct monsters_path {
+  heap_node_t *hn;
+  uint8_t pos[2];
+  uint8_t from[2];
+  int32_t cost;
+} monsters_path;
+
 typedef enum dim {
   dim_x,
   dim_y,
@@ -46,7 +53,7 @@ typedef int16_t pair_t[num_dims];
 #define DUNGEON_SAVE_FILE      "dungeon"
 #define DUNGEON_SAVE_SEMANTIC  "RLG327-S2017"
 #define DUNGEON_SAVE_VERSION   0U
-  
+
 #define mappair(pair) (d->map[pair[dim_y]][pair[dim_x]])
 #define mapxy(x, y) (d->map[y][x])
 #define hardnesspair(pair) (d->hardness[pair[dim_y]][pair[dim_x]])
@@ -59,6 +66,7 @@ typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_floor,
   ter_floor_room,
   ter_floor_hall,
+  ter_pc,
 } terrain_type_t;
 
 typedef struct room {
@@ -117,7 +125,7 @@ static void dijkstra_corridor(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-  
+
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -216,7 +224,7 @@ static void dijkstra_corridor_inv(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-  
+
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -691,6 +699,10 @@ void render_dungeon(dungeon_t *d)
         putchar('*');
         fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
         break;
+      case ter_pc:
+        putchar('@');
+
+        break;
       }
     }
     putchar('\n');
@@ -824,12 +836,12 @@ int write_dungeon(dungeon_t *d, char *file)
   fwrite(DUNGEON_SAVE_SEMANTIC, 1, strlen(DUNGEON_SAVE_SEMANTIC), f);
 
   /* The version, 4 bytes, 12-15 */
-  be32 = htobe32(DUNGEON_SAVE_VERSION);
-  fwrite(&be32, sizeof (be32), 1, f);
+  // be32 = htobe32(DUNGEON_SAVE_VERSION);
+  // fwrite(&be32, sizeof (be32), 1, f);
 
   /* The size of the file, 4 bytes, 16-19 */
-  be32 = htobe32(calculate_dungeon_size(d));
-  fwrite(&be32, sizeof (be32), 1, f);
+  // be32 = htobe32(calculate_dungeon_size(d));
+  // fwrite(&be32, sizeof (be32), 1, f);
 
   /* The dungeon map, 16800 bytes, 20-16819 */
   write_dungeon_map(d, f);
@@ -958,15 +970,15 @@ int read_dungeon(dungeon_t *d, char *file)
     exit(-1);
   }
   fread(&be32, sizeof (be32), 1, f);
-  if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
-    fprintf(stderr, "File version mismatch.\n");
-    exit(-1);
-  }
-  fread(&be32, sizeof (be32), 1, f);
-  if (buf.st_size != be32toh(be32)) {
-    fprintf(stderr, "File size mismatch.\n");
-    exit(-1);
-  }
+  // if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
+  //   fprintf(stderr, "File version mismatch.\n");
+  //   exit(-1);
+  // }
+  // fread(&be32, sizeof (be32), 1, f);
+  // if (buf.st_size != be32toh(be32)) {
+  //   fprintf(stderr, "File size mismatch.\n");
+  //   exit(-1);
+  // }
   read_dungeon_map(d, f);
   d->num_rooms = calculate_num_rooms(buf.st_size);
   d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
@@ -1060,6 +1072,82 @@ int read_pgm(dungeon_t *d, char *pgm)
   return 0;
 }
 
+static int place_pc(dungeon_t *d)
+{
+  int x_pc, y_pc;
+  while(1){
+    x_pc = rand_range(0, 159);
+    y_pc = rand_range(0, 104);
+    if(d->map[y_pc][x_pc] == ter_floor_room){
+      mapxy(x_pc, y_pc) = ter_pc;
+      hardnessxy(x_pc, y_pc) = 0;
+      break;
+    }
+  }
+  return 0;
+}
+
+static int place_pc_test(dungeon_t *d, int x, int y)
+{
+  if(mapxy(x, y) == ter_floor_room){
+    mapxy(x, y) = ter_pc;
+  }
+  else{
+    fprintf(stderr, "That's not a room!");
+    return -1;
+  }
+  return 0;
+}
+
+static int find_pc_position_x(dungeon_t *d)
+{
+  int pc_x;
+  int x,y;
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      if(mapxy(x, y) == ter_pc) {
+        pc_x = x;
+      }
+    }
+  }
+  if(pc_x == 0){
+    fprintf(stderr, "PC not found!");
+    return -1;
+  }
+  return pc_x;
+}
+
+static int find_pc_position_y(dungeon_t *d)
+{
+  int pc_y = 0;
+  int x,y;
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      if(mapxy(x, y) == ter_pc) {
+        pc_y = y;
+      }
+    }
+  }
+  if(pc_y == 0){
+    fprintf(stderr, "PC not found!");
+    return -1;
+  }
+  return pc_y;
+}
+
+static int show_tunnel_distance(dungeon_t *d, pair_t p)
+{
+
+}
+
+
+
+
+
+
+
+
+
 void usage(char *name)
 {
   fprintf(stderr,
@@ -1101,7 +1189,7 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
- 
+
  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
@@ -1183,7 +1271,7 @@ int main(int argc, char *argv[])
   } else {
     gen_dungeon(&d);
   }
-
+  place_pc(&d);
   render_dungeon(&d);
 
   if (do_save) {

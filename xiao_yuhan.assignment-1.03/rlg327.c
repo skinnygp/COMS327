@@ -1079,6 +1079,7 @@ int read_pgm(dungeon_t *d, char *pgm)
   return 0;
 }
 
+/* place a random pc in our dungeon*/
 static int place_pc(dungeon_t *d)
 {
   int x_pc, y_pc;
@@ -1094,6 +1095,7 @@ static int place_pc(dungeon_t *d)
   return 0;
 }
 
+/* place a pc with it's position in our dungeon */
 static int place_pc_test(dungeon_t *d, int x, int y)
 {
   if(mapxy(x, y) == ter_floor_room){
@@ -1106,6 +1108,7 @@ static int place_pc_test(dungeon_t *d, int x, int y)
   return 0;
 }
 
+/* find the x position of our PC*/
 static int find_pc_position_x(dungeon_t *d)
 {
   int pc_x;
@@ -1124,6 +1127,7 @@ static int find_pc_position_x(dungeon_t *d)
   return pc_x;
 }
 
+/* find the y position of our PC*/
 static int find_pc_position_y(dungeon_t *d)
 {
   int pc_y = 0;
@@ -1142,15 +1146,71 @@ static int find_pc_position_y(dungeon_t *d)
   return pc_y;
 }
 
+/* print tunnel distance*/
 static int show_tunnel_distance(dungeon_t *d, pair_t p)
 {
-
+  int x, y;
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      if(mapxy(x, y) == ter_pc) {
+        printf("@");
+      }
+      else {
+        pair_t to;
+        to[dim_x] = x;
+        to[dim_y] = y;
+        int dis = dijkstra_tunnel(d, p, to);
+        int length = snprintf( NULL, 0, "%d", dis);
+        char* str = malloc(length + 1);
+        snprintf(str, length + 1, "%d", dis);
+        printf("%c", str[length-1]);
+      }
+    }
+    printf("\n");
+  }
+  return 0;
 }
 
+/* print non-tunnel distance*/
+static int show_nontunnel_distance(dungeon_t *d, pair_t p)
+{
+  int x, y;
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      if(mapxy(x, y) == ter_pc) {
+        printf("@");
+      }
+      else {
+        pair_t to;
+        to[dim_x] = x;
+        to[dim_y] = y;
+        int dis = dijkstra_tunnel(d, p, to);
+        if(dis == -1) printf(" ");
+        else{
+          int length = snprintf( NULL, 0, "%d", dis);
+          char* str = malloc(length + 1);
+          snprintf(str, length + 1, "%d", dis);
+          printf("%c", str[length-1]);
+        }
+      }
+    }
+    printf("\n");
+  }
+  return 0;
+}
 
+/* calculate the distance between two points for tunneler*/
+int dijkstra_tunnel(dungeon_t *d, pair_t from, pair_t to)
+{
 
+  return 101;
+}
 
-
+/* calculate the distance between two points for nontunneler*/
+int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
+{
+  return 0;
+}
 
 
 
@@ -1279,7 +1339,12 @@ int main(int argc, char *argv[])
     gen_dungeon(&d);
   }
   place_pc(&d);
+  pair_t pc;
+  pc[dim_x] = find_pc_position_x(&d);
+  pc[dim_y] = find_pc_position_y(&d);
   render_dungeon(&d);
+  show_tunnel_distance(&d, pc);
+
 
   if (do_save) {
     write_dungeon(&d, save_file);

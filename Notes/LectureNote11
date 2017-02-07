@@ -1,0 +1,37 @@
+LectureNote11							Mon, Feb 6
+*Doing generics in C
+ Needs function pointers
+ How do we declare one?
+	<return type> (*<function name>)(<argument list>)
+ 	int (*intcmp)(int,int) /* int cmp is pointer to function taking teo ints and returning int*/
+ And how do we assign to a function pointers?
+ Assign a function name with no parenthesis
+
+**sort
+void insertion_sort (int *a, int n)
+{
+int i, j, tl
+
+for(i = 1; i < n; i++) {
+	for(t = a[i], j = i-1; j> -1; &&a[j] > t; j--) {
+		a[j+1] = a[j];
+	}
+	a[j+1] = t;
+}
+}
+
+void generic_insertion_sort(void *data, int n, size_t s,
+				int (*compare)(void *, void *))
+{
+  int i, j;
+  void *t;
+  char *a;
+  
+  t = malloc(s);
+  a = data; /* a needs to be char for byte addressing*
+  
+
+}
+
+use union to fix float and integer endian problem
+you can also do *((int *) &f) 

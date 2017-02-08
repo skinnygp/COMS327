@@ -20,5 +20,4 @@ Day Six   (Jan 31, 2017): Functions show_tunnel_distance and show_nontunnel_dist
 Day Six   (Jan 31, 2017): Found and fixed bug: When calling show_nontunnel_distance, Segmentation fault: 11 and malloc: *** error for object 0x7fe87e5879d0: pointer being freed was not allocated *** set a breakpoint in malloc_error_break to debug Abort trap: 6 showed up. The reason is when the dijkstra_nontunnel function goes to some wall cells, Jeremy's heap_remove_min will free heap nodes and it will cause malloc error. Fixed it by stop the function when hitting the walls showed up.
 Day Six   (Jan 31, 2017): Tests all passed.
 
-
 Day Seven (Feb 8, 2017): Finished README and CHANGELOG (makefile has already been made by Jeremy

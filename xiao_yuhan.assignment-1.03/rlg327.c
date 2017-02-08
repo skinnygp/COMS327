@@ -1513,7 +1513,6 @@ static int show_nontunnel_distance(dungeon_t *d, pair_t p)
 }
 
 
-
 void usage(char *name)
 {
   fprintf(stderr,

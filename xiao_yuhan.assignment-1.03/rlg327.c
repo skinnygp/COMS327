@@ -1122,7 +1122,7 @@ static int find_pc_position_x(dungeon_t *d)
     }
   }
   if(pc_x == 0){
-    fprintf(stderr, "PC not found!");
+    fprintf(stderr, "PC not found!\n");
     return -1;
   }
   return pc_x;
@@ -1141,7 +1141,7 @@ static int find_pc_position_y(dungeon_t *d)
     }
   }
   if(pc_y == 0){
-    fprintf(stderr, "PC not found!");
+    fprintf(stderr, "PC not found!\n");
     return -1;
   }
   return pc_y;
@@ -1657,6 +1657,7 @@ int main(int argc, char *argv[])
   if (do_pc) {
     place_pc_test(&d, x, y);
   }
+  else place_pc(&d);
   pair_t pc;
   pc[dim_x] = find_pc_position_x(&d);
   pc[dim_y] = find_pc_position_y(&d);

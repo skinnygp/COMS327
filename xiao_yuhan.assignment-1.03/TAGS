@@ -133,12 +133,12 @@ int read_pgm(999,28689
 static int place_pc(1083,30852
 static int place_pc_test(1099,31183
 static int find_pc_position_x(1113,31482
-static int find_pc_position_y(1132,31822
-static int32_t tunneling_distance_cmp(1150,32131
-int dijkstra_tunnel(1155,32356
-static int32_t nontunneling_distance_cmp(1303,37721
-int dijkstra_nontunnel(1308,37961
-int show_tunnel_distance(1455,43636
-static int show_nontunnel_distance(1484,44305
-void usage(1517,45026
-int main(1527,45236
+static int find_pc_position_y(1132,31824
+static int32_t tunneling_distance_cmp(1150,32135
+int dijkstra_tunnel(1155,32360
+static int32_t nontunneling_distance_cmp(1303,37725
+int dijkstra_nontunnel(1308,37965
+int show_tunnel_distance(1455,43640
+static int show_nontunnel_distance(1484,44309
+void usage(1516,45029
+int main(1526,45239

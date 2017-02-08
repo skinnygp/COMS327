@@ -1103,6 +1103,7 @@ static int place_pc_test(dungeon_t *d, int x, int y)
   }
   else{
     fprintf(stderr, "That's not in a room! I will create a random one for you!\n");
+    place_pc(d);
     return 0;
   }
   return 1;
@@ -1360,7 +1361,7 @@ int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
 
     if ((path[p->pos[dim_y] - 1][p->pos[dim_x]].hn) &&
         (path[p->pos[dim_y] - 1][p->pos[dim_x]].cost >
-            p->cost + weight)) {
+            p->cost + weight) && hardnessxy(p->pos[dim_x], p->pos[dim_y] - 1) == 0) {
       path[p->pos[dim_y] - 1][p->pos[dim_x]].cost = p->cost + weight;
       path[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
       path[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
@@ -1370,7 +1371,7 @@ int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
 
     if ((path[p->pos[dim_y]][p->pos[dim_x] - 1].hn) &&
         (path[p->pos[dim_y]][p->pos[dim_x] - 1].cost >
-            p->cost + weight))
+            p->cost + weight) && hardnessxy(p->pos[dim_x] - 1, p->pos[dim_y]) == 0)
                 {
       path[p->pos[dim_y]][p->pos[dim_x] - 1].cost =
           p->cost + weight;
@@ -1379,9 +1380,10 @@ int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y]]
       [p->pos[dim_x] - 1].hn);
     }
+
     if ((path[p->pos[dim_y]][p->pos[dim_x] + 1].hn) &&
         (path[p->pos[dim_y]][p->pos[dim_x] + 1].cost >
-            p->cost + weight)) {
+            p->cost + weight) && hardnessxy(p->pos[dim_x] + 1, p->pos[dim_y]) == 0) {
       path[p->pos[dim_y]][p->pos[dim_x] + 1].cost =
           p->cost + weight;
       path[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
@@ -1389,9 +1391,10 @@ int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y]]
       [p->pos[dim_x] + 1].hn);
     }
+
     if ((path[p->pos[dim_y] + 1][p->pos[dim_x]].hn) &&
         (path[p->pos[dim_y] + 1][p->pos[dim_x]].cost >
-            p->cost + weight)) {
+            p->cost + weight) && hardnessxy(p->pos[dim_x], p->pos[dim_y] + 1) == 0) {
       path[p->pos[dim_y] + 1][p->pos[dim_x]].cost =
           p->cost + weight;
       path[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
@@ -1402,7 +1405,7 @@ int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
 
     if ((path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].hn) &&
         (path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost >
-            p->cost + weight)) {
+            p->cost + weight) && hardnessxy(p->pos[dim_x] + 1, p->pos[dim_y] + 1) == 0) {
       path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost =
           p->cost + weight;
       path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
@@ -1413,7 +1416,7 @@ int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
 
     if ((path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].hn) &&
         (path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost >
-            p->cost + weight)) {
+            p->cost + weight) && hardnessxy(p->pos[dim_x] - 1, p->pos[dim_y] + 1) == 0) {
       path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost =
           p->cost + weight;
       path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
@@ -1421,9 +1424,10 @@ int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
       [p->pos[dim_x] - 1].hn);
     }
+
     if ((path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].hn) &&
         (path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost >
-            p->cost + weight)) {
+            p->cost + weight) && hardnessxy(p->pos[dim_x] + 1, p->pos[dim_y] - 1) == 0) {
       path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost =
           p->cost + weight;
       path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
@@ -1431,9 +1435,10 @@ int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
       [p->pos[dim_x] + 1].hn);
     }
+
     if ((path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].hn) &&
         (path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost >
-            p->cost + weight)) {
+            p->cost + weight) && hardnessxy(p->pos[dim_x] - 1, p->pos[dim_y] - 1) == 0) {
       path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost =
           p->cost + weight;
       path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
@@ -1441,7 +1446,6 @@ int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
       [p->pos[dim_x] - 1].hn);
     }
-
   }
   return -1;
 }
@@ -1467,6 +1471,7 @@ int show_tunnel_distance(dungeon_t *d, pair_t p)
           char* str = malloc(length + 1);
           snprintf(str, length + 1, "%d", dis);
           printf("%c", str[length-1]);
+          free(str);
         }
       }
     }
@@ -1484,6 +1489,9 @@ static int show_nontunnel_distance(dungeon_t *d, pair_t p)
       if(mapxy(x, y) == ter_pc) {
         printf("@");
       }
+      else if(hardnessxy(x, y) != 0) {
+        printf(" ");
+      }
       else {
         pair_t to;
         to[dim_x] = x;
@@ -1495,6 +1503,7 @@ static int show_nontunnel_distance(dungeon_t *d, pair_t p)
           char* str = malloc(length + 1);
           snprintf(str, length + 1, "%d", dis);
           printf("%c", str[length-1]);
+          free(str);
         }
       }
     }
@@ -1522,6 +1531,7 @@ int main(int argc, char *argv[])
   struct timeval tv;
   uint32_t i;
   uint32_t do_load, do_save, do_seed, do_image, do_pc;
+  int x, y;
   uint32_t long_arg;
   char *save_file;
   char *load_file;
@@ -1608,15 +1618,14 @@ int main(int argc, char *argv[])
               argv[i + 2][0] == '-') {
             usage(argv[0]);
           }
-          int x, y;
           x = atoi(argv[++i]);
           y = atoi(argv[++i]);
-          if(x<1 || x > DUNGEON_X - 2
+          if(x < 1 || x > DUNGEON_X - 2
             || y < 1 || y > DUNGEON_Y - 2){
               fprintf(stderr, "Invalid PC position.\n");
               usage(argv[0]);
           }
-            do_pc = place_pc_test(&d, x, y);
+            do_pc = 1;
           break;
         default:
           usage(argv[0]);
@@ -1646,8 +1655,8 @@ int main(int argc, char *argv[])
   } else {
     gen_dungeon(&d);
   }
-  if (!do_pc) {
-    place_pc(&d);
+  if (do_pc) {
+    place_pc_test(&d, x, y);
   }
   pair_t pc;
   pc[dim_x] = find_pc_position_x(&d);

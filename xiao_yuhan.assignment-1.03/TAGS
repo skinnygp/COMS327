@@ -132,13 +132,13 @@ int read_dungeon(925,26961
 int read_pgm(999,28689
 static int place_pc(1083,30852
 static int place_pc_test(1099,31183
-static int find_pc_position_x(1112,31465
-static int find_pc_position_y(1131,31805
-static int32_t tunneling_distance_cmp(1149,32114
-int dijkstra_tunnel(1154,32339
-static int32_t nontunneling_distance_cmp(1302,37704
-int dijkstra_nontunnel(1307,37944
-int show_tunnel_distance(1451,43195
-static int show_nontunnel_distance(1479,43843
-void usage(1508,44475
-int main(1518,44685
+static int find_pc_position_x(1113,31482
+static int find_pc_position_y(1132,31822
+static int32_t tunneling_distance_cmp(1150,32131
+int dijkstra_tunnel(1155,32356
+static int32_t nontunneling_distance_cmp(1303,37721
+int dijkstra_nontunnel(1308,37961
+int show_tunnel_distance(1455,43636
+static int show_nontunnel_distance(1484,44305
+void usage(1517,45026
+int main(1527,45236

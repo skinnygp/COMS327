@@ -1102,10 +1102,10 @@ static int place_pc_test(dungeon_t *d, int x, int y)
     mapxy(x, y) = ter_pc;
   }
   else{
-    fprintf(stderr, "That's not a room!");
-    return -1;
+    fprintf(stderr, "That's not in a room! I will create a random one for you!\n");
+    return 0;
   }
-  return 0;
+  return 1;
 }
 
 /* find the x position of our PC*/
@@ -1147,7 +1147,7 @@ static int find_pc_position_y(dungeon_t *d)
 }
 
 /* print tunnel distance*/
-static int show_tunnel_distance(dungeon_t *d, pair_t p)
+int show_tunnel_distance(dungeon_t *d, pair_t p)
 {
   int x, y;
   for (y = 0; y < DUNGEON_Y; y++) {
@@ -1160,10 +1160,15 @@ static int show_tunnel_distance(dungeon_t *d, pair_t p)
         to[dim_x] = x;
         to[dim_y] = y;
         int dis = dijkstra_tunnel(d, p, to);
-        int length = snprintf( NULL, 0, "%d", dis);
-        char* str = malloc(length + 1);
-        snprintf(str, length + 1, "%d", dis);
-        printf("%c", str[length-1]);
+        if (dis == -1){
+          printf(" ");
+        }
+        else {
+          int length = snprintf( NULL, 0, "%d", dis);
+          char* str = malloc(length + 1);
+          snprintf(str, length + 1, "%d", dis);
+          printf("%c", str[length-1]);
+        }
       }
     }
     printf("\n");
@@ -1199,11 +1204,157 @@ static int show_nontunnel_distance(dungeon_t *d, pair_t p)
   return 0;
 }
 
+static int32_t tunneling_distance_cmp(const void *key, const void *with) {
+  return ((corridor_path_t *) key)->cost - ((corridor_path_t *) with)->cost;
+}
+
 /* calculate the distance between two points for tunneler*/
 int dijkstra_tunnel(dungeon_t *d, pair_t from, pair_t to)
 {
+  static tunneling_distance_t path[DUNGEON_Y][DUNGEON_X], *p;
+  static uint32_t initialized = 0;
+  heap_t h;
+  uint32_t x, y;
 
-  return 101;
+  if (!initialized) {
+    for (y = 0; y < DUNGEON_Y; y++) {
+      for (x = 0; x < DUNGEON_X; x++) {
+        path[y][x].pos[dim_y] = y;
+        path[y][x].pos[dim_x] = x;
+      }
+    }
+    initialized = 1;
+  }
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      path[y][x].cost = INT_MAX;
+    }
+  }
+
+  path[from[dim_y]][from[dim_x]].cost = 0;
+
+  heap_init(&h, tunneling_distance_cmp, NULL);
+
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      if (mapxy(x, y) != ter_wall_immutable) {
+        path[y][x].hn = heap_insert(&h, &path[y][x]);
+      } else {
+        path[y][x].hn = NULL;
+      }
+    }
+  }
+
+  while ((p = heap_remove_min(&h))) {
+    p->hn = NULL;
+
+    if ((p->pos[dim_y] == to[dim_y]) && p->pos[dim_x] == to[dim_x]) {
+      for (x = to[dim_x], y = to[dim_y];
+           (x != from[dim_x]) || (y != from[dim_y]);
+           p = &path[y][x], x = p->from[dim_x], y = p->from[dim_y]) {
+      }
+      heap_delete(&h);
+      return path[to[dim_y]][to[dim_x]].cost;
+    }
+
+    int hard = hardnesspair(p->pos);
+    int weight;
+    if((hard >= 1 && hard <=84) || hard == 0) {
+      weight = 1;
+    }
+    else if( hard >= 85 && hard <=170) {
+      weight = 2;
+    }
+    else if( hard >= 171 && hard <=254) {
+      weight = 3;
+    }
+    else weight = INT_MAX;
+
+    if ((path[p->pos[dim_y] - 1][p->pos[dim_x]].hn) &&
+        (path[p->pos[dim_y] - 1][p->pos[dim_x]].cost >
+            p->cost + weight)) {
+      path[p->pos[dim_y] - 1][p->pos[dim_x]].cost = p->cost + weight;
+      path[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
+      [p->pos[dim_x]].hn);
+    }
+
+    if ((path[p->pos[dim_y]][p->pos[dim_x] - 1].hn) &&
+        (path[p->pos[dim_y]][p->pos[dim_x] - 1].cost >
+            p->cost + weight))
+                {
+      path[p->pos[dim_y]][p->pos[dim_x] - 1].cost =
+          p->cost + weight;
+      path[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y]]
+      [p->pos[dim_x] - 1].hn);
+    }
+    if ((path[p->pos[dim_y]][p->pos[dim_x] + 1].hn) &&
+        (path[p->pos[dim_y]][p->pos[dim_x] + 1].cost >
+            p->cost + weight)) {
+      path[p->pos[dim_y]][p->pos[dim_x] + 1].cost =
+          p->cost + weight;
+      path[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y]]
+      [p->pos[dim_x] + 1].hn);
+    }
+    if ((path[p->pos[dim_y] + 1][p->pos[dim_x]].hn) &&
+        (path[p->pos[dim_y] + 1][p->pos[dim_x]].cost >
+            p->cost + weight)) {
+      path[p->pos[dim_y] + 1][p->pos[dim_x]].cost =
+          p->cost + weight;
+      path[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
+      [p->pos[dim_x]].hn);
+    }
+
+    if ((path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].hn) &&
+        (path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost >
+            p->cost + weight)) {
+      path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost =
+          p->cost + weight;
+      path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
+      [p->pos[dim_x] + 1].hn);
+    }
+
+    if ((path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].hn) &&
+        (path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost >
+            p->cost + weight)) {
+      path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost =
+          p->cost + weight;
+      path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
+      [p->pos[dim_x] - 1].hn);
+    }
+    if ((path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].hn) &&
+        (path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost >
+            p->cost + weight)) {
+      path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost =
+          p->cost + weight;
+      path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
+      [p->pos[dim_x] + 1].hn);
+    }
+    if ((path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].hn) &&
+        (path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost >
+            p->cost + weight)) {
+      path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost =
+          p->cost + weight;
+      path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
+      [p->pos[dim_x] - 1].hn);
+    }
+  }
+  return -1;
 }
 
 /* calculate the distance between two points for nontunneler*/
@@ -1231,7 +1382,7 @@ int main(int argc, char *argv[])
   time_t seed;
   struct timeval tv;
   uint32_t i;
-  uint32_t do_load, do_save, do_seed, do_image;
+  uint32_t do_load, do_save, do_seed, do_image, do_pc;
   uint32_t long_arg;
   char *save_file;
   char *load_file;
@@ -1239,7 +1390,7 @@ int main(int argc, char *argv[])
 
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
-  do_load = do_save = do_image = 0;
+  do_load = do_save = do_image = do_pc = 0;
   do_seed = 1;
   save_file = load_file = NULL;
 
@@ -1310,6 +1461,24 @@ int main(int argc, char *argv[])
             pgm_file = argv[++i];
           }
           break;
+        case 'p':
+          if ((!long_arg && argv[i][2])            ||
+              (long_arg && strcmp(argv[i], "-pc")) ||
+              argc <= i + 2                        ||
+              argv[i + 1][0] == '-'                ||
+              argv[i + 2][0] == '-') {
+            usage(argv[0]);
+          }
+          int x, y;
+          x = atoi(argv[++i]);
+          y = atoi(argv[++i]);
+          if(x<1 || x > DUNGEON_X - 2
+            || y < 1 || y > DUNGEON_Y - 2){
+              fprintf(stderr, "Invalid PC position.\n");
+              usage(argv[0]);
+          }
+            do_pc = place_pc_test(&d, x, y);
+          break;
         default:
           usage(argv[0]);
         }
@@ -1338,10 +1507,13 @@ int main(int argc, char *argv[])
   } else {
     gen_dungeon(&d);
   }
-  place_pc(&d);
+  if (!do_pc) {
+    place_pc(&d);
+  }
   pair_t pc;
   pc[dim_x] = find_pc_position_x(&d);
   pc[dim_y] = find_pc_position_y(&d);
+  printf("PC Position(x, y): %d, %d\n", pc[dim_x], pc[dim_y]);
   render_dungeon(&d);
   show_tunnel_distance(&d, pc);
 

@@ -57,7 +57,7 @@ macros.h,611
 # define frand(173,7872
 # define structdup(180,7984
 
-rlg327.c,2585
+rlg327.c,2638
 # define rand_under(16,341
 # define rand_range(20,484
 typedef struct corridor_path 22,558
@@ -134,10 +134,11 @@ static int place_pc(1083,30852
 static int place_pc_test(1099,31183
 static int find_pc_position_x(1112,31465
 static int find_pc_position_y(1131,31805
-int show_tunnel_distance(1150,32141
-static int show_nontunnel_distance(1180,32811
-static int32_t tunneling_distance_cmp(1207,33437
-int dijkstra_tunnel(1212,33652
-int dijkstra_nontunnel(1361,39080
-void usage(1369,39161
-int main(1379,39371
+static int32_t tunneling_distance_cmp(1149,32114
+int dijkstra_tunnel(1154,32339
+static int32_t nontunneling_distance_cmp(1302,37704
+int dijkstra_nontunnel(1307,37944
+int show_tunnel_distance(1451,43195
+static int show_nontunnel_distance(1479,43843
+void usage(1508,44475
+int main(1518,44685

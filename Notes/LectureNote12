@@ -3,3 +3,7 @@ LectureNote12									Wed, Feb 8
 Function pointers:
 
 go download the lectureNote!
+
+for(i = 0; i < sizeof(a) / sizeof(a[0]); i++)
+               ------------------------
+		That's always right

@@ -1,0 +1,23 @@
+CHANGELOG
+Author: Yuhan Xiao
+
+Day One   (Jan 26, 2017): Started reading the description of this assignment.
+Day One   (Jan 26, 2017): Started reading Jeremy's code for Assignment-1.02.
+Day One   (Jan 26, 2017): Started Project and I used Jeremy's code since my code doesn't have hardness for dungeon.
+
+Day Two   (Jan 27, 2017) To Day Four (Jan 29, 2017): Keep understanding Jeremy's code and the description for Assignment-1.02.
+
+Day Five  (Jan 30, 2017): Created data structures non_tunneling_distance and tunneling_distance.
+Day Five  (Jan 30, 2017): Created and finished function place_pc to place a random pc in our dungeon.
+Day Five  (Jan 30, 2017): Created and finished function place_pc_test to place a pc with it's position for test.
+Day Five  (Jan 30, 2017): Created and finished functions find_pc_position_x and find_pc_position_y to find the position for our PC.
+Day Five  (Jan 30, 2017): Created functions dijkstra_tunnel, dijkstra_nontunnel, show_tunnel_distance and show_nontunnel_distance.
+
+Day Six   (Jan 31, 2017): Finished functions tunneling_distance_cmp and nontuneling_distance_cmp for dijkstra_tunnel and dijkstra_nontunnel. They are cut-and-paste of Jeremy's corridor_path_cmp function.
+Day Six   (Jan 31, 2017): Finished functions dijkstra_tunnel, dijkstra_nontunnel, show_tunnel_distance and show_nontunnel_distance.
+Day Six   (Jan 31, 2017): Functions dijkstra_tunnel and dijkstra_nontunnel are cut-and-paste of Jeremy's dijkstra_corridor but changed the weight for different hardnesses of cells and returning the total cost.
+Day Six   (Jan 31, 2017): Functions show_tunnel_distance and show_nontunnel_distance are functions that calculate the distances between all points on map and PC position.
+Day Six   (Jan 31, 2017): Found and fixed bug: When calling show_nontunnel_distance, Segmentation fault: 11 and malloc: *** error for object 0x7fe87e5879d0: pointer being freed was not allocated *** set a breakpoint in malloc_error_break to debug Abort trap: 6 showed up. The reason is when the dijkstra_nontunnel function goes to some wall cells, Jeremy's heap_remove_min will free heap nodes and it will cause malloc error. Fixed it by stop the function when hitting the walls showed up.
+Day Six   (Jan 31, 2017): Tests all passed.
+
+Day Seven (Feb 8, 2017): Finished README and CHANGELOG (makefile has already been made by Jeremy

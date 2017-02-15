@@ -1,0 +1,39 @@
+README
+Author: Yuhan Xiao
+Date: Jan 31, 2017
+
+included:
+heap.c
+heap.h
+macros.h
+rlg327.c
+this README
+Makefile
+CHANGELOG
+
+Project Description: Add functions to calculate closest distance between PC and all points in our dungeon in two mode tunneling and non-tunneling.
+Note:
+* When run, firstly render the dungeon, secondly render the non-tunneling distance map and render the tunneling distance at last.
+* It might take few minutes to show all maps. So please be patient. It's working!
+* For PC position, when using arguments to create a PC, enter x position first then y position. (--pc x y).
+* If the input PC position is not in a room. Program will generate a random PC for it.
+* Program will print the PC position at the beginning. (Easy for you to test!)
+* Used Jeremy's code from Assignment-1.02.
+* After make, there is a TAGS file and after run ./rlg327, there are three pgm files will be created. Those are all from Jeremy's code, not mine.
+* Places that are written by me: Functions place_pc, place_pc_test, find_pc_position_x(_y), dijkstra_tunnel, dijkstra_nontunnel, show_tunnel_distance, show_nontunnel_distance, tunneling_distance_cmp and nontuneling_distance_cmp;
+                                 Structures non_tunneling_distance and tunneling_distance. And of course main method.
+* Those dijkstra algorithm: dijkstra_tunnel and dijkstra_nontunnel are cut-and-paste of Jeremy's dijkstra_corridor but have several changes about the weight for each cell.
+* All tests passed except those oversize ones: adventure.rlg327, goodwork.rlg327 and hello.rlg327
+
+Relevant Functions:
+[Line: 1083] place_pc(dungeon_t *d)
+[Line: 1099] place_pc_test(dungeon_t *d, int x, int y)
+[Line: 1113] find_pc_position_x(dungeon_t *d) (There is another one for y)
+[Line: 1155] dijkstra_tunnel(dungeon_t *d, pair_t from, pair_t to)
+[Line: 1308] dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
+[Line: 1455] show_tunnel_distance(dungeon_t *d, pair_t p)
+[Line: 1484] show_nontunnel_distance(dungeon_t *d, pair_t p)
+
+Data Structures:
+[Line: 29] typedef struct non_tunneling_distance{...}non_tunneling_distance_t;
+[Line: 36] typedef struct tunneling_distance{...}tunneling_distance_t;

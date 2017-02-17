@@ -19,3 +19,24 @@ register
 put register key word
 
 gcc main.c -Ofast   can make it more faster
+LectureNote13              				Wed, Feb 15
+
+Entity |  @  |  S  | F
+Speed  |  10 |  5  | 20
+Seq    |  0  |  1  | 2
+N ticks| 100 | 200 | 50
+N ticks = 1000/speed
+
+Event Queue
+Entity |  Seq #  | Next turn
+@ 0 100
+S 1 0
+F 2 0 
+
+extern
+	allows access to variable declared in another file
+
+register
+put register key word
+
+gcc main.c -Ofast   can make it more faster

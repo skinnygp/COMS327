@@ -11,6 +11,12 @@
 
 #include "heap.h"
 
+#define SMART 0x00000001
+#define TELE  0x00000002
+
+// rand() & 0x0000000f
+// rand() % 2
+
 /* Returns true if random float in [0,1] is less than *
  * numerator/denominator.  Uses only integer math.    */
 # define rand_under(numerator, denominator) \

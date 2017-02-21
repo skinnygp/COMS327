@@ -41,6 +41,11 @@ typedef struct pc {
   pair_t position;
 } pc_t;
 
+typedef struct monster {
+  pair_t position;
+  int characteristics;
+} mon_t;
+
 typedef struct dungeon {
   uint32_t num_rooms;
   room_t *rooms;

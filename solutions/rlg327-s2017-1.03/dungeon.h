@@ -37,13 +37,27 @@ typedef struct room {
   pair_t size;
 } room_t;
 
+static int ids = 0;
+
 typedef struct pc {
   pair_t position;
+  pair_t last_position;
+  uint8_t speed;
+  uint32_t turn;
+  uint8_t dead;
 } pc_t;
 
 typedef struct monster {
   pair_t position;
-  int characteristics;
+  pair_t last_position;
+  uint8_t speed;
+  uint32_t turn;
+  uint8_t dead;
+  uint8_t id;
+  uint8_t is_intelligence:;
+  uint8_t is_telepathy:;
+  uint8_t is_tunneling;
+  uint8_t is_erratic;
 } mon_t;
 
 typedef struct dungeon {

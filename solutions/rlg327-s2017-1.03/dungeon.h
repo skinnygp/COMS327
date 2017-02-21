@@ -58,7 +58,8 @@ typedef struct monster {
   uint8_t is_telepathy;
   uint8_t is_tunneling;
   uint8_t is_erratic;
-} mon_t;
+  uint32_t character;
+} monster_t;
 
 typedef struct dungeon {
   uint32_t num_rooms;

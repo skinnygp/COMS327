@@ -1,29 +1,14 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-// #include <endian.h>
+#include <endian.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <limits.h>
 #include <sys/time.h>
+#include <limits.h>
 #include <errno.h>
 
+#include "dungeon.h"
+#include "utils.h"
 #include "heap.h"
-
-#define SMART 0x00000001
-#define TELE  0x00000002
-
-// rand() & 0x0000000f
-// rand() % 2
-
-/* Returns true if random float in [0,1] is less than *
- * numerator/denominator.  Uses only integer math.    */
-# define rand_under(numerator, denominator) \
-  (rand() < ((RAND_MAX / denominator) * numerator))
-
-/* Returns random integer in [min, max]. */
-# define rand_range(min, max) ((rand() % (((max) + 1) - (min))) + (min))
 
 typedef struct corridor_path {
   heap_node_t *hn;
@@ -31,92 +16,6 @@ typedef struct corridor_path {
   uint8_t from[2];
   int32_t cost;
 } corridor_path_t;
-
-typedef struct non_tunneling_distance {
-  heap_node_t *hn;
-  uint8_t pos[2];
-  uint8_t from[2];
-  int32_t cost;
-} non_tunneling_distance_t;
-
-typedef struct tunneling_distance {
-  heap_node_t *hn;
-  uint8_t pos[2];
-  uint8_t from[2];
-  int32_t cost;
-} tunneling_distance_t;
-
-typedef enum dim {
-  dim_x,
-  dim_y,
-  num_dims
-} dim_t;
-
-typedef int16_t pair_t[num_dims];
-
-#define DUNGEON_X              160
-#define DUNGEON_Y              105
-#define MIN_ROOMS              25
-#define MAX_ROOMS              40
-#define ROOM_MIN_X             7
-#define ROOM_MIN_Y             5
-#define ROOM_MAX_X             20
-#define ROOM_MAX_Y             15
-#define SAVE_DIR               ".rlg327"
-#define DUNGEON_SAVE_FILE      "dungeon"
-#define DUNGEON_SAVE_SEMANTIC  "RLG327-S2017"
-#define DUNGEON_SAVE_VERSION   0U
-
-#define mappair(pair) (d->map[pair[dim_y]][pair[dim_x]])
-#define mapxy(x, y) (d->map[y][x])
-#define hardnesspair(pair) (d->hardness[pair[dim_y]][pair[dim_x]])
-#define hardnessxy(x, y) (d->hardness[y][x])
-
-typedef enum __attribute__ ((__packed__)) terrain_type {
-  ter_debug,
-  ter_wall,
-  ter_wall_immutable,
-  ter_floor,
-  ter_floor_room,
-  ter_floor_hall,
-  ter_pc,
-  ter_mon_0,
-  ter_mon_1,
-  ter_mon_2,
-  ter_mon_3,
-  ter_mon_4,
-  ter_mon_5,
-  ter_mon_6,
-  ter_mon_7,
-  ter_mon_8,
-  ter_mon_9,
-  ter_mon_10,
-  ter_mon_11,
-  ter_mon_12,
-  ter_mon_13,
-  ter_mon_14,
-  ter_mon_15,
-} terrain_type_t;
-
-typedef struct room {
-  pair_t position;
-  pair_t size;
-} room_t;
-
-typedef struct dungeon {
-  uint32_t num_rooms;
-  room_t *rooms;
-  terrain_type_t map[DUNGEON_Y][DUNGEON_X];
-  /* Since hardness is usually not used, it would be expensive to pull it *
-   * into cache every time we need a map cell, so we store it in a        *
-   * parallel array, rather than using a structure to represent the       *
-   * cells.  We may want a cell structure later, but from a performanace  *
-   * perspective, it would be a bad idea to ever have the map be part of  *
-   * that structure.  Pathfinding will require efficient use of the map,  *
-   * and pulling in unnecessary data with each map cell would add a lot   *
-   * of overhead to the memory system.                                    */
-  uint8_t hardness[DUNGEON_Y][DUNGEON_X];
-} dungeon_t;
 
 static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
 {
@@ -154,7 +53,7 @@ static void dijkstra_corridor(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-
+  
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -253,7 +152,7 @@ static void dijkstra_corridor_inv(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-
+  
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -675,11 +574,6 @@ static int make_rooms(dungeon_t *d)
   for (i = MIN_ROOMS; i < MAX_ROOMS && rand_under(6, 8); i++)
     ;
   d->num_rooms = i;
-  if (d->rooms) {
-    /* If we're restarting due to a timeout in place_rooms(), we need to     *
-     * free our rooms array or we'll lose the pointer (could use realloc()). */
-    free(d->rooms);
-  }
   d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
 
   for (i = 0; i < d->num_rooms; i++) {
@@ -712,26 +606,27 @@ void render_dungeon(dungeon_t *d)
 
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      switch (mappair(p)) {
-      case ter_wall:
-      case ter_wall_immutable:
-        putchar(' ');
-        break;
-      case ter_floor:
-      case ter_floor_room:
-        putchar('.');
-        break;
-      case ter_floor_hall:
-        putchar('#');
-        break;
-      case ter_debug:
-        putchar('*');
-        fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
-        break;
-      case ter_pc:
+      if (p[dim_x] ==  d->pc.position[dim_x] &&
+          p[dim_y] ==  d->pc.position[dim_y]) {
         putchar('@');
-
-        break;
+      } else {
+        switch (mappair(p)) {
+        case ter_wall:
+        case ter_wall_immutable:
+          putchar(' ');
+          break;
+        case ter_floor:
+        case ter_floor_room:
+          putchar('.');
+          break;
+        case ter_floor_hall:
+          putchar('#');
+          break;
+        case ter_debug:
+          putchar('*');
+          fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
+          break;
+        }
       }
     }
     putchar('\n');
@@ -745,7 +640,6 @@ void delete_dungeon(dungeon_t *d)
 
 void init_dungeon(dungeon_t *d)
 {
-  d->rooms = NULL;
   empty_dungeon(d);
 }
 
@@ -789,41 +683,6 @@ uint32_t calculate_dungeon_size(dungeon_t *d)
           (d->num_rooms * 4) /* Four bytes per room */);
 }
 
-int makedirectory(char *dir)
-{
-  char *slash;
-
-  for (slash = dir + strlen(dir); slash > dir && *slash != '/'; slash--)
-    ;
-
-  if (slash == dir) {
-    return 0;
-  }
-
-  if (mkdir(dir, 0700)) {
-    if (errno != ENOENT && errno != EEXIST) {
-      fprintf(stderr, "mkdir(%s): %s\n", dir, strerror(errno));
-      return 1;
-    }
-    if (*slash != '/') {
-      return 1;
-    }
-    *slash = '\0';
-    if (makedirectory(dir)) {
-      *slash = '/';
-      return 1;
-    }
-
-    *slash = '/';
-    if (mkdir(dir, 0700) && errno != EEXIST) {
-      fprintf(stderr, "mkdir(%s): %s\n", dir, strerror(errno));
-      return 1;
-    }
-  }
-
-  return 0;
-}
-
 int write_dungeon(dungeon_t *d, char *file)
 {
   char *home;
@@ -865,12 +724,12 @@ int write_dungeon(dungeon_t *d, char *file)
   fwrite(DUNGEON_SAVE_SEMANTIC, 1, strlen(DUNGEON_SAVE_SEMANTIC), f);
 
   /* The version, 4 bytes, 12-15 */
-  // be32 = htobe32(DUNGEON_SAVE_VERSION);
-  // fwrite(&be32, sizeof (be32), 1, f);
+  be32 = htobe32(DUNGEON_SAVE_VERSION);
+  fwrite(&be32, sizeof (be32), 1, f);
 
   /* The size of the file, 4 bytes, 16-19 */
-  // be32 = htobe32(calculate_dungeon_size(d));
-  // fwrite(&be32, sizeof (be32), 1, f);
+  be32 = htobe32(calculate_dungeon_size(d));
+  fwrite(&be32, sizeof (be32), 1, f);
 
   /* The dungeon map, 16800 bytes, 20-16819 */
   write_dungeon_map(d, f);
@@ -999,15 +858,15 @@ int read_dungeon(dungeon_t *d, char *file)
     exit(-1);
   }
   fread(&be32, sizeof (be32), 1, f);
-  // if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
-  //   fprintf(stderr, "File version mismatch.\n");
-  //   exit(-1);
-  // }
-  // fread(&be32, sizeof (be32), 1, f);
-  // if (buf.st_size != be32toh(be32)) {
-  //   fprintf(stderr, "File size mismatch.\n");
-  //   exit(-1);
-  // }
+  if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
+    fprintf(stderr, "File version mismatch.\n");
+    exit(-1);
+  }
+  fread(&be32, sizeof (be32), 1, f);
+  if (buf.st_size != be32toh(be32)) {
+    fprintf(stderr, "File size mismatch.\n");
+    exit(-1);
+  }
   read_dungeon_map(d, f);
   d->num_rooms = calculate_num_rooms(buf.st_size);
   d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
@@ -1101,599 +960,64 @@ int read_pgm(dungeon_t *d, char *pgm)
   return 0;
 }
 
-/* place a random pc in our dungeon*/
-static int place_pc(dungeon_t *d)
+void render_distance_map(dungeon_t *d)
 {
-  int x_pc, y_pc;
-  while(1){
-    x_pc = rand_range(0, 159);
-    y_pc = rand_range(0, 104);
-    if(d->map[y_pc][x_pc] == ter_floor_room){
-      mapxy(x_pc, y_pc) = ter_pc;
-      hardnessxy(x_pc, y_pc) = 0;
-      break;
-    }
-  }
-  return 0;
-}
+  pair_t p;
 
-/* place a pc with it's position in our dungeon */
-static int place_pc_test(dungeon_t *d, int x, int y)
-{
-  if(mapxy(x, y) == ter_floor_room){
-    mapxy(x, y) = ter_pc;
-  }
-  else{
-    fprintf(stderr, "That's not in a room! I will create a random one for you!\n");
-    place_pc(d);
-    return 0;
-  }
-  return 1;
-}
-
-/* find the x position of our PC*/
-static int find_pc_position_x(dungeon_t *d)
-{
-  int pc_x;
-  int x,y;
-  for (y = 0; y < DUNGEON_Y; y++) {
-    for (x = 0; x < DUNGEON_X; x++) {
-      if(mapxy(x, y) == ter_pc) {
-        pc_x = x;
-      }
-    }
-  }
-  if(pc_x == 0){
-    fprintf(stderr, "PC not found!\n");
-    return -1;
-  }
-  return pc_x;
-}
-
-/* find the y position of our PC*/
-static int find_pc_position_y(dungeon_t *d)
-{
-  int pc_y = 0;
-  int x,y;
-  for (y = 0; y < DUNGEON_Y; y++) {
-    for (x = 0; x < DUNGEON_X; x++) {
-      if(mapxy(x, y) == ter_pc) {
-        pc_y = y;
-      }
-    }
-  }
-  if(pc_y == 0){
-    fprintf(stderr, "PC not found!\n");
-    return -1;
-  }
-  return pc_y;
-}
-
-static int32_t tunneling_distance_cmp(const void *key, const void *with) {
-  return ((tunneling_distance_t *) key)->cost - ((tunneling_distance_t *) with)->cost;
-}
-
-/* calculate the distance between two points for tunneler*/
-int dijkstra_tunnel(dungeon_t *d, pair_t from, pair_t to)
-{
-  static tunneling_distance_t path[DUNGEON_Y][DUNGEON_X], *p;
-  static uint32_t initialized = 0;
-  heap_t h;
-  uint32_t x, y;
-
-  if (!initialized) {
-    for (y = 0; y < DUNGEON_Y; y++) {
-      for (x = 0; x < DUNGEON_X; x++) {
-        path[y][x].pos[dim_y] = y;
-        path[y][x].pos[dim_x] = x;
-      }
-    }
-    initialized = 1;
-  }
-  for (y = 0; y < DUNGEON_Y; y++) {
-    for (x = 0; x < DUNGEON_X; x++) {
-      path[y][x].cost = INT_MAX;
-    }
-  }
-
-  path[from[dim_y]][from[dim_x]].cost = 0;
-
-  heap_init(&h, tunneling_distance_cmp, NULL);
-
-  for (y = 0; y < DUNGEON_Y; y++) {
-    for (x = 0; x < DUNGEON_X; x++) {
-      if (mapxy(x, y) != ter_wall_immutable) {
-        path[y][x].hn = heap_insert(&h, &path[y][x]);
+  for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
+    for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
+      if (p[dim_x] ==  d->pc.position[dim_x] &&
+          p[dim_y] ==  d->pc.position[dim_y]) {
+        putchar('@');
       } else {
-        path[y][x].hn = NULL;
+        switch (mappair(p)) {
+        case ter_wall:
+        case ter_wall_immutable:
+          putchar(' ');
+          break;
+        case ter_floor:
+        case ter_floor_room:
+        case ter_floor_hall:
+          putchar('0' + d->pc_distance[p[dim_y]][p[dim_x]] % 10);
+          break;
+        case ter_debug:
+          fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
+          putchar('*');
+          break;
+        }
       }
     }
+    putchar('\n');
   }
-
-  while ((p = heap_remove_min(&h))) {
-    p->hn = NULL;
-
-    if ((p->pos[dim_y] == to[dim_y]) && p->pos[dim_x] == to[dim_x]) {
-      for (x = to[dim_x], y = to[dim_y];
-           (x != from[dim_x]) || (y != from[dim_y]);
-           p = &path[y][x], x = p->from[dim_x], y = p->from[dim_y]) {
-      }
-      heap_delete(&h);
-      return path[to[dim_y]][to[dim_x]].cost;
-    }
-
-    int hard = hardnesspair(p->pos);
-    int weight;
-    if((hard >= 1 && hard <=84) || hard == 0) {
-      weight = 1;
-    }
-    else if( hard >= 85 && hard <=170) {
-      weight = 2;
-    }
-    else if( hard >= 171 && hard <=254) {
-      weight = 3;
-    }
-    else weight = INT_MAX;
-
-    if ((path[p->pos[dim_y] - 1][p->pos[dim_x]].hn) &&
-        (path[p->pos[dim_y] - 1][p->pos[dim_x]].cost >
-            p->cost + weight)) {
-      path[p->pos[dim_y] - 1][p->pos[dim_x]].cost = p->cost + weight;
-      path[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
-      [p->pos[dim_x]].hn);
-    }
-
-    if ((path[p->pos[dim_y]][p->pos[dim_x] - 1].hn) &&
-        (path[p->pos[dim_y]][p->pos[dim_x] - 1].cost >
-            p->cost + weight))
-                {
-      path[p->pos[dim_y]][p->pos[dim_x] - 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y]]
-      [p->pos[dim_x] - 1].hn);
-    }
-    if ((path[p->pos[dim_y]][p->pos[dim_x] + 1].hn) &&
-        (path[p->pos[dim_y]][p->pos[dim_x] + 1].cost >
-            p->cost + weight)) {
-      path[p->pos[dim_y]][p->pos[dim_x] + 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y]]
-      [p->pos[dim_x] + 1].hn);
-    }
-    if ((path[p->pos[dim_y] + 1][p->pos[dim_x]].hn) &&
-        (path[p->pos[dim_y] + 1][p->pos[dim_x]].cost >
-            p->cost + weight)) {
-      path[p->pos[dim_y] + 1][p->pos[dim_x]].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
-      [p->pos[dim_x]].hn);
-    }
-
-    if ((path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].hn) &&
-        (path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost >
-            p->cost + weight)) {
-      path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
-      [p->pos[dim_x] + 1].hn);
-    }
-
-    if ((path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].hn) &&
-        (path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost >
-            p->cost + weight)) {
-      path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
-      [p->pos[dim_x] - 1].hn);
-    }
-    if ((path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].hn) &&
-        (path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost >
-            p->cost + weight)) {
-      path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
-      [p->pos[dim_x] + 1].hn);
-    }
-    if ((path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].hn) &&
-        (path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost >
-            p->cost + weight)) {
-      path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
-      [p->pos[dim_x] - 1].hn);
-    }
-  }
-  return -1;
 }
 
-static int32_t nontunneling_distance_cmp(const void *key, const void *with) {
-  return ((non_tunneling_distance_t *) key)->cost - ((non_tunneling_distance_t *) with)->cost;
-}
-
-/* calculate the distance between two points for non-tunneler*/
-int dijkstra_nontunnel(dungeon_t *d, pair_t from, pair_t to)
+void render_tunnel_distance_map(dungeon_t *d)
 {
-  static non_tunneling_distance_t path[DUNGEON_Y][DUNGEON_X], *p;
-  static uint32_t initialized = 0;
-  heap_t h;
-  uint32_t x, y;
+  pair_t p;
 
-  if (!initialized) {
-    for (y = 0; y < DUNGEON_Y; y++) {
-      for (x = 0; x < DUNGEON_X; x++) {
-        path[y][x].pos[dim_y] = y;
-        path[y][x].pos[dim_x] = x;
-      }
-    }
-    initialized = 1;
-  }
-
-  for (y = 0; y < DUNGEON_Y; y++) {
-    for (x = 0; x < DUNGEON_X; x++) {
-      path[y][x].cost = INT_MAX;
-    }
-  }
-
-  path[from[dim_y]][from[dim_x]].cost = 0;
-
-  heap_init(&h, nontunneling_distance_cmp, NULL);
-
-  for (y = 0; y < DUNGEON_Y; y++) {
-    for (x = 0; x < DUNGEON_X; x++) {
-      if (mapxy(x, y) != ter_wall_immutable) {
-        path[y][x].hn = heap_insert(&h, &path[y][x]);
+  for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
+    for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
+      if (p[dim_x] ==  d->pc.position[dim_x] &&
+          p[dim_y] ==  d->pc.position[dim_y]) {
+        putchar('@');
       } else {
-        path[y][x].hn = NULL;
-      }
-    }
-  }
-
-  while ((p = heap_remove_min(&h))) {
-    p->hn = NULL;
-
-    if ((p->pos[dim_y] == to[dim_y]) && p->pos[dim_x] == to[dim_x]) {
-      for (x = to[dim_x], y = to[dim_y];
-           (x != from[dim_x]) || (y != from[dim_y]);
-           p = &path[y][x], x = p->from[dim_x], y = p->from[dim_y]) {
-      }
-      heap_delete(&h);
-      return path[to[dim_y]][to[dim_x]].cost;
-    }
-
-    int hard = hardnesspair(p->pos);
-    int weight;
-    if(hard == 0) weight = 1;
-    else weight = INT_MAX;
-
-    if ((path[p->pos[dim_y] - 1][p->pos[dim_x]].hn) &&
-        (path[p->pos[dim_y] - 1][p->pos[dim_x]].cost >
-            p->cost + weight) && hardnessxy(p->pos[dim_x], p->pos[dim_y] - 1) == 0) {
-      path[p->pos[dim_y] - 1][p->pos[dim_x]].cost = p->cost + weight;
-      path[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
-      [p->pos[dim_x]].hn);
-    }
-
-    if ((path[p->pos[dim_y]][p->pos[dim_x] - 1].hn) &&
-        (path[p->pos[dim_y]][p->pos[dim_x] - 1].cost >
-            p->cost + weight) && hardnessxy(p->pos[dim_x] - 1, p->pos[dim_y]) == 0)
-                {
-      path[p->pos[dim_y]][p->pos[dim_x] - 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y]]
-      [p->pos[dim_x] - 1].hn);
-    }
-
-    if ((path[p->pos[dim_y]][p->pos[dim_x] + 1].hn) &&
-        (path[p->pos[dim_y]][p->pos[dim_x] + 1].cost >
-            p->cost + weight) && hardnessxy(p->pos[dim_x] + 1, p->pos[dim_y]) == 0) {
-      path[p->pos[dim_y]][p->pos[dim_x] + 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y]]
-      [p->pos[dim_x] + 1].hn);
-    }
-
-    if ((path[p->pos[dim_y] + 1][p->pos[dim_x]].hn) &&
-        (path[p->pos[dim_y] + 1][p->pos[dim_x]].cost >
-            p->cost + weight) && hardnessxy(p->pos[dim_x], p->pos[dim_y] + 1) == 0) {
-      path[p->pos[dim_y] + 1][p->pos[dim_x]].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
-      [p->pos[dim_x]].hn);
-    }
-
-    if ((path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].hn) &&
-        (path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost >
-            p->cost + weight) && hardnessxy(p->pos[dim_x] + 1, p->pos[dim_y] + 1) == 0) {
-      path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
-      [p->pos[dim_x] + 1].hn);
-    }
-
-    if ((path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].hn) &&
-        (path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost >
-            p->cost + weight) && hardnessxy(p->pos[dim_x] - 1, p->pos[dim_y] + 1) == 0) {
-      path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
-      [p->pos[dim_x] - 1].hn);
-    }
-
-    if ((path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].hn) &&
-        (path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost >
-            p->cost + weight) && hardnessxy(p->pos[dim_x] + 1, p->pos[dim_y] - 1) == 0) {
-      path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
-      [p->pos[dim_x] + 1].hn);
-    }
-
-    if ((path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].hn) &&
-        (path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost >
-            p->cost + weight) && hardnessxy(p->pos[dim_x] - 1, p->pos[dim_y] - 1) == 0) {
-      path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost =
-          p->cost + weight;
-      path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
-      path[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
-      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
-      [p->pos[dim_x] - 1].hn);
-    }
-  }
-  return -1;
-}
-
-
-/* print tunnel distance*/
-int show_tunnel_distance(dungeon_t *d, pair_t p)
-{
-  int x, y;
-  for (y = 0; y < DUNGEON_Y; y++) {
-    for (x = 0; x < DUNGEON_X; x++) {
-      if(mapxy(x, y) == ter_pc) {
-        printf("@");
-      }
-      else {
-        pair_t to;
-        to[dim_x] = x;
-        to[dim_y] = y;
-        int dis = dijkstra_tunnel(d, p, to);
-        if (dis == -1) printf(" ");
-        else{
-          int length = snprintf( NULL, 0, "%d", dis);
-          char* str = malloc(length + 1);
-          snprintf(str, length + 1, "%d", dis);
-          printf("%c", str[length-1]);
-          free(str);
+        switch (mappair(p)) {
+        case ter_wall_immutable:
+          putchar(' ');
+          break;
+        case ter_wall:
+        case ter_floor:
+        case ter_floor_room:
+        case ter_floor_hall:
+          putchar('0' + d->pc_tunnel[p[dim_y]][p[dim_x]] % 10);
+          break;
+        case ter_debug:
+          fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
+          putchar('*');
+          break;
         }
       }
     }
-    printf("\n");
+    putchar('\n');
   }
-  return 0;
-}
-
-/* print non-tunnel distance*/
-static int show_nontunnel_distance(dungeon_t *d, pair_t p)
-{
-  int x, y;
-  for (y = 0; y < DUNGEON_Y; y++) {
-    for (x = 0; x < DUNGEON_X; x++) {
-      if(mapxy(x, y) == ter_pc) {
-        printf("@");
-      }
-      else if(hardnessxy(x, y) != 0) {
-        printf(" ");
-      }
-      else {
-        pair_t to;
-        to[dim_x] = x;
-        to[dim_y] = y;
-        int dis = dijkstra_nontunnel(d, p, to);
-        if (dis == -1) printf(" ");
-        else{
-          int length = snprintf( NULL, 0, "%d", dis);
-          char* str = malloc(length + 1);
-          snprintf(str, length + 1, "%d", dis);
-          printf("%c", str[length-1]);
-          free(str);
-        }
-      }
-    }
-    printf("\n");
-  }
-  return 0;
-}
-
-
-void usage(char *name)
-{
-  fprintf(stderr,
-          "Usage: %s [-r|--rand <seed>] [-l|--load [<file>]]\n"
-          "          [-s|--save [<file>]] [-i|--image <pgm file>]\n",
-          name);
-
-  exit(-1);
-}
-
-int main(int argc, char *argv[])
-{
-  dungeon_t d;
-  time_t seed;
-  struct timeval tv;
-  uint32_t i;
-  uint32_t do_load, do_save, do_seed, do_image, do_pc;
-  int x, y;
-  uint32_t long_arg;
-  char *save_file;
-  char *load_file;
-  char *pgm_file;
-
-  /* Default behavior: Seed with the time, generate a new dungeon, *
-   * and don't write to disk.                                      */
-  do_load = do_save = do_image = do_pc = 0;
-  do_seed = 1;
-  save_file = load_file = NULL;
-
-  /* The project spec requires '--load' and '--save'.  It's common  *
-   * to have short and long forms of most switches (assuming you    *
-   * don't run out of letters).  For now, we've got plenty.  Long   *
-   * forms use whole words and take two dashes.  Short forms use an *
-    * abbreviation after a single dash.  We'll add '--rand' (to     *
-   * specify a random seed), which will take an argument of it's    *
-   * own, and we'll add short forms for all three commands, '-l',   *
-   * '-s', and '-r', respectively.  We're also going to allow an    *
-   * optional argument to load to allow us to load non-default save *
-   * files.  No means to save to non-default locations, however.    *
-   * And the final switch, '--image', allows me to create a dungeon *
-   * from a PGM image, so that I was able to create those more      *
-   * interesting test dungeons for you.                             */
-
- if (argc > 1) {
-    for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
-      if (argv[i][0] == '-') { /* All switches start with a dash */
-        if (argv[i][1] == '-') {
-          argv[i]++;    /* Make the argument have a single dash so we can */
-          long_arg = 1; /* handle long and short args at the same place.  */
-        }
-        switch (argv[i][1]) {
-        case 'r':
-          if ((!long_arg && argv[i][2]) ||
-              (long_arg && strcmp(argv[i], "-rand")) ||
-              argc < ++i + 1 /* No more arguments */ ||
-              !sscanf(argv[i], "%lu", &seed) /* Argument is not an integer */) {
-            usage(argv[0]);
-          }
-          do_seed = 0;
-          break;
-        case 'l':
-          if ((!long_arg && argv[i][2]) ||
-              (long_arg && strcmp(argv[i], "-load"))) {
-            usage(argv[0]);
-          }
-          do_load = 1;
-          if ((argc > i + 1) && argv[i + 1][0] != '-') {
-            /* There is another argument, and it's not a switch, so *
-             * we'll treat it as a save file and try to load it.    */
-            load_file = argv[++i];
-          }
-          break;
-        case 's':
-          if ((!long_arg && argv[i][2]) ||
-              (long_arg && strcmp(argv[i], "-save"))) {
-            usage(argv[0]);
-          }
-          do_save = 1;
-          if ((argc > i + 1) && argv[i + 1][0] != '-') {
-            /* There is another argument, and it's not a switch, so *
-             * we'll treat it as a save file and try to load it.    */
-            save_file = argv[++i];
-          }
-          break;
-        case 'i':
-          if ((!long_arg && argv[i][2]) ||
-              (long_arg && strcmp(argv[i], "-image"))) {
-            usage(argv[0]);
-          }
-          do_image = 1;
-          if ((argc > i + 1) && argv[i + 1][0] != '-') {
-            /* There is another argument, and it's not a switch, so *
-             * we'll treat it as a save file and try to load it.    */
-            pgm_file = argv[++i];
-          }
-          break;
-        case 'p':
-          if ((!long_arg && argv[i][2])            ||
-              (long_arg && strcmp(argv[i], "-pc")) ||
-              argc <= i + 2                        ||
-              argv[i + 1][0] == '-'                ||
-              argv[i + 2][0] == '-') {
-            usage(argv[0]);
-          }
-          x = atoi(argv[++i]);
-          y = atoi(argv[++i]);
-          if(x < 1 || x > DUNGEON_X - 2
-            || y < 1 || y > DUNGEON_Y - 2){
-              fprintf(stderr, "Invalid PC position.\n");
-              usage(argv[0]);
-          }
-            do_pc = 1;
-          break;
-        default:
-          usage(argv[0]);
-        }
-      } else { /* No dash */
-        usage(argv[0]);
-      }
-    }
-  }
-
-  if (do_seed) {
-    /* Allows me to generate more than one dungeon *
-     * per second, as opposed to time().           */
-    gettimeofday(&tv, NULL);
-    seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
-  }
-
-  printf("Seed is %ld.\n", seed);
-  srand(seed);
-
-  init_dungeon(&d);
-
-  if (do_load) {
-    read_dungeon(&d, load_file);
-  } else if (do_image) {
-    read_pgm(&d, pgm_file);
-  } else {
-    gen_dungeon(&d);
-  }
-  if (do_pc) {
-    place_pc_test(&d, x, y);
-  }
-  else place_pc(&d);
-  pair_t pc;
-  pc[dim_x] = find_pc_position_x(&d);
-  pc[dim_y] = find_pc_position_y(&d);
-  printf("PC Position(x, y): %d, %d\n", pc[dim_x], pc[dim_y]);
-  render_dungeon(&d);
-  show_nontunnel_distance(&d, pc);
-  show_tunnel_distance(&d, pc);
-
-
-  if (do_save) {
-    write_dungeon(&d, save_file);
-  }
-
-  delete_dungeon(&d);
-
-  return 0;
 }

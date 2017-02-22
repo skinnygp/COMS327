@@ -21,15 +21,17 @@ int main(int argc, char *argv[])
   time_t seed;
   struct timeval tv;
   uint32_t i;
-  uint32_t do_load, do_save, do_seed, do_image, do_place_pc;
+  uint32_t do_load, do_save, do_seed, do_image, do_place_pc, do_nummon;
   uint32_t long_arg;
+
+
   char *save_file;
   char *load_file;
   char *pgm_file;
 
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
-  do_load = do_save = do_image = do_place_pc = 0;
+  do_load = do_save = do_image = do_place_pc = do_nummon = 0;
   do_seed = 1;
   save_file = load_file = NULL;
 
@@ -46,7 +48,7 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
- 
+
  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
@@ -117,6 +119,19 @@ int main(int argc, char *argv[])
             usage(argv[0]);
           }
           break;
+          //for system in the number of monsters
+        case 'n':
+          if ((!long_arg && argv[i][2]) ||
+              (long_arg && strcmp(argv[i], "-nummon"))) {
+                usage(argv[0]);
+              }
+              do_nummon = 1;
+              if ((argc > i + 1) && argv[i + 1][0] != '-') {
+                /* There is another argument, and it's not a switch, so *
+                * we'll treat it as a save file and try to load it.    */
+                d.nummon = atoi(argv[++i]);
+              }
+          break;
         default:
           usage(argv[0]);
         }
@@ -132,6 +147,7 @@ int main(int argc, char *argv[])
     gettimeofday(&tv, NULL);
     seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
   }
+
 
   printf("Seed is %ld.\n", seed);
   srand(seed);
@@ -154,15 +170,21 @@ int main(int argc, char *argv[])
                             (rand() % d.rooms[i].size[dim_y]));
   }
 
+  if(!do_nummon) {
+    d.nummon = 20;
+  }
+
+  //print the number of monsters
+  printf("The number of monsters is %d\n", d.nummon);
+
   printf("PC is at (y, x): %d, %d\n",
          d.pc.position[dim_y], d.pc.position[dim_x]);
 
+  excute(&d, d.nummon);
   render_dungeon(&d);
 
   dijkstra(&d);
   dijkstra_tunnel(&d);
-  render_distance_map(&d);
-  render_tunnel_distance_map(&d);
 
   if (do_save) {
     write_dungeon(&d, save_file);

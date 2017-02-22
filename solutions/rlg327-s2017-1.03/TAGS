@@ -8,7 +8,7 @@ typedef enum dim 7,190
 } dim_t;11,238
 typedef int16_t pair_t[pair_t13,248
 
-dungeon.c,1073
+dungeon.c,1041
 typedef struct corridor_path 13,205
 } corridor_path_t;18,308
 static uint32_t in_room(20,328
@@ -28,21 +28,21 @@ static int place_rooms(506,15863
 static int make_rooms(570,18388
 int gen_dungeon(593,18949
 void render_dungeon(603,19071
-void delete_dungeon(636,19853
-void init_dungeon(641,19910
-int write_dungeon_map(646,19967
-int write_rooms(659,20196
-uint32_t calculate_dungeon_size(679,20615
-int write_dungeon(686,20837
-int read_dungeon_map(745,22244
-int read_rooms(768,22842
-int calculate_num_rooms(798,23611
-int read_dungeon(806,23851
-int read_pgm(880,25576
-void render_distance_map(963,27701
-void render_tunnel_distance_map(994,28489
+void delete_dungeon(642,20099
+void init_dungeon(647,20156
+int write_dungeon_map(652,20213
+int write_rooms(665,20442
+uint32_t calculate_dungeon_size(685,20861
+int write_dungeon(692,21083
+int read_dungeon_map(751,22490
+int read_rooms(774,23088
+int calculate_num_rooms(804,23857
+int read_dungeon(812,24097
+int read_pgm(886,25822
+int move_cmp(969,27947
+void excute(973,28067
 
-dungeon.h,884
+dungeon.h,883
 # define DUNGEON_H2,18
 #define DUNGEON_X 8,98
 #define DUNGEON_Y 9,133
@@ -70,12 +70,11 @@ typedef enum __attribute__ ((__packed__)) terrain_type 26,738
 } terrain_type_t;33,891
 typedef struct room 35,910
 } room_t;38,966
-typedef struct pc 40,977
-} pc_t;42,1016
-typedef struct monster 44,1025
-} mon_t;47,1092
-typedef struct dungeon 49,1102
-} dungeon_t;65,1960
+static int seqs 40,977
+typedef struct character{character42,999
+} character_t;54,1257
+typedef struct dungeon 56,1273
+} dungeon_t;74,2182
 
 heap.c,798
 #undef min4,39

@@ -37,34 +37,27 @@ typedef struct room {
   pair_t size;
 } room_t;
 
-static int ids = 0;
+static int seqs = 0;
 
-typedef struct pc {
+typedef struct character{
   pair_t position;
   pair_t last_position;
+  uint8_t is_pc;
   uint8_t speed;
-  uint32_t turn;
-  uint8_t dead;
-} pc_t;
-
-typedef struct monster {
-  pair_t position;
-  pair_t last_position;
-  uint8_t speed;
-  uint32_t turn;
-  uint8_t dead;
-  uint8_t id;
+  uint32_t seq;
+  uint8_t health;
   uint8_t is_intelligence;
   uint8_t is_telepathy;
   uint8_t is_tunneling;
   uint8_t is_erratic;
-  uint32_t character;
-} monster_t;
+  char characteristics;
+} character_t;
 
 typedef struct dungeon {
   uint32_t num_rooms;
   room_t *rooms;
   terrain_type_t map[DUNGEON_Y][DUNGEON_X];
+  uint32_t nummon;
   /* Since hardness is usually not used, it would be expensive to pull it *
    * into cache every time we need a map cell, so we store it in a        *
    * parallel array, rather than using a structure to represent the       *
@@ -76,7 +69,8 @@ typedef struct dungeon {
   uint8_t hardness[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_distance[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_tunnel[DUNGEON_Y][DUNGEON_X];
-  pc_t pc;
+  character_t pc;
+  character_t *monsters;
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);
@@ -86,7 +80,6 @@ void render_dungeon(dungeon_t *d);
 int write_dungeon(dungeon_t *d, char *file);
 int read_dungeon(dungeon_t *d, char *file);
 int read_pgm(dungeon_t *d, char *pgm);
-void render_distance_map(dungeon_t *d);
-void render_tunnel_distance_map(dungeon_t *d);
+void excute(dungeon_t *d, int nummon);
 
 #endif

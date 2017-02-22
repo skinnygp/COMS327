@@ -603,13 +603,19 @@ int gen_dungeon(dungeon_t *d)
 void render_dungeon(dungeon_t *d)
 {
   pair_t p;
-
+  int i;
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
       if (p[dim_x] ==  d->pc.position[dim_x] &&
           p[dim_y] ==  d->pc.position[dim_y]) {
         putchar('@');
       } else {
+        for(i = 0; i < d->nummon; ++i){
+          if(p[dim_x] == d->monsters[i].position[dim_x] &&
+             p[dim_y] == d->monsters[i].position[dim_y]){
+               putchar(d->monsters[i].characteristics);
+             }
+        }
         switch (mappair(p)) {
         case ter_wall:
         case ter_wall_immutable:
@@ -960,64 +966,118 @@ int read_pgm(dungeon_t *d, char *pgm)
   return 0;
 }
 
-void render_distance_map(dungeon_t *d)
-{
-  pair_t p;
-
-  for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
-    for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (p[dim_x] ==  d->pc.position[dim_x] &&
-          p[dim_y] ==  d->pc.position[dim_y]) {
-        putchar('@');
-      } else {
-        switch (mappair(p)) {
-        case ter_wall:
-        case ter_wall_immutable:
-          putchar(' ');
-          break;
-        case ter_floor:
-        case ter_floor_room:
-        case ter_floor_hall:
-          putchar('0' + d->pc_distance[p[dim_y]][p[dim_x]] % 10);
-          break;
-        case ter_debug:
-          fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
-          putchar('*');
-          break;
-        }
-      }
-    }
-    putchar('\n');
-  }
+int move_cmp(const void *key, const void *with) {
+  return ((character_t *) key)->seq - ((character_t *) with)->seq;
 }
 
-void render_tunnel_distance_map(dungeon_t *d)
+void excute(dungeon_t *d, int nummon)
 {
-  pair_t p;
+  character_t *current_move;
+  d->monsters = malloc(sizeof(character_t) * nummon);
+  heap_t event_queue;
+  heap_init(&event_queue, move_cmp, NULL);
 
-  for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
-    for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (p[dim_x] ==  d->pc.position[dim_x] &&
-          p[dim_y] ==  d->pc.position[dim_y]) {
-        putchar('@');
-      } else {
-        switch (mappair(p)) {
-        case ter_wall_immutable:
-          putchar(' ');
-          break;
-        case ter_wall:
-        case ter_floor:
-        case ter_floor_room:
-        case ter_floor_hall:
-          putchar('0' + d->pc_tunnel[p[dim_y]][p[dim_x]] % 10);
-          break;
-        case ter_debug:
-          fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
-          putchar('*');
-          break;
-        }
-      }
+  d->pc.last_position[dim_x] = d->pc.position[dim_x];
+  d->pc.last_position[dim_y] = d->pc.position[dim_y];
+  d->pc.is_pc = 1;
+  d->pc.speed = 10;
+  d->pc.seq = 0;
+  d->pc.health = 1;
+  d->pc.characteristics = '@';
+  heap_insert(&event_queue, &d->pc);
+
+  int i;
+  for(i = 0; i < nummon; i++){
+    //random the position for the monsters
+    i = rand() % d->num_rooms;
+    d->monsters[i].position[dim_x] = (d->rooms[i].position[dim_x] +
+                            (rand() % d->rooms[i].size[dim_x]));
+    d->monsters[i].position[dim_y] = (d->rooms[i].position[dim_y] +
+                            (rand() % d->rooms[i].size[dim_y]));
+
+    d->monsters[i].is_pc = 0;
+    d->monsters[i].speed = rand_range(5,20);
+    d->monsters[i].seq = ++seqs;
+    d->monsters[i].health = 1;
+    d->monsters[i].is_intelligence = rand_range(0,1);
+    d->monsters[i].is_telepathy = rand_range(0,1);
+    d->monsters[i].is_tunneling = rand_range(0,1);
+    d->monsters[i].is_erratic = rand_range(0,1);
+    char *characteristics = malloc(5);
+
+    int length = snprintf( NULL, 0, "%d", d->monsters[i].is_intelligence );
+    char* is_intelligence = malloc( length + 1 );
+    snprintf( is_intelligence, length + 1, "%d", d->monsters[i].is_intelligence );
+
+    char* is_telepathy = malloc( length + 1 );
+    snprintf( is_telepathy, length + 1, "%d", d->monsters[i].is_telepathy );
+
+    char* is_tunneling = malloc( length + 1 );
+    snprintf( is_tunneling, length + 1, "%d", d->monsters[i].is_tunneling );
+
+    char* is_erratic = malloc( length + 1 );
+    snprintf( is_erratic, length + 1, "%d", d->monsters[i].is_erratic );
+
+    strcat(characteristics, is_erratic);
+    strcat(characteristics, is_tunneling);
+    strcat(characteristics, is_telepathy);
+    strcat(characteristics, is_intelligence);
+    free(is_intelligence);
+    free(is_telepathy);
+    free(is_tunneling);
+    free(is_erratic);
+
+    if(strcmp(characteristics, "0000") == 0){
+      d->monsters[i].characteristics = '0';
     }
-    putchar('\n');
+    else if(strcmp(characteristics, "0001") == 0){
+      d->monsters[i].characteristics = '1';
+    }
+    else if(strcmp(characteristics, "0010") == 0){
+      d->monsters[i].characteristics = '2';
+    }
+    else if(strcmp(characteristics, "0011") == 0){
+      d->monsters[i].characteristics = '3';
+    }
+    else if(strcmp(characteristics, "0100") == 0){
+      d->monsters[i].characteristics = '4';
+    }
+    else if(strcmp(characteristics, "0101") == 0){
+      d->monsters[i].characteristics = '5';
+    }
+    else if(strcmp(characteristics, "0110") == 0){
+      d->monsters[i].characteristics = '6';
+    }
+    else if(strcmp(characteristics, "0111") == 0){
+      d->monsters[i].characteristics = '7';
+    }
+    else if(strcmp(characteristics, "1000") == 0){
+      d->monsters[i].characteristics = '8';
+    }
+    else if(strcmp(characteristics, "1001") == 0){
+      d->monsters[i].characteristics = '9';
+    }
+    else if(strcmp(characteristics, "1010") == 0){
+      d->monsters[i].characteristics = 'a';
+    }
+    else if(strcmp(characteristics, "1011") == 0){
+      d->monsters[i].characteristics = 'b';
+    }
+    else if(strcmp(characteristics, "1100") == 0){
+      d->monsters[i].characteristics = 'c';
+    }
+    else if(strcmp(characteristics, "1101") == 0){
+      d->monsters[i].characteristics = 'd';
+    }
+    else if(strcmp(characteristics, "1110") == 0){
+      d->monsters[i].characteristics = 'e';
+    }
+    else if(strcmp(characteristics, "1111") == 0){
+      d->monsters[i].characteristics = 'f';
+    }
+    free(characteristics);
+    heap_insert(&event_queue, &d->monsters[i]);
   }
+
+
 }

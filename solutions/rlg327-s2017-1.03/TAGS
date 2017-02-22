@@ -8,7 +8,7 @@ typedef enum dim 7,190
 } dim_t;11,238
 typedef int16_t pair_t[pair_t13,248
 
-dungeon.c,1192
+dungeon.c,1236
 typedef struct corridor_path 13,224
 } corridor_path_t;18,327
 static uint32_t in_room(20,347
@@ -28,24 +28,25 @@ static int place_rooms(506,15882
 static int make_rooms(570,18407
 int gen_dungeon(593,18968
 void render_dungeon(603,19090
-void delete_dungeon(645,20188
-void init_dungeon(650,20245
-int write_dungeon_map(655,20302
-int write_rooms(668,20531
-uint32_t calculate_dungeon_size(688,20950
-int write_dungeon(695,21172
-int read_dungeon_map(754,22579
-int read_rooms(777,23177
-int calculate_num_rooms(807,23946
-int read_dungeon(815,24186
-int read_pgm(889,25911
-int move_cmp(972,28036
-void excute(984,28350
-int check_monsters_alive(1132,33285
-void pc_move(1141,33433
-int line_of_sight(1236,35976
-void monster_move(1287,38095
-void stupid_move(1337,39367
+void delete_dungeon(645,20209
+void init_dungeon(650,20266
+int write_dungeon_map(655,20323
+int write_rooms(668,20552
+uint32_t calculate_dungeon_size(688,20971
+int write_dungeon(695,21193
+int read_dungeon_map(754,22600
+int read_rooms(777,23198
+int calculate_num_rooms(807,23967
+int read_dungeon(815,24207
+int read_pgm(889,25932
+int move_cmp(972,28057
+void excute(984,28371
+int check_monsters_alive(1132,33326
+void pc_move(1141,33474
+int line_of_sight(1236,36017
+void monster_move(1287,38136
+void stupid_monster_move(1319,39101
+void smart_monster_move(1357,40115
 
 dungeon.h,906
 # define DUNGEON_H2,18

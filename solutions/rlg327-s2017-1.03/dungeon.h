@@ -88,5 +88,6 @@ int check_monsters_alive(dungeon_t *d);
 void pc_move(dungeon_t *d);
 void monster_move(dungeon_t *d, character_t *monster);
 int line_of_sight(character_t *pc, character_t *monster);
-void stupid_move(dungeon_t *d, character_t *monster, pair_t next);
+void stupid_monster_move(dungeon_t *d, character_t *monster, pair_t next, pair_t next_position);
+void smart_monster_move(dungeon_t *d, character_t *monster, pair_t next, pair_t next_position);
 #endif

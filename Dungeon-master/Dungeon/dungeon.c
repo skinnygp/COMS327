@@ -1004,18 +1004,18 @@ void play(dungeon_t *d, int nummon) {
 
   /* While the game is not over. */
   while (turn_queue.size > 0 && !game_over(&pc, monsters, nummon)) {
-    
+
     /* Get the next character from the priority queue, */
     c = heap_remove_min(&turn_queue);
-    
+
     if (c->turn != turn) {
         usleep(DELAY);
     }
     turn = c->turn;
-    
-    /* Skip dead character */    
+
+    /* Skip dead character */
     if (c->is_dead) continue;
-    
+
     if (!c->is_monster) {
       /* Player's move. */
       player_move(d, &pc, monsters, nummon);
@@ -1024,17 +1024,17 @@ void play(dungeon_t *d, int nummon) {
       /* Monster's move. */
       monsters_move(d, &pc, c);
     }
-    
+
     /* Set the next turn of the character. */
     c->turn += 100 / c->speed;
-    
+
     /* Insert the character to the queue. */
     heap_insert(&turn_queue, c);
-    
+
     /* Print the dungeon. */
     render_dungeon(d);
   }
-  
+
   /* Print the game result. */
   printf("\nGame over. ");
   if (pc.is_dead) {
@@ -1044,4 +1044,3 @@ void play(dungeon_t *d, int nummon) {
   }
   free(monsters);
 }
-

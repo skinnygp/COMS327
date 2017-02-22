@@ -30,6 +30,7 @@ typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_floor,
   ter_floor_room,
   ter_floor_hall,
+  ter_monster,
 } terrain_type_t;
 
 typedef struct room {
@@ -45,6 +46,7 @@ typedef struct character{
   uint8_t is_pc;
   uint8_t speed;
   uint32_t seq;
+  uint32_t turn;
   uint8_t health;
   uint8_t is_intelligence;
   uint8_t is_telepathy;
@@ -81,5 +83,8 @@ int write_dungeon(dungeon_t *d, char *file);
 int read_dungeon(dungeon_t *d, char *file);
 int read_pgm(dungeon_t *d, char *pgm);
 void excute(dungeon_t *d, int nummon);
+int check_monsters_alive(dungeon_t *d);
+void pc_move(dungeon_t *d);
+void monster_move(dungeon_t *d, character_t *monster);
 
 #endif

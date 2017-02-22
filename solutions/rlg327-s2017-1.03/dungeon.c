@@ -5,7 +5,7 @@
 #include <sys/time.h>
 #include <limits.h>
 #include <errno.h>
-
+#include <unistd.h>
 #include "dungeon.h"
 #include "utils.h"
 #include "heap.h"
@@ -606,16 +606,17 @@ void render_dungeon(dungeon_t *d)
   int i;
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
+      for(i = 0; i < d->nummon; ++i){
+        if(p[dim_x] == d->monsters[i].position[dim_x] &&
+           p[dim_y] == d->monsters[i].position[dim_y] &&
+           d->monsters[i].health == 1){
+             putchar(d->monsters[i].characteristics);
+           }
+      }
       if (p[dim_x] ==  d->pc.position[dim_x] &&
           p[dim_y] ==  d->pc.position[dim_y]) {
         putchar('@');
       } else {
-        for(i = 0; i < d->nummon; ++i){
-          if(p[dim_x] == d->monsters[i].position[dim_x] &&
-             p[dim_y] == d->monsters[i].position[dim_y]){
-               putchar(d->monsters[i].characteristics);
-             }
-        }
         switch (mappair(p)) {
         case ter_wall:
         case ter_wall_immutable:
@@ -632,6 +633,8 @@ void render_dungeon(dungeon_t *d)
           putchar('*');
           fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
           break;
+        case ter_monster:
+        break;
         }
       }
     }
@@ -967,7 +970,15 @@ int read_pgm(dungeon_t *d, char *pgm)
 }
 
 int move_cmp(const void *key, const void *with) {
-  return ((character_t *) key)->seq - ((character_t *) with)->seq;
+  if(((character_t *) key)->turn == ((character_t *) with)->turn){
+    if(((character_t *) key)->seq > ((character_t *) with)->seq){
+      return 1;
+    }
+    else{
+      return -1;
+    }
+  }
+  return ((character_t *) key)->turn - ((character_t *) with)->turn;
 }
 
 void excute(dungeon_t *d, int nummon)
@@ -982,6 +993,7 @@ void excute(dungeon_t *d, int nummon)
   d->pc.is_pc = 1;
   d->pc.speed = 10;
   d->pc.seq = 0;
+  d->pc.turn = 0;
   d->pc.health = 1;
   d->pc.characteristics = '@';
   heap_insert(&event_queue, &d->pc);
@@ -989,15 +1001,23 @@ void excute(dungeon_t *d, int nummon)
   int i;
   for(i = 0; i < nummon; i++){
     //random the position for the monsters
-    i = rand() % d->num_rooms;
-    d->monsters[i].position[dim_x] = (d->rooms[i].position[dim_x] +
-                            (rand() % d->rooms[i].size[dim_x]));
-    d->monsters[i].position[dim_y] = (d->rooms[i].position[dim_y] +
-                            (rand() % d->rooms[i].size[dim_y]));
-
+    int a = rand() % d->num_rooms;
+    d->monsters[i].position[dim_x] = (d->rooms[a].position[dim_x] +
+                            (rand() % d->rooms[a].size[dim_x]));
+    d->monsters[i].position[dim_y] = (d->rooms[a].position[dim_y] +
+                            (rand() % d->rooms[a].size[dim_y]));
+    while(mappair(d->monsters[i].position) == ter_monster){
+      int a = rand() % d->num_rooms;
+      d->monsters[i].position[dim_x] = (d->rooms[a].position[dim_x] +
+                              (rand() % d->rooms[a].size[dim_x]));
+      d->monsters[i].position[dim_y] = (d->rooms[a].position[dim_y] +
+                              (rand() % d->rooms[a].size[dim_y]));
+    }
+    mapxy(d->monsters[i].position[dim_x], d->monsters[i].position[dim_y]) = ter_monster;
     d->monsters[i].is_pc = 0;
     d->monsters[i].speed = rand_range(5,20);
     d->monsters[i].seq = ++seqs;
+    d->monsters[i].turn = 0;
     d->monsters[i].health = 1;
     d->monsters[i].is_intelligence = rand_range(0,1);
     d->monsters[i].is_telepathy = rand_range(0,1);
@@ -1078,6 +1098,142 @@ void excute(dungeon_t *d, int nummon)
     free(characteristics);
     heap_insert(&event_queue, &d->monsters[i]);
   }
+  render_dungeon(d);
+  uint32_t next_turn = 0;
 
+  while(d->pc.health == 1 && check_monsters_alive(d) == 1 && event_queue.size > 0){
+    current_move = heap_remove_min(&event_queue);
+    if(current_move->health == 0) continue;
+    next_turn = current_move->turn;
+    if(current_move->is_pc == 1){
+      pc_move(d);
+      usleep(83333);
+      render_dungeon(d);
+    }
+    else{
+      monster_move(d, current_move);
+    }
+
+    current_move->turn += 1000/(current_move->speed);
+
+    heap_insert(&event_queue, current_move);
+
+  }
+
+  if(d->pc.health == 0){
+    printf("You lose!\n");
+  }
+  if(check_monsters_alive(d) == 0){
+    printf("You win!\n");
+  }
+  free(d->monsters);
+}
+
+int check_monsters_alive(dungeon_t *d)
+{
+  int i;
+  for(i = 0; i < d->nummon; i++){
+    if(d->monsters[i].health == 1) return 1;
+  }
+  return 0;
+}
+
+void pc_move(dungeon_t *d)
+{
+  pair_t next_position, temp_position;
+  next_position[dim_x] = d->pc.position[dim_x];
+  next_position[dim_y] = d->pc.position[dim_y];
+  temp_position[dim_x] = d->pc.position[dim_x];
+  temp_position[dim_y] = d->pc.position[dim_y];
+  int direction = rand_range(1,8);
+  switch (direction) {
+    case 1:
+      next_position[dim_x]++;
+      break;
+    case 2:
+      next_position[dim_x]--;
+      break;
+    case 3:
+      next_position[dim_y]++;
+      break;
+    case 4:
+      next_position[dim_y]--;
+      break;
+    case 5:
+      next_position[dim_x]++;
+      next_position[dim_y]++;
+      break;
+    case 6:
+      next_position[dim_x]++;
+      next_position[dim_y]--;
+      break;
+    case 7:
+      next_position[dim_x]--;
+      next_position[dim_y]++;
+      break;
+    case 8:
+      next_position[dim_x]--;
+      next_position[dim_y]--;
+      break;
+  }
+  if(mappair(next_position) == ter_floor_room || mappair(next_position) == ter_floor_hall){
+    temp_position[dim_x] = next_position[dim_x];
+    temp_position[dim_y] = next_position[dim_y];
+  }
+  while(mappair(next_position) == ter_wall || mappair(next_position) == ter_wall_immutable){
+    next_position[dim_x] = temp_position[dim_x];
+    next_position[dim_y] = temp_position[dim_y];
+    int direction = rand_range(1,8);
+    switch (direction) {
+      case 1:
+        next_position[dim_x]++;
+        break;
+      case 2:
+        next_position[dim_x]--;
+        break;
+      case 3:
+        next_position[dim_y]++;
+        break;
+      case 4:
+        next_position[dim_y]--;
+        break;
+      case 5:
+        next_position[dim_x]++;
+        next_position[dim_y]++;
+        break;
+      case 6:
+        next_position[dim_x]++;
+        next_position[dim_y]--;
+        break;
+      case 7:
+        next_position[dim_x]--;
+        next_position[dim_y]++;
+        break;
+      case 8:
+        next_position[dim_x]--;
+        next_position[dim_y]--;
+        break;
+    }
+  }
+  if(mappair(next_position) == ter_monster){
+    int i;
+    for(i = 0; i < d->nummon; ++i){
+      if(d->monsters[i].position[dim_x] == next_position[dim_x] &&
+         d->monsters[i].position[dim_y] == next_position[dim_y] &&
+         d->monsters[i].health == 1){
+           d->monsters[i].health = 0;
+           mappair(d->monsters[i].position) = ter_floor;
+         }
+    }
+  }
+  d->pc.last_position[dim_y] = d->pc.position[dim_y];
+  d->pc.last_position[dim_x] = d->pc.position[dim_x];
+
+  d->pc.position[dim_x] = next_position[dim_x];
+  d->pc.position[dim_y] = next_position[dim_y];
+}
+
+void monster_move(dungeon_t *d, character_t *monster)
+{
 
 }

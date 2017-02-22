@@ -1233,7 +1233,110 @@ void pc_move(dungeon_t *d)
   d->pc.position[dim_y] = next_position[dim_y];
 }
 
+int line_of_sight(character_t *pc, character_t *monster)
+{
+  if(pc->position[dim_y] == monster->position[dim_y]){
+    if(pc->position[dim_x] > monster->position[dim_x]){
+      monster->last_position[dim_x] = pc->position[dim_x];
+      monster->last_position[dim_y] = pc->position[dim_y];
+      return 1;
+    }
+    else{
+      monster->last_position[dim_x] = pc->position[dim_x];
+      monster->last_position[dim_y] = pc->position[dim_y];
+      return 2;
+    }
+  }
+  if(pc->position[dim_x] == monster->position[dim_x]){
+    if(pc->position[dim_y] > monster->position[dim_y]){
+      return 3;
+    }
+    else{
+      monster->last_position[dim_x] = pc->position[dim_x];
+      monster->last_position[dim_y] = pc->position[dim_y];
+      return 4;
+    }
+  }
+  if(pc->position[dim_y] > monster->position[dim_y] && pc->position[dim_x] > monster->position[dim_x]
+  && pc->position[dim_y] - monster->position[dim_y] == pc->position[dim_x] - monster->position[dim_x]){
+    monster->last_position[dim_x] = pc->position[dim_x];
+    monster->last_position[dim_y] = pc->position[dim_y];
+    return 5;
+  }
+  if(pc->position[dim_y] < monster->position[dim_y] && pc->position[dim_x] > monster->position[dim_x]
+  && monster->position[dim_y] - pc->position[dim_y] == pc->position[dim_x] - monster->position[dim_x]){
+    monster->last_position[dim_x] = pc->position[dim_x];
+    monster->last_position[dim_y] = pc->position[dim_y];
+    return 6;
+  }
+  if(pc->position[dim_y] > monster->position[dim_y] && pc->position[dim_x] < monster->position[dim_x]
+  && pc->position[dim_y] - monster->position[dim_y] == monster->position[dim_x] - pc->position[dim_x]){
+    monster->last_position[dim_x] = pc->position[dim_x];
+    monster->last_position[dim_y] = pc->position[dim_y];
+    return 7;
+  }
+  if(pc->position[dim_y] < monster->position[dim_y] && pc->position[dim_x] < monster->position[dim_x]
+  && monster->position[dim_y] - pc->position[dim_y] == monster->position[dim_x] - pc->position[dim_x]){
+    monster->last_position[dim_x] = pc->position[dim_x];
+    monster->last_position[dim_y] = pc->position[dim_y];
+    return 8;
+  }
+  return -1;
+}
+
 void monster_move(dungeon_t *d, character_t *monster)
 {
+  pair_t next_position;
+  next_position[dim_x] = d->pc.position[dim_x];
+  next_position[dim_y] = d->pc.position[dim_y];
+  monster->last_position[dim_x] = 0;
+  monster->last_position[dim_y] = 0;
+  switch (monster->characteristics) {
+    case '0':
+      switch (line_of_sight(&d->pc, monster)) {
+        case -1:
+          stupid_move(d, monster, monster->last_position);
+          break;
+        case 1:
+          next_position[dim_x]++;
+          break;
+        case 2:
+          next_position[dim_x]--;
+          break;
+        case 3:
+          next_position[dim_y]++;
+          break;
+        case 4:
+          next_position[dim_y]--;
+          break;
+        case 5:
+          next_position[dim_x]++;
+          next_position[dim_y]++;
+          break;
+        case 6:
+          next_position[dim_x]++;
+          next_position[dim_y]--;
+          break;
+        case 7:
+          next_position[dim_x]--;
+          next_position[dim_y]++;
+          break;
+        case 8:
+          next_position[dim_x]--;
+          next_position[dim_y]--;
+          break;
+      }
+      break;
+    case '1':
+      break;
+  }
+  monster->position[dim_x] = next_position[dim_x];
+  monster->position[dim_y] = next_position[dim_y];
+}
 
+void stupid_move(dungeon_t *d, character_t *monster, pair_t next)
+{
+  pair_t next_position;
+  next_position[dim_x] = d->pc.position[dim_x];
+  next_position[dim_y] = d->pc.position[dim_y];
 }

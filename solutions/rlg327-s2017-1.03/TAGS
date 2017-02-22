@@ -8,7 +8,7 @@ typedef enum dim 7,190
 } dim_t;11,238
 typedef int16_t pair_t[pair_t13,248
 
-dungeon.c,1133
+dungeon.c,1192
 typedef struct corridor_path 13,224
 } corridor_path_t;18,327
 static uint32_t in_room(20,347
@@ -43,7 +43,9 @@ int move_cmp(972,28036
 void excute(984,28350
 int check_monsters_alive(1132,33285
 void pc_move(1141,33433
-void monster_move(1236,35976
+int line_of_sight(1236,35976
+void monster_move(1287,38095
+void stupid_move(1337,39367
 
 dungeon.h,906
 # define DUNGEON_H2,18
@@ -76,9 +78,9 @@ typedef struct room 36,925
 } room_t;39,981
 static int seqs 41,992
 typedef struct character{character43,1014
-} character_t;56,1289
-typedef struct dungeon 58,1305
-} dungeon_t;76,2214
+} character_t;57,1306
+typedef struct dungeon 59,1322
+} dungeon_t;77,2231
 
 heap.c,798
 #undef min4,39

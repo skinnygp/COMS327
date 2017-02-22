@@ -41,6 +41,7 @@ typedef struct room {
 static int seqs = 0;
 
 typedef struct character{
+  uint32_t room;
   pair_t position;
   pair_t last_position;
   uint8_t is_pc;
@@ -86,5 +87,6 @@ void excute(dungeon_t *d, int nummon);
 int check_monsters_alive(dungeon_t *d);
 void pc_move(dungeon_t *d);
 void monster_move(dungeon_t *d, character_t *monster);
-
+int line_of_sight(character_t *pc, character_t *monster);
+void stupid_move(dungeon_t *d, character_t *monster, pair_t next);
 #endif

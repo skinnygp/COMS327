@@ -180,9 +180,7 @@ int main(int argc, char *argv[])
   printf("PC is at (y, x): %d, %d\n",
          d.pc.position[dim_y], d.pc.position[dim_x]);
 
-  dijkstra(&d);
-  dijkstra_tunnel(&d);
-  
+
   excute(&d, d.nummon);
 
 

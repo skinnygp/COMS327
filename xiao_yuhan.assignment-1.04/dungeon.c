@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-// #include <endian.h>
+#include <endian.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <limits.h>
@@ -746,13 +746,13 @@ int write_dungeon(dungeon_t *d, char *file)
   /* The semantic, which is 12 bytes, 0-11 */
   fwrite(DUNGEON_SAVE_SEMANTIC, 1, strlen(DUNGEON_SAVE_SEMANTIC), f);
 
-  // /* The version, 4 bytes, 12-15 */
-  // be32 = htobe32(DUNGEON_SAVE_VERSION);
-  // fwrite(&be32, sizeof (be32), 1, f);
-  //
-  // /* The size of the file, 4 bytes, 16-19 */
-  // be32 = htobe32(calculate_dungeon_size(d));
-  // fwrite(&be32, sizeof (be32), 1, f);
+  /* The version, 4 bytes, 12-15 */
+  be32 = htobe32(DUNGEON_SAVE_VERSION);
+  fwrite(&be32, sizeof (be32), 1, f);
+
+  /* The size of the file, 4 bytes, 16-19 */
+  be32 = htobe32(calculate_dungeon_size(d));
+  fwrite(&be32, sizeof (be32), 1, f);
 
   /* The dungeon map, 16800 bytes, 20-16819 */
   write_dungeon_map(d, f);
@@ -881,15 +881,15 @@ int read_dungeon(dungeon_t *d, char *file)
     exit(-1);
   }
   fread(&be32, sizeof (be32), 1, f);
-  // if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
-  //   fprintf(stderr, "File version mismatch.\n");
-  //   exit(-1);
-  // }
+  if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
+    fprintf(stderr, "File version mismatch.\n");
+    exit(-1);
+  }
   fread(&be32, sizeof (be32), 1, f);
-  // if (buf.st_size != be32toh(be32)) {
-  //   fprintf(stderr, "File size mismatch.\n");
-  //   exit(-1);
-  // }
+  if (buf.st_size != be32toh(be32)) {
+    fprintf(stderr, "File size mismatch.\n");
+    exit(-1);
+  }
   read_dungeon_map(d, f);
   d->num_rooms = calculate_num_rooms(buf.st_size);
   d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
@@ -1018,12 +1018,15 @@ void excute(dungeon_t *d, int nummon)
   for(i = 0; i < nummon; i++){
     //random the position for the monsters
     int a = rand() % d->num_rooms;
+    d->monsters[i].room = a;
     d->monsters[i].position[dim_x] = (d->rooms[a].position[dim_x] +
                             (rand() % d->rooms[a].size[dim_x]));
     d->monsters[i].position[dim_y] = (d->rooms[a].position[dim_y] +
                             (rand() % d->rooms[a].size[dim_y]));
-    while(mappair(d->monsters[i].position) == ter_monster){
+    while(mappair(d->monsters[i].position) == ter_monster &&
+          d->monsters[i].room == d->pc.room){
       int a = rand() % d->num_rooms;
+      d->monsters[i].room = a;
       d->monsters[i].position[dim_x] = (d->rooms[a].position[dim_x] +
                               (rand() % d->rooms[a].size[dim_x]));
       d->monsters[i].position[dim_y] = (d->rooms[a].position[dim_y] +
@@ -1115,12 +1118,10 @@ void excute(dungeon_t *d, int nummon)
     heap_insert(&event_queue, &d->monsters[i]);
   }
   render_dungeon(d);
-  uint32_t next_turn = 0;
 
   while(d->pc.health == 1 && check_monsters_alive(d) == 1 && event_queue.size > 0){
     current_move = heap_remove_min(&event_queue);
     if(current_move->health == 0) continue;
-    next_turn = current_move->turn;
     usleep(8333);
     if(current_move->is_pc == 1){
       pc_move(d);

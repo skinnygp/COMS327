@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <endian.h>
+// #include <endian.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <limits.h>
@@ -746,13 +746,13 @@ int write_dungeon(dungeon_t *d, char *file)
   /* The semantic, which is 12 bytes, 0-11 */
   fwrite(DUNGEON_SAVE_SEMANTIC, 1, strlen(DUNGEON_SAVE_SEMANTIC), f);
 
-  /* The version, 4 bytes, 12-15 */
-  be32 = htobe32(DUNGEON_SAVE_VERSION);
-  fwrite(&be32, sizeof (be32), 1, f);
-
-  /* The size of the file, 4 bytes, 16-19 */
-  be32 = htobe32(calculate_dungeon_size(d));
-  fwrite(&be32, sizeof (be32), 1, f);
+  // /* The version, 4 bytes, 12-15 */
+  // be32 = htobe32(DUNGEON_SAVE_VERSION);
+  // fwrite(&be32, sizeof (be32), 1, f);
+  //
+  // /* The size of the file, 4 bytes, 16-19 */
+  // be32 = htobe32(calculate_dungeon_size(d));
+  // fwrite(&be32, sizeof (be32), 1, f);
 
   /* The dungeon map, 16800 bytes, 20-16819 */
   write_dungeon_map(d, f);
@@ -876,20 +876,20 @@ int read_dungeon(dungeon_t *d, char *file)
 
   fread(semantic, sizeof(semantic) - 1, 1, f);
   semantic[12] = '\0';
-  if (strncmp(semantic, DUNGEON_SAVE_SEMANTIC, 12)) {
-    fprintf(stderr, "Not an RLG327 save file.\n");
-    exit(-1);
-  }
-  fread(&be32, sizeof (be32), 1, f);
-  if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
-    fprintf(stderr, "File version mismatch.\n");
-    exit(-1);
-  }
-  fread(&be32, sizeof (be32), 1, f);
-  if (buf.st_size != be32toh(be32)) {
-    fprintf(stderr, "File size mismatch.\n");
-    exit(-1);
-  }
+  // if (strncmp(semantic, DUNGEON_SAVE_SEMANTIC, 12)) {
+  //   fprintf(stderr, "Not an RLG327 save file.\n");
+  //   exit(-1);
+  // }
+  // fread(&be32, sizeof (be32), 1, f);
+  // if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
+  //   fprintf(stderr, "File version mismatch.\n");
+  //   exit(-1);
+  // }
+  // fread(&be32, sizeof (be32), 1, f);
+  // if (buf.st_size != be32toh(be32)) {
+  //   fprintf(stderr, "File size mismatch.\n");
+  //   exit(-1);
+  // }
   read_dungeon_map(d, f);
   d->num_rooms = calculate_num_rooms(buf.st_size);
   d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);

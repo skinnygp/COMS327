@@ -45,16 +45,16 @@ int read_dungeon(829,24481
 int read_pgm(903,26224
 int move_cmp(986,28349
 void excute(998,28663
-int check_monsters_alive(1149,33728
-void pc_move(1158,33876
-int line_of_sight(1192,35117
-void monster_move(1209,35602
-void stupid_move(1390,41493
-static int32_t nontunneling_distance_cmp(1436,42765
-void smart_move(1439,42940
-void stupid_tunneling_move(1589,48784
-static int32_t tunneling_distance_cmp(1642,50319
-void smart_tunneling_move(1645,50483
+int check_monsters_alive(1148,33707
+void pc_move(1157,33855
+int line_of_sight(1191,35096
+void monster_move(1208,35581
+void stupid_move(1389,41472
+static int32_t nontunneling_distance_cmp(1435,42744
+void smart_move(1438,42919
+void stupid_tunneling_move(1588,48763
+static int32_t tunneling_distance_cmp(1641,50298
+void smart_tunneling_move(1644,50462
 
 dungeon.h,933
 # define DUNGEON_H2,18

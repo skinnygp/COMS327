@@ -1136,7 +1136,6 @@ void excute(dungeon_t *d, int nummon)
     heap_insert(&event_queue, current_move);
 
   }
-  render_dungeon(d);
   if(d->pc.health == 0){
     printf("You lose!\n");
   }

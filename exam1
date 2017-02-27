@@ -1,0 +1,51 @@
+write the name on the opposite side
+
+1.
+(a) You remind me of the baby.
+(b) In nine hours and twenty-three minutes you'll be mine
+(c) run time error modify const data
+(d) against the rules (because it's on the disk cannot be modified)
+(e) run time error
+(f) no output
+
+2.
+(a) void swap (int* a, int* b)
+{
+int temp;
+tmp = *a;
+*a = *b;
+*b = temp;
+}
+
+(b) void freeplusplus(void ** p)
+{
+free(*p);
+*p = NULL;
+}
+
+(c) char *strndup(const char *s, size_t n)
+{
+char *o;
+int i;
+if((o == malloc(n+1))){
+  for(i = 0; i < n&&*s(s[i]); ++i, ++s){
+    o[i] = *s(s[i]);
+  }
+  o[i] = '\0';
+}
+return o;
+}
+
+3.
+(a) b
+(b) b
+(c) a
+(d) a
+(e) b same address cannot be freed twice
+(f) c
+(g) c
+(h) b
+(i) a
+(j) a
+
+4. you have no power over me

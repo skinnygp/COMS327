@@ -72,6 +72,7 @@ typedef struct dungeon {
    * convenience, e.g., the ability to create a new event without explicit *
    * information from the current event.                                   */
   uint32_t time;
+  pair_t portion;
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);

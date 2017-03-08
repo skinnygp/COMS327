@@ -289,7 +289,7 @@ const char *victory victory11,202
 const char *tombstone tombstone42,1773
 void usage(63,2824
 int main(74,3098
-void portion(266,9525
+void portion(271,9802
 
 utils.c,25
 int makedirectory(9,124

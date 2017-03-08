@@ -222,16 +222,16 @@ int main(int argc, char *argv[])
   config_pc(&d);
   gen_monsters(&d);
   d.portion[dim_x] = (d.pc.position[dim_x] - 40);
-  d.portion[dim_y] = (d.pc.position[dim_y] - 13);
+  d.portion[dim_y] = (d.pc.position[dim_y] - 11);
   if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
   if (d.portion[dim_x] > 80) d.portion[dim_x] = 80;
   if (d.portion[dim_y] < 0) d.portion[dim_x] = 0;
-  if (d.portion[dim_y] > 81) d.portion[dim_x] = 81;
+  if (d.portion[dim_y] > 83) d.portion[dim_x] = 83;
   d.is_look_mode = 0;
   while (pc_is_alive(&d) && dungeon_has_npcs(&d)) {
     portion(&d);
     do_moves(&d);
-    if(d.is_look_mode = 0){
+    if(d.is_look_mode == 0){
       if(d.portion[dim_x] + 80 - d.pc.position[dim_x] < 2){
         d.portion[dim_x] = (d.pc.position[dim_x] - 40);
       }
@@ -239,11 +239,15 @@ int main(int argc, char *argv[])
         d.portion[dim_x] = (d.pc.position[dim_x] - 40);
       }
       if(d.portion[dim_y] + 21 - d.pc.position[dim_y] < 2){
-        d.portion[dim_y] = (d.pc.position[dim_y] - 13);
+        d.portion[dim_y] = (d.pc.position[dim_y] - 11);
       }
       if(d.pc.position[dim_y] - d.portion[dim_y] < 2){
-        d.portion[dim_y] = (d.pc.position[dim_y] - 13);
+        d.portion[dim_y] = (d.pc.position[dim_y] - 11);
       }
+      if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
+      if (d.portion[dim_x] > 80) d.portion[dim_x] = 80;
+      if (d.portion[dim_y] < 0) d.portion[dim_x] = 0;
+      if (d.portion[dim_y] > 83) d.portion[dim_x] = 83;
     }
   }
   portion(&d);
@@ -267,7 +271,7 @@ int main(int argc, char *argv[])
 void portion(dungeon_t *d){
   pair_t p;
   clear();
-  for (p[dim_y] = 3; p[dim_y] < 24; p[dim_y]++) {
+  for (p[dim_y] = 1; p[dim_y] < 22; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < 80; p[dim_x]++) {
       if (charxy(d->portion[dim_x] + p[dim_x],d->portion[dim_y] + p[dim_y])){
         mvaddch(p[dim_y], p[dim_x], d->character[d->portion[dim_y] + p[dim_y]]
@@ -275,9 +279,10 @@ void portion(dungeon_t *d){
       } else {
         switch (mapxy(d->portion[dim_x] + p[dim_x],
                       d->portion[dim_y] + p[dim_y])) {
+        case ter_debug:
         case ter_wall:
         case ter_wall_immutable:
-          mvaddch(p[dim_y], p[dim_x], '#');
+          mvaddch(p[dim_y], p[dim_x], ' ');
           break;
         case ter_stair_up:
           mvaddch(p[dim_y], p[dim_x], '<');
@@ -287,13 +292,19 @@ void portion(dungeon_t *d){
           break;
         case ter_floor:
         case ter_floor_room:
-        case ter_floor_hall:
           mvaddch(p[dim_y], p[dim_x], '.');
+          break;
+        case ter_floor_hall:
+          mvaddch(p[dim_y], p[dim_x], '#');
           break;
         }
       }
     }
   }
   mvprintw(0, 0, "PC position: %3d,%2d.",d->pc.position[dim_x], d->pc.position[dim_y]);
+  if(d->is_look_mode){
+    mvprintw(22, 0, "Look Mode: Press esc to enter Control Mode.");
+  }
+  else mvprintw(22, 0, "Control Mode: Press L to enter Look Mode");
   refresh();
 }

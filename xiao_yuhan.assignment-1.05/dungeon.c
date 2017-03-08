@@ -505,6 +505,7 @@ static int empty_dungeon(dungeon_t *d)
   return 0;
 }
 
+//@author: yuhan xiao
 static int make_stairs(dungeon_t *d){
   pair_t position;
   int room, num, type;

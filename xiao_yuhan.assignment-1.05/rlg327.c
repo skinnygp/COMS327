@@ -239,16 +239,16 @@ int main(int argc, char *argv[])
     do_moves(&d);
     PC_control(&d);
     if(d.is_look_mode == 0){
-      if(d.portion[dim_x] + 79 - d.pc.position[dim_x] < 2){
+      if(d.portion[dim_x] + 79 - d.pc.position[dim_x] < 5){
         d.portion[dim_x] = (d.pc.position[dim_x] - 40);
       }
-      if(d.pc.position[dim_x] - d.portion[dim_x] < 2){
+      if(d.pc.position[dim_x] - d.portion[dim_x] < 5){
         d.portion[dim_x] = (d.pc.position[dim_x] - 40);
       }
-      if(d.portion[dim_y] + 21 - d.pc.position[dim_y] < 2){
+      if(d.portion[dim_y] + 21 - d.pc.position[dim_y] < 5){
         d.portion[dim_y] = (d.pc.position[dim_y] - 11);
       }
-      if(d.pc.position[dim_y] - d.portion[dim_y] < 2){
+      if(d.pc.position[dim_y] - d.portion[dim_y] < 5){
         d.portion[dim_y] = (d.pc.position[dim_y] - 11);
       }
       if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
@@ -544,10 +544,29 @@ void do_look_mode(dungeon_t *d)
         return;
       case 56:
       case 107:
-        if(d->portion[dim_y] - 5 > 0){
-          d->portion[dim_y] -= 5;
+        if(d->portion[dim_y] - 3 > 0){
+          d->portion[dim_y] -= 3;
+        }
+        break;
+      case 54:
+      case 108:
+        if(d->portion[dim_x] + 3 < 79){
+          d->portion[dim_x] += 3;
+        }
+        break;
+      case 50:
+      case 106:
+        if(d->portion[dim_y] + 3 < 82){
+          d->portion[dim_y] += 3;
+        }
+        break;
+      case 52:
+      case 104:
+        if(d->portion[dim_x] - 3 > 0){
+          d->portion[dim_x] -= 3;
         }
         break;
     }
+    portion(d);
   }
 }

@@ -1,0 +1,44 @@
+README
+Author: Yuhan Xiao
+Date: Jan 31, 2017
+
+included:
+heap.c
+heap.h
+macros.h
+rlg327.c
+dungeon.c
+dungeon.h
+path.c
+path.h
+this README
+Makefile
+CHANGELOG
+
+Bugs(Improtant!!!): 
+1. Game over time: When PC meet monsters(especially monster3 and 7), Segmentation fault occurs. 
+2. The tunneling monsters will dig into wall immediately. Things may go wrong if substract 85.
+3. The erratic monsters will not goto randomly neighbors but goto a same direction when lose the chance to move like their pre other characteritics. 
+4. Program may stuck at functions smart_move or smart_tunneling_move. Run another one if that happens. Do not wait for it.
+
+Project Description: create randomly moving PC and 16 kinds of monsters moving toward PC
+Note:
+* When run, PC will go toward a random monster. Monsters will go toward PC if they are Telepathy or have line of sight.
+* The non-telepathy monsters will not move until they have line of sight of PC
+* For number of monsters, when using arguments to create monsters with number, do --nummon number. (--nummon 50).
+* Used Jeremy's code from Assignment-1.03.
+
+Relevant Functions:
+void excute(dungeon_t *d, int nummon);
+int check_monsters_alive(dungeon_t *d);
+void pc_move(dungeon_t *d);
+void monster_move(dungeon_t *d, character_t *monster);
+int line_of_sight(character_t *pc, character_t *monster);
+void stupid_move(dungeon_t *d, character_t *monster, pair_t next, pair_t next_position);
+void smart_move(dungeon_t *d, character_t *monster, pair_t next, pair_t next_position);
+void stupid_tunneling_move(dungeon_t *d, character_t *monster, pair_t next, pair_t next_position);
+void smart_tunneling_move(dungeon_t *d, character_t *monster, pair_t next, pair_t next_position);
+
+Data Structures:
+[Line: 29] typedef struct non_tunneling_distance{...}non_tunneling_distance_t;
+[Line: 36] typedef struct tunneling_distance{...}tunneling_distance_t;

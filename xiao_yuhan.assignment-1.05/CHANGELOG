@@ -16,5 +16,6 @@ Day Three (Mar 7, 2017): Deleted pc part move in do_moves without event staff.
 Day Three (Mar 7, 2017): Added PC_control to replace pc_next_pos to make our pc move by pressing key.
 Day Three (Mar 7, 2017): Added all cases of key pressing.
 
-Day Three (Mar 8, 2017): Added function do_look_mode to control the look mode.
-Day Three (Mar 8, 2017): Finished README and CHANGELOG (makefile has already been made by Jeremy
+Day Three (Mar 8, 2017): Added function do_look_mode to control the look mode and all cases of key pressing.
+Day Three (Mar 8, 2017): Debugged.
+Day Three (Mar 8, 2017): Finished README and CHANGELOG

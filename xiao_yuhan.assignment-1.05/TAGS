@@ -43,23 +43,23 @@ typedef struct queue_node 325,11146
 static int smooth_hardness(330,11230
 static int empty_dungeon(488,15506
 static int make_stairs(509,15931
-static int place_rooms(533,16713
-static int make_rooms(597,19238
-int gen_dungeon(621,19800
-void render_dungeon(631,19939
-void delete_dungeon(669,20804
-void init_dungeon(676,20938
-int write_dungeon_map(683,21095
-int write_rooms(696,21324
-uint32_t calculate_dungeon_size(716,21743
-int write_dungeon(723,21965
-int read_dungeon_map(782,23369
-int read_rooms(805,23967
-int calculate_num_rooms(835,24736
-int read_dungeon(843,24976
-int read_pgm(917,26704
-void render_distance_map(1000,28829
-void render_tunnel_distance_map(1033,29673
+static int place_rooms(533,16712
+static int make_rooms(597,19237
+int gen_dungeon(621,19799
+void render_dungeon(631,19938
+void delete_dungeon(669,20803
+void init_dungeon(676,20937
+int write_dungeon_map(683,21094
+int write_rooms(696,21323
+uint32_t calculate_dungeon_size(716,21742
+int write_dungeon(723,21964
+int read_dungeon_map(782,23368
+int read_rooms(805,23966
+int calculate_num_rooms(835,24735
+int read_dungeon(843,24975
+int read_pgm(917,26703
+void render_distance_map(1000,28828
+void render_tunnel_distance_map(1033,29672
 
 dungeon.h,1031
 # define DUNGEON_H2,18
@@ -289,9 +289,9 @@ const char *victory victory16,286
 const char *tombstone tombstone47,1857
 void usage(68,2908
 int main(79,3182
-void portion(286,10233
-void PC_control(328,11559
-void do_look_mode(528,16560
+void portion(286,10259
+void PC_control(327,11544
+void do_look_mode(527,16545
 
 utils.c,25
 int makedirectory(9,124

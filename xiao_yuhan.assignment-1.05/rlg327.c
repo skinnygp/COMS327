@@ -229,15 +229,14 @@ int main(int argc, char *argv[])
   d.portion[dim_x] = (d.pc.position[dim_x] - 40);
   d.portion[dim_y] = (d.pc.position[dim_y] - 11);
   if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
-  if (d.portion[dim_x] > 79) d.portion[dim_x] = 79;
-  if (d.portion[dim_y] < 0) d.portion[dim_x] = 0;
-  if (d.portion[dim_y] > 82) d.portion[dim_x] = 82;
+  if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
+  if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
+  if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
   d.is_look_mode = 0;
   d.quit = 0;
   while (pc_is_alive(&d) && dungeon_has_npcs(&d) && d.quit == 0) {
     portion(&d);
     do_moves(&d);
-    PC_control(&d);
     if(d.is_look_mode == 0){
       if(d.portion[dim_x] + 79 - d.pc.position[dim_x] < 5){
         d.portion[dim_x] = (d.pc.position[dim_x] - 40);
@@ -252,10 +251,11 @@ int main(int argc, char *argv[])
         d.portion[dim_y] = (d.pc.position[dim_y] - 11);
       }
       if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
-      if (d.portion[dim_x] > 80) d.portion[dim_x] = 80;
-      if (d.portion[dim_y] < 0) d.portion[dim_x] = 0;
-      if (d.portion[dim_y] > 82) d.portion[dim_x] = 82;
+      if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
+      if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
+      if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
     }
+    PC_control(&d);
   }
   portion(&d);
   endwin();
@@ -290,8 +290,7 @@ void portion(dungeon_t *d)
   for (p[dim_y] = 1; p[dim_y] < 22; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < 80; p[dim_x]++) {
       if (charxy(d->portion[dim_x] + p[dim_x],d->portion[dim_y] + p[dim_y])){
-        mvaddch(p[dim_y], p[dim_x], d->character[d->portion[dim_y] + p[dim_y]]
-                                  [d->portion[dim_x] + p[dim_x]]->symbol);
+        mvaddch(p[dim_y], p[dim_x], charxy(d->portion[dim_x] + p[dim_x], d->portion[dim_y] + p[dim_y])->symbol);
       } else {
         switch (mapxy(d->portion[dim_x] + p[dim_x],
                       d->portion[dim_y] + p[dim_y])) {

@@ -508,9 +508,9 @@ static int empty_dungeon(dungeon_t *d)
 //@author: yuhan xiao
 static int make_stairs(dungeon_t *d){
   pair_t position;
-  int room, num, type;
+  int room, num, type, i;
   num = rand_range(10, 20);
-  for(int i = 0; i < num; i++){
+  for(i = 0; i < num; i++){
     type = rand_range(0,1);
     room = rand_range(1, d->num_rooms - 1);
     position[dim_y] = rand_range(d->rooms[room].position[dim_y],

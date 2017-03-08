@@ -2,7 +2,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
-
+#include <ncurses.h>
 #include "dungeon.h"
 #include "pc.h"
 #include "npc.h"
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
- 
+
  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
@@ -215,11 +215,10 @@ int main(int argc, char *argv[])
 
   config_pc(&d);
   gen_monsters(&d);
-
+  d.is_look_mode = 0;
   while (pc_is_alive(&d) && dungeon_has_npcs(&d)) {
     render_dungeon(&d);
     do_moves(&d);
-    usleep(5000);
   }
   render_dungeon(&d);
 

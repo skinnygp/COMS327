@@ -36,6 +36,8 @@ typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_floor,
   ter_floor_room,
   ter_floor_hall,
+  ter_stair_up,
+  ter_stair_down,
 } terrain_type_t;
 
 typedef struct room {
@@ -73,6 +75,7 @@ typedef struct dungeon {
    * information from the current event.                                   */
   uint32_t time;
   pair_t portion;
+  uint8_t is_look_mode;
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);

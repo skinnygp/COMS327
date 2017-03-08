@@ -26,7 +26,7 @@ typedef enum dim 7,190
 } dim_t;11,238
 typedef int16_t pair_t[pair_t13,248
 
-dungeon.c,1073
+dungeon.c,1148
 typedef struct corridor_path 14,224
 } corridor_path_t;19,327
 static uint32_t in_room(21,347
@@ -42,25 +42,27 @@ typedef struct queue_node 325,11146
 } queue_node_t;328,11213
 static int smooth_hardness(330,11230
 static int empty_dungeon(488,15506
-static int place_rooms(508,15909
-static int make_rooms(572,18434
-int gen_dungeon(595,18995
-void render_dungeon(605,19117
-void delete_dungeon(637,19844
-void init_dungeon(644,19978
-int write_dungeon_map(651,20135
-int write_rooms(664,20364
-uint32_t calculate_dungeon_size(684,20783
-int write_dungeon(691,21005
-int read_dungeon_map(750,22409
-int read_rooms(773,23007
-int calculate_num_rooms(803,23776
-int read_dungeon(811,24016
-int read_pgm(885,25744
-void render_distance_map(968,27869
-void render_tunnel_distance_map(999,28657
+static int make_stairs(508,15909
+static int place_rooms(532,16691
+static int make_rooms(596,19216
+int gen_dungeon(620,19778
+void render_dungeon(630,19917
+void render_portion_dungeon(667,20781
+void delete_dungeon(705,21654
+void init_dungeon(712,21788
+int write_dungeon_map(719,21945
+int write_rooms(732,22174
+uint32_t calculate_dungeon_size(752,22593
+int write_dungeon(759,22815
+int read_dungeon_map(818,24219
+int read_rooms(841,24817
+int calculate_num_rooms(871,25586
+int read_dungeon(879,25826
+int read_pgm(953,27554
+void render_distance_map(1036,29679
+void render_tunnel_distance_map(1069,30523
 
-dungeon.h,981
+dungeon.h,1031
 # define DUNGEON_H2,18
 #define DUNGEON_X 9,122
 #define DUNGEON_Y 10,157
@@ -90,12 +92,14 @@ typedef enum __attribute__ ((__packed__)) terrain_type 32,970
   ter_floor,36,1074
   ter_floor_room,37,1087
   ter_floor_hall,38,1105
-} terrain_type_t;39,1123
-typedef struct room 41,1142
-} room_t;44,1198
-typedef struct character character_t;46,1209
-typedef struct dungeon 48,1248
-} dungeon_t;75,2669
+  ter_stair_up,39,1123
+  ter_stair_down,40,1139
+} terrain_type_t;41,1157
+typedef struct room 43,1176
+} room_t;46,1232
+typedef struct character character_t;48,1243
+typedef struct dungeon 50,1282
+} dungeon_t;79,2745
 
 event.c,178
 static uint32_t next_event_number(4,43
@@ -175,10 +179,10 @@ move.c,194
 void do_combat(17,250
 void move_character(30,571
 void do_moves(46,1052
-void dir_nearest_wall(116,3233
-uint32_t against_wall(128,3648
-uint32_t in_corner(140,4136
-uint32_t move_pc(158,4764
+void dir_nearest_wall(128,3746
+uint32_t against_wall(140,4161
+uint32_t in_corner(152,4649
+uint32_t move_pc(170,5277
 
 move.h,104
 # define MOVE_H2,15
@@ -268,13 +272,12 @@ path.h,60
 # define PATH_H2,15
 typedef struct dungeon dungeon_t;4,32
 
-pc.c,157
+pc.c,126
 void pc_delete(11,135
 uint32_t pc_is_alive(18,195
 void place_pc(23,257
 void config_pc(33,684
-uint32_t pc_next_pos(53,1102
-uint32_t pc_in_room(151,5123
+uint32_t pc_in_room(53,1102
 
 pc.h,99
 # define PC_H2,13
@@ -283,10 +286,10 @@ typedef struct pc 10,105
 } pc_t;11,125
 
 rlg327.c,115
-const char *victory victory11,155
-const char *tombstone tombstone42,1726
-void usage(63,2777
-int main(74,3051
+const char *victory victory11,175
+const char *tombstone tombstone42,1746
+void usage(63,2797
+int main(74,3071
 
 utils.c,25
 int makedirectory(9,124

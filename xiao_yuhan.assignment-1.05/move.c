@@ -100,7 +100,19 @@ void do_moves(dungeon_t *d)
      * and recreated every time we leave and re-enter this function.    */
     e->c = NULL;
     event_delete(e);
-    pc_next_pos(d, next);
+    next[dim_x] = next[dim_y] = 0;
+    int key = 0;
+    printf("Enter Key: ");
+    do {
+      key = getchar();
+      // switch (/* expression */) {
+      //   case /* value */:
+      // }
+    }
+    while(key != 55 && key != 121 && key != 56 && key != 107 && key != 57 && key != 117
+          && key != 54 && key != 108 && key != 51 && key != 110 && key != 50 && key != 106
+          && key != 49 && key != 98 && key != 52 && key != 104 && key != 53 && key != 32
+          && key != 62 && key != 60 && key != 76 && key != 27 && key != 81);
     next[dim_x] += c->position[dim_x];
     next[dim_y] += c->position[dim_y];
     if (mappair(next) <= ter_floor) {

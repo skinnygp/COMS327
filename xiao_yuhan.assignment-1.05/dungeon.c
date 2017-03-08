@@ -505,6 +505,30 @@ static int empty_dungeon(dungeon_t *d)
   return 0;
 }
 
+static int make_stairs(dungeon_t *d){
+  pair_t position;
+  int room, num, type;
+  num = rand_range(10, 20);
+  for(int i = 0; i < num; i++){
+    type = rand_range(0,1);
+    room = rand_range(1, d->num_rooms - 1);
+    position[dim_y] = rand_range(d->rooms[room].position[dim_y],
+                          (d->rooms[room].position[dim_y] +
+                           d->rooms[room].size[dim_y] - 1));
+    position[dim_x] = rand_range(d->rooms[room].position[dim_x],
+                          (d->rooms[room].position[dim_x] +
+                           d->rooms[room].size[dim_x] - 1));
+    if(type){
+      mappair(position) = ter_stair_up;
+    }
+    else mappair(position) = ter_stair_down;
+    printf("%d ", position[dim_y]);
+    printf("%d\n", position[dim_x]);
+  }
+  return 0;
+}
+
+
 static int place_rooms(dungeon_t *d)
 {
   pair_t p;
@@ -592,13 +616,14 @@ static int make_rooms(dungeon_t *d)
   return 0;
 }
 
+
 int gen_dungeon(dungeon_t *d)
 {
   do {
     make_rooms(d);
   } while (place_rooms(d));
   connect_rooms(d);
-
+  make_stairs(d);
   return 0;
 }
 
@@ -615,6 +640,12 @@ void render_dungeon(dungeon_t *d)
         case ter_wall:
         case ter_wall_immutable:
           putchar(' ');
+          break;
+        case ter_stair_up:
+          putchar('<');
+          break;
+        case ter_stair_down:
+          putchar('>');
           break;
         case ter_floor:
         case ter_floor_room:
@@ -981,6 +1012,8 @@ void render_distance_map(dungeon_t *d)
           putchar(' ');
           break;
         case ter_floor:
+        case ter_stair_up:
+        case ter_stair_down:
         case ter_floor_room:
         case ter_floor_hall:
           putchar('0' + d->pc_distance[p[dim_y]][p[dim_x]] % 10);

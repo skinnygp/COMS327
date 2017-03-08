@@ -26,7 +26,7 @@ typedef enum dim 7,190
 } dim_t;11,238
 typedef int16_t pair_t[pair_t13,248
 
-dungeon.c,1148
+dungeon.c,1108
 typedef struct corridor_path 14,224
 } corridor_path_t;19,327
 static uint32_t in_room(21,347
@@ -47,20 +47,19 @@ static int place_rooms(532,16691
 static int make_rooms(596,19216
 int gen_dungeon(620,19778
 void render_dungeon(630,19917
-void render_portion_dungeon(667,20781
-void delete_dungeon(705,21654
-void init_dungeon(712,21788
-int write_dungeon_map(719,21945
-int write_rooms(732,22174
-uint32_t calculate_dungeon_size(752,22593
-int write_dungeon(759,22815
-int read_dungeon_map(818,24219
-int read_rooms(841,24817
-int calculate_num_rooms(871,25586
-int read_dungeon(879,25826
-int read_pgm(953,27554
-void render_distance_map(1036,29679
-void render_tunnel_distance_map(1069,30523
+void delete_dungeon(668,20782
+void init_dungeon(675,20916
+int write_dungeon_map(682,21073
+int write_rooms(695,21302
+uint32_t calculate_dungeon_size(715,21721
+int write_dungeon(722,21943
+int read_dungeon_map(781,23347
+int read_rooms(804,23945
+int calculate_num_rooms(834,24714
+int read_dungeon(842,24954
+int read_pgm(916,26682
+void render_distance_map(999,28807
+void render_tunnel_distance_map(1032,29651
 
 dungeon.h,1031
 # define DUNGEON_H2,18
@@ -285,11 +284,12 @@ typedef struct dungeon dungeon_t;8,70
 typedef struct pc 10,105
 } pc_t;11,125
 
-rlg327.c,115
-const char *victory victory11,175
-const char *tombstone tombstone42,1746
-void usage(63,2797
-int main(74,3071
+rlg327.c,138
+const char *victory victory11,202
+const char *tombstone tombstone42,1773
+void usage(63,2824
+int main(74,3098
+void portion(266,9525
 
 utils.c,25
 int makedirectory(9,124

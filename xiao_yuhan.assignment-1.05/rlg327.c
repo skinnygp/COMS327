@@ -7,7 +7,7 @@
 #include "pc.h"
 #include "npc.h"
 #include "move.h"
-
+void portion(dungeon_t *d);
 const char *victory =
   "\n                                       o\n"
   "                                      $\"\"$o\n"
@@ -203,6 +203,12 @@ int main(int argc, char *argv[])
   printf("Seed is %ld.\n", seed);
   srand(seed);
 
+  initscr();
+  raw();
+  noecho();
+  curs_set(0);
+  keypad(stdscr, TRUE);
+
   init_dungeon(&d);
 
   if (do_load) {
@@ -215,13 +221,33 @@ int main(int argc, char *argv[])
 
   config_pc(&d);
   gen_monsters(&d);
+  d.portion[dim_x] = (d.pc.position[dim_x] - 40);
+  d.portion[dim_y] = (d.pc.position[dim_y] - 13);
+  if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
+  if (d.portion[dim_x] > 80) d.portion[dim_x] = 80;
+  if (d.portion[dim_y] < 0) d.portion[dim_x] = 0;
+  if (d.portion[dim_y] > 81) d.portion[dim_x] = 81;
   d.is_look_mode = 0;
   while (pc_is_alive(&d) && dungeon_has_npcs(&d)) {
-    render_dungeon(&d);
+    portion(&d);
     do_moves(&d);
+    if(d.is_look_mode = 0){
+      if(d.portion[dim_x] + 80 - d.pc.position[dim_x] < 2){
+        d.portion[dim_x] = (d.pc.position[dim_x] - 40);
+      }
+      if(d.pc.position[dim_x] - d.portion[dim_x] < 2){
+        d.portion[dim_x] = (d.pc.position[dim_x] - 40);
+      }
+      if(d.portion[dim_y] + 21 - d.pc.position[dim_y] < 2){
+        d.portion[dim_y] = (d.pc.position[dim_y] - 13);
+      }
+      if(d.pc.position[dim_y] - d.portion[dim_y] < 2){
+        d.portion[dim_y] = (d.pc.position[dim_y] - 13);
+      }
+    }
   }
-  render_dungeon(&d);
-
+  portion(&d);
+  endwin();
   if (do_save) {
     write_dungeon(&d, save_file);
   }
@@ -236,4 +262,38 @@ int main(int argc, char *argv[])
   delete_dungeon(&d);
 
   return 0;
+}
+
+void portion(dungeon_t *d){
+  pair_t p;
+  clear();
+  for (p[dim_y] = 3; p[dim_y] < 24; p[dim_y]++) {
+    for (p[dim_x] = 0; p[dim_x] < 80; p[dim_x]++) {
+      if (charxy(d->portion[dim_x] + p[dim_x],d->portion[dim_y] + p[dim_y])){
+        mvaddch(p[dim_y], p[dim_x], d->character[d->portion[dim_y] + p[dim_y]]
+                                  [d->portion[dim_x] + p[dim_x]]->symbol);
+      } else {
+        switch (mapxy(d->portion[dim_x] + p[dim_x],
+                      d->portion[dim_y] + p[dim_y])) {
+        case ter_wall:
+        case ter_wall_immutable:
+          mvaddch(p[dim_y], p[dim_x], '#');
+          break;
+        case ter_stair_up:
+          mvaddch(p[dim_y], p[dim_x], '<');
+          break;
+        case ter_stair_down:
+          mvaddch(p[dim_y], p[dim_x], '>');
+          break;
+        case ter_floor:
+        case ter_floor_room:
+        case ter_floor_hall:
+          mvaddch(p[dim_y], p[dim_x], '.');
+          break;
+        }
+      }
+    }
+  }
+  mvprintw(0, 0, "PC position: %3d,%2d.",d->pc.position[dim_x], d->pc.position[dim_y]);
+  refresh();
 }

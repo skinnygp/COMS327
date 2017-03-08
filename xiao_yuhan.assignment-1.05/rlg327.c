@@ -316,7 +316,7 @@ void portion(dungeon_t *d)
       }
     }
   }
-  mvprintw(0, 0, "PC position: %3d,%2d.",d->pc.position[dim_x], d->pc.position[dim_y]);
+  mvprintw(0, 0, "PC position: %d %d.",d->pc.position[dim_x], d->pc.position[dim_y]);
   if(d->is_look_mode){
     mvprintw(22, 0, "Look Mode: Press esc to enter Control Mode.");
   }
@@ -481,10 +481,10 @@ void PC_control(dungeon_t *d)
           gen_monsters(d);
           d->portion[dim_x] = (d->pc.position[dim_x] - 40);
           d->portion[dim_y] = (d->pc.position[dim_y] - 11);
-          if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
-          if (d->portion[dim_x] > 79) d->portion[dim_x] = 79;
-          if (d->portion[dim_y] < 0) d->portion[dim_x] = 0;
-          if (d->portion[dim_y] > 82) d->portion[dim_x] = 82;
+          if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
+          if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
+          if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
+          if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
           d->is_look_mode = 0;
           d->quit = 0;
         }
@@ -503,10 +503,10 @@ void PC_control(dungeon_t *d)
           gen_monsters(d);
           d->portion[dim_x] = (d->pc.position[dim_x] - 40);
           d->portion[dim_y] = (d->pc.position[dim_y] - 11);
-          if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
-          if (d->portion[dim_x] > 79) d->portion[dim_x] = 79;
-          if (d->portion[dim_y] < 0) d->portion[dim_x] = 0;
-          if (d->portion[dim_y] > 82) d->portion[dim_x] = 82;
+          if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
+          if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
+          if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
+          if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
           d->is_look_mode = 0;
           d->quit = 0;
         }
@@ -534,10 +534,10 @@ void do_look_mode(dungeon_t *d)
       case 27:
         d->portion[dim_x] = (d->pc.position[dim_x] - 40);
         d->portion[dim_y] = (d->pc.position[dim_y] - 11);
-        if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
-        if (d->portion[dim_x] > 79) d->portion[dim_x] = 79;
-        if (d->portion[dim_y] < 0) d->portion[dim_x] = 0;
-        if (d->portion[dim_y] > 82) d->portion[dim_x] = 82;
+        if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
+        if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
+        if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
+        if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
         d->is_look_mode = 0;
         portion(d);
         return;

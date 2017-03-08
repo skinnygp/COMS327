@@ -75,7 +75,8 @@ typedef struct dungeon {
    * information from the current event.                                   */
   uint32_t time;
   pair_t portion;
-  uint8_t is_look_mode;
+  uint32_t is_look_mode;
+  uint32_t quit;
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);

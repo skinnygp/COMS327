@@ -98,7 +98,7 @@ typedef struct room 43,1176
 } room_t;46,1232
 typedef struct character character_t;48,1243
 typedef struct dungeon 50,1282
-} dungeon_t;79,2745
+} dungeon_t;80,2763
 
 event.c,178
 static uint32_t next_event_number(4,43
@@ -178,10 +178,10 @@ move.c,194
 void do_combat(17,250
 void move_character(30,571
 void do_moves(46,1052
-void dir_nearest_wall(128,3746
-uint32_t against_wall(140,4161
-uint32_t in_corner(152,4649
-uint32_t move_pc(170,5277
+void dir_nearest_wall(106,2973
+uint32_t against_wall(118,3388
+uint32_t in_corner(130,3876
+uint32_t move_pc(148,4504
 
 move.h,104
 # define MOVE_H2,15
@@ -284,12 +284,14 @@ typedef struct dungeon dungeon_t;8,70
 typedef struct pc 10,105
 } pc_t;11,125
 
-rlg327.c,138
-const char *victory victory11,202
-const char *tombstone tombstone42,1773
-void usage(63,2824
-int main(74,3098
-void portion(271,9802
+rlg327.c,195
+const char *victory victory16,286
+const char *tombstone tombstone47,1857
+void usage(68,2908
+int main(79,3182
+void portion(286,10233
+void PC_control(328,11559
+void do_look_mode(528,16560
 
 utils.c,25
 int makedirectory(9,124

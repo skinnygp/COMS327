@@ -497,6 +497,7 @@ void PC_control(dungeon_t *d)
         if(mappair(next) == ter_stair_up){
           unbound = 0;
           delete_dungeon(d);
+          
 	        free(d->pc.pc);
           init_dungeon(d);
           gen_dungeon(d);

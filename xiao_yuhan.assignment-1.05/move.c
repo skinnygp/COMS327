@@ -144,8 +144,3 @@ uint32_t in_corner(dungeon_t *d, character_t *c)
 
   return num_immutable > 1;
 }
-
-uint32_t move_pc(dungeon_t *d, uint32_t dir)
-{
-  return 1;
-}

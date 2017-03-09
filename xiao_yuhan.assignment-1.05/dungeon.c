@@ -501,14 +501,14 @@ static int empty_dungeon(dungeon_t *d)
       charxy(x, y) = NULL;
     }
   }
-
+  d->rooms = NULL;
   return 0;
 }
 
 //@author: yuhan xiao
 static int make_stairs(dungeon_t *d){
   pair_t position;
-  int room, num, type, i;
+  int room, num, type,i;
   num = rand_range(10, 20);
   for(i = 0; i < num; i++){
     type = rand_range(0,1);
@@ -523,8 +523,6 @@ static int make_stairs(dungeon_t *d){
       mappair(position) = ter_stair_up;
     }
     else mappair(position) = ter_stair_down;
-    printf("%d ", position[dim_y]);
-    printf("%d\n", position[dim_x]);
   }
   return 0;
 }
@@ -601,6 +599,7 @@ static int make_rooms(dungeon_t *d)
   for (i = MIN_ROOMS; i < MAX_ROOMS && rand_under(6, 8); i++)
     ;
   d->num_rooms = i;
+  if(d->rooms != NULL) free(d->rooms);
   d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
 
   for (i = 0; i < d->num_rooms; i++) {
@@ -894,7 +893,7 @@ int read_dungeon(dungeon_t *d, char *file)
     fprintf(stderr, "Not an RLG327 save file.\n");
     exit(-1);
   }
-  fread(&be32, sizeof (be32), 1, f);
+  // fread(&be32, sizeof (be32), 1, f);
   // if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
   //   fprintf(stderr, "File version mismatch.\n");
   //   exit(-1);

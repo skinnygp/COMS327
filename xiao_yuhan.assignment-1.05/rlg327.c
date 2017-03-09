@@ -211,9 +211,8 @@ int main(int argc, char *argv[])
   initscr();
   raw();
   noecho();
-  curs_set(0);
   keypad(stdscr, TRUE);
-
+  curs_set(0);
   init_dungeon(&d);
 
   if (do_load) {
@@ -229,9 +228,9 @@ int main(int argc, char *argv[])
   d.portion[dim_x] = (d.pc.position[dim_x] - 40);
   d.portion[dim_y] = (d.pc.position[dim_y] - 11);
   if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
-  if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
+  if (d.portion[dim_x] + 80 >= 159) d.portion[dim_x] = 79;
   if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
-  if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
+  if (d.portion[dim_y] + 21 >= 104) d.portion[dim_y] = 82;
   d.is_look_mode = 0;
   d.quit = 0;
   while (pc_is_alive(&d) && dungeon_has_npcs(&d) && d.quit == 0) {
@@ -251,9 +250,9 @@ int main(int argc, char *argv[])
         d.portion[dim_y] = (d.pc.position[dim_y] - 11);
       }
       if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
-      if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
+      if (d.portion[dim_x] + 80 >= 159) d.portion[dim_x] = 79;
       if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
-      if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
+      if (d.portion[dim_y] + 21 >= 104) d.portion[dim_y] = 82;
     }
     PC_control(&d);
   }
@@ -343,7 +342,7 @@ void PC_control(dungeon_t *d)
       case 121:
         next[dim_x]--;
         next[dim_y]--;
-        if(mappair(next) == ter_wall){
+        if(mappair(next) == ter_wall || mappair(next) == ter_wall_immutable){
           mvprintw(23, 0, "Wrong Way!");
           unbound = 1;
           next[dim_x]++;
@@ -359,7 +358,7 @@ void PC_control(dungeon_t *d)
       case 56:
       case 107:
         next[dim_y]--;
-        if(mappair(next) == ter_wall){
+        if(mappair(next) == ter_wall || mappair(next) == ter_wall_immutable){
           mvprintw(23, 0, "Wrong Way!");
           unbound = 1;
           next[dim_y]++;
@@ -375,7 +374,7 @@ void PC_control(dungeon_t *d)
       case 117:
         next[dim_x]++;
         next[dim_y]--;
-        if(mappair(next) == ter_wall){
+        if(mappair(next) == ter_wall || mappair(next) == ter_wall_immutable){
           mvprintw(23, 0, "Wrong Way!");
           unbound = 1;
           next[dim_x]--;
@@ -391,7 +390,7 @@ void PC_control(dungeon_t *d)
       case 54:
       case 108:
         next[dim_x]++;
-        if(mappair(next) == ter_wall){
+        if(mappair(next) == ter_wall || mappair(next) == ter_wall_immutable){
           mvprintw(23, 0, "Wrong Way!");
           unbound = 1;
           next[dim_x]--;
@@ -407,7 +406,7 @@ void PC_control(dungeon_t *d)
       case 110:
         next[dim_x]++;
         next[dim_y]++;
-        if(mappair(next) == ter_wall){
+        if(mappair(next) == ter_wall || mappair(next) == ter_wall_immutable){
           mvprintw(23, 0, "Wrong Way!");
           unbound = 1;
           next[dim_x]--;
@@ -423,7 +422,7 @@ void PC_control(dungeon_t *d)
       case 50:
       case 106:
         next[dim_y]++;
-        if(mappair(next) == ter_wall){
+        if(mappair(next) == ter_wall || mappair(next) == ter_wall_immutable){
           mvprintw(23, 0, "Wrong Way!");
           unbound = 1;
           next[dim_y]--;
@@ -439,7 +438,7 @@ void PC_control(dungeon_t *d)
       case 98:
         next[dim_x]--;
         next[dim_y]++;
-        if(mappair(next) == ter_wall){
+        if(mappair(next) == ter_wall || mappair(next) == ter_wall_immutable){
           mvprintw(23, 0, "Wrong Way!");
           unbound = 1;
           next[dim_x]++;
@@ -455,7 +454,7 @@ void PC_control(dungeon_t *d)
       case 52:
       case 104:
         next[dim_x]--;
-        if(mappair(next) == ter_wall){
+        if(mappair(next) == ter_wall || mappair(next) == ter_wall_immutable){
           mvprintw(23, 0, "Wrong Way!");
           unbound = 1;
           next[dim_x]++;
@@ -475,16 +474,17 @@ void PC_control(dungeon_t *d)
         if(mappair(next) == ter_stair_down){
           unbound = 0;
           delete_dungeon(d);
+	        free(d->pc.pc);
           init_dungeon(d);
           gen_dungeon(d);
           config_pc(d);
           gen_monsters(d);
           d->portion[dim_x] = (d->pc.position[dim_x] - 40);
           d->portion[dim_y] = (d->pc.position[dim_y] - 11);
-          if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
-          if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
-          if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
-          if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
+          if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
+          if (d->portion[dim_x] + 80 >= 159) d->portion[dim_x] = 79;
+          if (d->portion[dim_y] < 0) d->portion[dim_y] = 0;
+          if (d->portion[dim_y] + 21 >= 104) d->portion[dim_y] = 83;
           d->is_look_mode = 0;
           d->quit = 0;
         }
@@ -497,16 +497,17 @@ void PC_control(dungeon_t *d)
         if(mappair(next) == ter_stair_up){
           unbound = 0;
           delete_dungeon(d);
+	        free(d->pc.pc);
           init_dungeon(d);
           gen_dungeon(d);
           config_pc(d);
           gen_monsters(d);
           d->portion[dim_x] = (d->pc.position[dim_x] - 40);
           d->portion[dim_y] = (d->pc.position[dim_y] - 11);
-          if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
-          if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
-          if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
-          if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
+          if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
+          if (d->portion[dim_x] + 80 >= 159) d->portion[dim_x] = 79;
+          if (d->portion[dim_y] < 0) d->portion[dim_y] = 0;
+          if (d->portion[dim_y] + 21 >= 104) d->portion[dim_y] = 83;
           d->is_look_mode = 0;
           d->quit = 0;
         }
@@ -534,10 +535,10 @@ void do_look_mode(dungeon_t *d)
       case 27:
         d->portion[dim_x] = (d->pc.position[dim_x] - 40);
         d->portion[dim_y] = (d->pc.position[dim_y] - 11);
-        if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
-        if (d.portion[dim_x] + 80 >= 160) d.portion[dim_x] = 80;
-        if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
-        if (d.portion[dim_y] + 21 > 105) d.portion[dim_y] = 84;
+        if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
+        if (d->portion[dim_x] + 80 >= 159) d->portion[dim_x] = 79;
+        if (d->portion[dim_y] < 0) d->portion[dim_y] = 0;
+        if (d->portion[dim_y] + 21 >= 104) d->portion[dim_y] = 83;
         d->is_look_mode = 0;
         portion(d);
         return;
@@ -555,7 +556,7 @@ void do_look_mode(dungeon_t *d)
         break;
       case 50:
       case 106:
-        if(d->portion[dim_y] + 3 < 82){
+        if(d->portion[dim_y] + 3 < 83){
           d->portion[dim_y] += 3;
         }
         break;

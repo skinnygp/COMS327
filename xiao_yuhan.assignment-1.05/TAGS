@@ -26,7 +26,7 @@ typedef enum dim 7,190
 } dim_t;11,238
 typedef int16_t pair_t[pair_t13,248
 
-dungeon.c,1109
+dungeon.c,1108
 typedef struct corridor_path 14,224
 } corridor_path_t;19,327
 static uint32_t in_room(21,347
@@ -42,24 +42,24 @@ typedef struct queue_node 325,11146
 } queue_node_t;328,11213
 static int smooth_hardness(330,11230
 static int empty_dungeon(488,15506
-static int make_stairs(509,15931
-static int place_rooms(533,16712
-static int make_rooms(597,19237
-int gen_dungeon(621,19799
-void render_dungeon(631,19938
-void delete_dungeon(669,20803
-void init_dungeon(676,20937
-int write_dungeon_map(683,21094
-int write_rooms(696,21323
-uint32_t calculate_dungeon_size(716,21742
-int write_dungeon(723,21964
-int read_dungeon_map(782,23368
-int read_rooms(805,23966
-int calculate_num_rooms(835,24735
-int read_dungeon(843,24975
-int read_pgm(917,26703
-void render_distance_map(1000,28828
-void render_tunnel_distance_map(1033,29672
+static int make_stairs(509,15949
+static int place_rooms(531,16656
+static int make_rooms(595,19181
+int gen_dungeon(620,19782
+void render_dungeon(630,19921
+void delete_dungeon(668,20786
+void init_dungeon(675,20920
+int write_dungeon_map(682,21077
+int write_rooms(695,21306
+uint32_t calculate_dungeon_size(715,21725
+int write_dungeon(722,21947
+int read_dungeon_map(781,23351
+int read_rooms(804,23949
+int calculate_num_rooms(834,24718
+int read_dungeon(842,24958
+int read_pgm(916,26689
+void render_distance_map(999,28814
+void render_tunnel_distance_map(1032,29658
 
 dungeon.h,1031
 # define DUNGEON_H2,18
@@ -174,14 +174,13 @@ macros.h,611
 # define frand(173,7872
 # define structdup(180,7984
 
-move.c,194
+move.c,167
 void do_combat(17,250
 void move_character(30,571
 void do_moves(46,1052
 void dir_nearest_wall(106,2973
 uint32_t against_wall(118,3388
 uint32_t in_corner(130,3876
-uint32_t move_pc(148,4504
 
 move.h,104
 # define MOVE_H2,15
@@ -289,9 +288,9 @@ const char *victory victory16,286
 const char *tombstone tombstone47,1857
 void usage(68,2908
 int main(79,3182
-void portion(286,10259
-void PC_control(327,11544
-void do_look_mode(527,16545
+void portion(285,10260
+void PC_control(326,11543
+void do_look_mode(528,16934
 
 utils.c,25
 int makedirectory(9,124

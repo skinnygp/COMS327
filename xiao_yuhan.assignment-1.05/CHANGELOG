@@ -18,4 +18,5 @@ Day Three (Mar 7, 2017): Added all cases of key pressing.
 
 Day Three (Mar 8, 2017): Added function do_look_mode to control the look mode and all cases of key pressing.
 Day Three (Mar 8, 2017): Debugged.
-Day Three (Mar 8, 2017): Finished README and CHANGELOG
+Day Three (Mar 8, 2017): Finished README and CHANGELOG.
+Day Three (Mar 8, 2017): Fixed all memory leaking problems.

@@ -1,15 +1,15 @@
-CC = gcc
+¥CC = gcc
 CXX = g++
 ECHO = echo
 RM = rm -f
 
-CFLAGS = -Wall -Werror -ggdb -funroll-loops
-CXXFLAGS = -Wall -Werror -ggdb -funroll-loops
+CFLAGS = -Wall -ggdb -funroll-loops -pg
+CXXFLAGS = -Wall -ggdb -funroll-loops
 LDFLAGS = -lncurses
 
 BIN = rlg327
 OBJS = rlg327.o heap.o dungeon.o path.o utils.o character.o event.o \
-       pc.o npc.o move.o io.o
+       pc.o npc.o move.o
 
 all: $(BIN) etags
 

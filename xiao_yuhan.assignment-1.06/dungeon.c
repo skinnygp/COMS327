@@ -1,6 +1,19 @@
+// #include <stdio.h>
+// #include <stdint.h>
+// #include <endian.h>
+// #include <sys/stat.h>
+// #include <sys/time.h>
+// #include <limits.h>
+// #include <errno.h>
+//
+// #include "dungeon.h"
+// #include "utils.h"
+// #include "heap.h"
+// #include "event.h"
+#define RUN_ON_MAC
+
 #include <stdio.h>
 #include <stdint.h>
-// #include <endian.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <limits.h>
@@ -10,10 +23,15 @@
 #include "utils.h"
 #include "heap.h"
 #include "event.h"
-#include "pc.h"
-#include "npc.h"
-#include "io.h"
 
+#ifndef RUN_ON_MAC
+#include <endian.h>
+#else
+#define htobe32(x) (x)
+#define htobe16(x) (x)
+#define be32toh(x) (x)
+#define be16toh(x) (x)
+#endif
 typedef struct corridor_path {
   heap_node_t *hn;
   uint8_t pos[2];
@@ -57,7 +75,7 @@ static void dijkstra_corridor(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-  
+
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -156,7 +174,7 @@ static void dijkstra_corridor_inv(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-  
+
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -508,6 +526,29 @@ static int empty_dungeon(dungeon_t *d)
   return 0;
 }
 
+//@author: yuhan xiao
+static int make_stairs(dungeon_t *d){
+  pair_t position;
+  int room, num, type,i;
+  num = rand_range(10, 20);
+  for(i = 0; i < num; i++){
+    type = rand_range(0,1);
+    room = rand_range(1, d->num_rooms - 1);
+    position[dim_y] = rand_range(d->rooms[room].position[dim_y],
+                          (d->rooms[room].position[dim_y] +
+                           d->rooms[room].size[dim_y] - 1));
+    position[dim_x] = rand_range(d->rooms[room].position[dim_x],
+                          (d->rooms[room].position[dim_x] +
+                           d->rooms[room].size[dim_x] - 1));
+    if(type){
+      mappair(position) = ter_stair_up;
+    }
+    else mappair(position) = ter_stair_down;
+  }
+  return 0;
+}
+
+
 static int place_rooms(dungeon_t *d)
 {
   pair_t p;
@@ -579,9 +620,7 @@ static int make_rooms(dungeon_t *d)
   for (i = MIN_ROOMS; i < MAX_ROOMS && rand_under(6, 8); i++)
     ;
   d->num_rooms = i;
-  if (d->rooms) { /* We're here on a "do over" */
-    free(d->rooms);
-  }
+  if(d->rooms != NULL) free(d->rooms);
   d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
 
   for (i = 0; i < d->num_rooms; i++) {
@@ -598,27 +637,6 @@ static int make_rooms(dungeon_t *d)
   return 0;
 }
 
-static void place_stairs(dungeon_t *d)
-{
-  pair_t p;
-  do {
-    while ((p[dim_y] = rand_range(1, DUNGEON_Y - 2)) &&
-           (p[dim_x] = rand_range(1, DUNGEON_X - 2)) &&
-           ((mappair(p) < ter_floor)                 ||
-            (mappair(p) > ter_stairs)))
-      ;
-    mappair(p) = ter_stairs_down;
-  } while (rand_under(2, 3));
-  do {
-    while ((p[dim_y] = rand_range(1, DUNGEON_Y - 2)) &&
-           (p[dim_x] = rand_range(1, DUNGEON_X - 2)) &&
-           ((mappair(p) < ter_floor)                 ||
-            (mappair(p) > ter_stairs)))
-      
-      ;
-    mappair(p) = ter_stairs_up;
-  } while (rand_under(3, 4));
-}
 
 int gen_dungeon(dungeon_t *d)
 {
@@ -626,11 +644,10 @@ int gen_dungeon(dungeon_t *d)
     make_rooms(d);
   } while (place_rooms(d));
   connect_rooms(d);
-  place_stairs(d);
-
+  make_stairs(d);
   return 0;
 }
-/*
+
 void render_dungeon(dungeon_t *d)
 {
   pair_t p;
@@ -644,6 +661,12 @@ void render_dungeon(dungeon_t *d)
         case ter_wall:
         case ter_wall_immutable:
           putchar(' ');
+          break;
+        case ter_stair_up:
+          putchar('<');
+          break;
+        case ter_stair_down:
+          putchar('>');
           break;
         case ter_floor:
         case ter_floor_room:
@@ -662,7 +685,6 @@ void render_dungeon(dungeon_t *d)
     putchar('\n');
   }
 }
-*/
 
 void delete_dungeon(dungeon_t *d)
 {
@@ -724,7 +746,7 @@ int write_dungeon(dungeon_t *d, char *file)
   char *filename;
   FILE *f;
   size_t len;
-  // uint32_t be32;
+  uint32_t be32;
 
   if (!file) {
     if (!(home = getenv("HOME"))) {
@@ -759,12 +781,12 @@ int write_dungeon(dungeon_t *d, char *file)
   fwrite(DUNGEON_SAVE_SEMANTIC, 1, strlen(DUNGEON_SAVE_SEMANTIC), f);
 
   /* The version, 4 bytes, 12-15 */
-  // be32 = htobe32(DUNGEON_SAVE_VERSION);
-  // fwrite(&be32, sizeof (be32), 1, f);
+  be32 = htobe32(DUNGEON_SAVE_VERSION);
+  fwrite(&be32, sizeof (be32), 1, f);
 
-  //  The size of the file, 4 bytes, 16-19 
-  // be32 = htobe32(calculate_dungeon_size(d));
-  // fwrite(&be32, sizeof (be32), 1, f);
+  /* The size of the file, 4 bytes, 16-19 */
+  be32 = htobe32(calculate_dungeon_size(d));
+  fwrite(&be32, sizeof (be32), 1, f);
 
   /* The dungeon map, 16800 bytes, 20-16819 */
   write_dungeon_map(d, f);
@@ -841,7 +863,7 @@ int calculate_num_rooms(uint32_t dungeon_bytes)
 int read_dungeon(dungeon_t *d, char *file)
 {
   char semantic[13];
-  // uint32_t be32;
+  uint32_t be32;
   FILE *f;
   char *home;
   size_t len;
@@ -892,16 +914,16 @@ int read_dungeon(dungeon_t *d, char *file)
     fprintf(stderr, "Not an RLG327 save file.\n");
     exit(-1);
   }
-  // fread(&be32, sizeof (be32), 1, f);
-  // if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
-  //   fprintf(stderr, "File version mismatch.\n");
-  //   exit(-1);
-  // }
-  // fread(&be32, sizeof (be32), 1, f);
-  // if (buf.st_size != be32toh(be32)) {
-  //   fprintf(stderr, "File size mismatch.\n");
-  //   exit(-1);
-  // }
+  fread(&be32, sizeof (be32), 1, f);
+  if (be32toh(be32) != 0) { /* Since we expect zero, be32toh() is a no-op. */
+    fprintf(stderr, "File version mismatch.\n");
+    exit(-1);
+  }
+  fread(&be32, sizeof (be32), 1, f);
+  if (buf.st_size != be32toh(be32)) {
+    fprintf(stderr, "File size mismatch.\n");
+    exit(-1);
+  }
   read_dungeon_map(d, f);
   d->num_rooms = calculate_num_rooms(buf.st_size);
   d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
@@ -995,7 +1017,6 @@ int read_pgm(dungeon_t *d, char *pgm)
   return 0;
 }
 
-/*
 void render_distance_map(dungeon_t *d)
 {
   pair_t p;
@@ -1012,6 +1033,8 @@ void render_distance_map(dungeon_t *d)
           putchar(' ');
           break;
         case ter_floor:
+        case ter_stair_up:
+        case ter_stair_down:
         case ter_floor_room:
         case ter_floor_hall:
           putchar('0' + d->pc_distance[p[dim_y]][p[dim_x]] % 10);
@@ -1026,9 +1049,7 @@ void render_distance_map(dungeon_t *d)
     putchar('\n');
   }
 }
-*/
 
-/*
 void render_tunnel_distance_map(dungeon_t *d)
 {
   pair_t p;
@@ -1045,6 +1066,8 @@ void render_tunnel_distance_map(dungeon_t *d)
           break;
         case ter_wall:
         case ter_floor:
+        case ter_stair_up:
+        case ter_stair_down:
         case ter_floor_room:
         case ter_floor_hall:
           putchar('0' + d->pc_tunnel[p[dim_y]][p[dim_x]] % 10);
@@ -1058,24 +1081,4 @@ void render_tunnel_distance_map(dungeon_t *d)
     }
     putchar('\n');
   }
-}
-*/
-
-void new_dungeon(dungeon_t *d)
-{
-  uint32_t sequence_number;
-
-  sequence_number = d->character_sequence_number;
-
-  delete_dungeon(d);
-
-  init_dungeon(d);
-  gen_dungeon(d);
-  d->character_sequence_number = sequence_number;
-
-  place_pc(d);
-  d->character[d->pc.position[dim_y]][d->pc.position[dim_x]] = &d->pc;
-  io_calculate_offset(d);
-
-  gen_monsters(d);
 }

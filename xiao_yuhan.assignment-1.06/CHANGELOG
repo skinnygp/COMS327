@@ -1,0 +1,22 @@
+CHANGELOG
+Author: Yuhan Xiao
+
+Day One   (Mar 5, 2017): Started reading the description of this assignment.
+Day One   (Mar 5, 2017): Started reading Jeremy's code for Assignment-1.04.
+Day One   (Mar 5, 2017): Started Project and I used Jeremy's code.
+
+Day Two   (Mar 6, 2017): Started with building ncurses. Add ncurses functions in Main.
+Day Two   (Mar 6, 2017): Add -lncurses to the Makefile at LDFLAGS = -lncurses.
+Day Two   (Mar 6, 2017): Added function make_stairs to make stairs in dungeon.
+Day Two   (Mar 6, 2017): Found out that we are not going to use render_dungeon but ncurses to render.
+Day Two   (Mar 6, 2017): Added a function portion to replace render_dungeon.
+
+Day Three (Mar 7, 2017): Deleted pc_next_pos since we don't need it anymore.
+Day Three (Mar 7, 2017): Deleted pc part move in do_moves without event staff.
+Day Three (Mar 7, 2017): Added PC_control to replace pc_next_pos to make our pc move by pressing key.
+Day Three (Mar 7, 2017): Added all cases of key pressing.
+
+Day Three (Mar 8, 2017): Added function do_look_mode to control the look mode and all cases of key pressing.
+Day Three (Mar 8, 2017): Debugged.
+Day Three (Mar 8, 2017): Finished README and CHANGELOG.
+Day Three (Mar 8, 2017): Fixed all memory leaking problems.

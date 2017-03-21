@@ -106,10 +106,8 @@ void npc_next_pos_rand_tunnel(dungeon_t *d, character_t *c, pair_t next)
       mappair(n) = ter_floor_hall;
 
       /* Update distance maps because map has changed. */
-      /* Comment out for performance
       dijkstra(d);
       dijkstra_tunnel(d);
-      */
     }
 
     next[dim_x] = n[dim_x];
@@ -199,10 +197,8 @@ void npc_next_pos_line_of_sight_tunnel(dungeon_t *d,
       mappair(dir) = ter_floor_hall;
 
       /* Update distance maps because map has changed. */
-      /* Comment out for performance
       dijkstra(d);
       dijkstra_tunnel(d);
-      */
     }
 
     next[dim_x] = dir[dim_x];

@@ -13,7 +13,6 @@
 #include "utils.h"
 #include "path.h"
 #include "event.h"
-#include "io.h"
 
 void do_combat(dungeon_t *d, character_t *atk, character_t *def)
 {
@@ -25,10 +24,6 @@ void do_combat(dungeon_t *d, character_t *atk, character_t *def)
     atk->kills[kill_direct]++;
     atk->kills[kill_avenged] += (def->kills[kill_direct] +
                                   def->kills[kill_avenged]);
-  }
-
-  if (atk == &d->pc) {
-    io_queue_message("You smite the %c", def->symbol);
   }
 }
 
@@ -97,7 +92,6 @@ void do_moves(dungeon_t *d)
     heap_insert(&d->events, update_event(d, e, 1000 / c->speed));
   }
 
-  io_display(d);
   if (pc_is_alive(d) && e->c == &d->pc) {
     c = e->c;
     d->time = e->time;
@@ -106,7 +100,6 @@ void do_moves(dungeon_t *d)
      * and recreated every time we leave and re-enter this function.    */
     e->c = NULL;
     event_delete(e);
-    io_handle_input(d);
   }
 }
 
@@ -150,91 +143,4 @@ uint32_t in_corner(dungeon_t *d, character_t *c)
                           c->position[dim_y] + 1) == ter_wall_immutable);
 
   return num_immutable > 1;
-}
-
-
-static void new_dungeon_level(dungeon_t *d, uint32_t dir)
-{
-  /* Eventually up and down will be independantly meaningful. *
-   * For now, simply generate a new dungeon.                  */
-
-  switch (dir) {
-  case '<':
-  case '>':
-    new_dungeon(d);
-    break;
-  default:
-    break;
-  }
-}
-
-
-uint32_t move_pc(dungeon_t *d, uint32_t dir)
-{
-  pair_t next;
-  uint32_t was_stairs = 0;
-
-  next[dim_y] = d->pc.position[dim_y];
-  next[dim_x] = d->pc.position[dim_x];
-
-
-  switch (dir) {
-  case 1:
-  case 2:
-  case 3:
-    next[dim_y]++;
-    break;
-  case 4:
-  case 5:
-  case 6:
-    break;
-  case 7:
-  case 8:
-  case 9:
-    next[dim_y]--;
-    break;
-  }
-  switch (dir) {
-  case 1:
-  case 4:
-  case 7:
-    next[dim_x]--;
-    break;
-  case 2:
-  case 5:
-  case 8:
-    break;
-  case 3:
-  case 6:
-  case 9:
-    next[dim_x]++;
-    break;
-  case '<':
-    if (mappair(d->pc.position) == ter_stairs_up) {
-      was_stairs = 1;
-      new_dungeon_level(d, '<');
-    }
-    break;
-  case '>':
-    if (mappair(d->pc.position) == ter_stairs_down) {
-      was_stairs = 1;
-      new_dungeon_level(d, '>');
-    }
-    break;
-  }
-
-  if (was_stairs) {
-    return 0;
-  }
-
-  if ((dir != '>') && (dir != '<') && (mappair(next) >= ter_floor)) {
-    move_character(d, &d->pc, next);
-    io_update_offset(d);
-    dijkstra(d);
-    dijkstra_tunnel(d);
-
-    return 0;
-  }
-
-  return 1;
 }

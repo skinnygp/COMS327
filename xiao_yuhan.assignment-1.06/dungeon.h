@@ -36,9 +36,8 @@ typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_floor,
   ter_floor_room,
   ter_floor_hall,
-  ter_stairs,
-  ter_stairs_up,
-  ter_stairs_down
+  ter_stair_up,
+  ter_stair_down,
 } terrain_type_t;
 
 typedef struct room {
@@ -75,12 +74,12 @@ typedef struct dungeon {
    * convenience, e.g., the ability to create a new event without explicit *
    * information from the current event.                                   */
   uint32_t time;
+  pair_t portion;
+  uint32_t is_look_mode;
   uint32_t quit;
-  pair_t io_offset;
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);
-void new_dungeon(dungeon_t *d);
 void delete_dungeon(dungeon_t *d);
 int gen_dungeon(dungeon_t *d);
 void render_dungeon(dungeon_t *d);

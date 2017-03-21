@@ -1,0 +1,35 @@
+README
+Author: Yuhan Xiao
+Date: Mar 8, 2017
+
+included:
+Same with Assignment-1.04
+this README
+Makefile
+CHANGELOG
+
+
+Project Description: Add User Interface with Ncurses for our dungeon.
+Note:
+* Every case works perfect. If it stuck when you press a valid button, wait witll it work. 
+* First line shows PC's position.
+* 23rd line shows modes(control/look).
+* 24th line shows wrong move when move cannot be done.
+* When unbound keys are pressed, do nothing and wait a correct key.
+* Portion changes when distance between boundaries and pc is less than 4.
+* In look mode, move 3 units every time when moving view. Cannot go out bounds.
+* When going up/down stairs, go to the stairs' position and press >/<.
+
+
+Relevant Functions:
+void do_look_mode(dungeon_t *d);
+void portion(dungeon_t *d);
+void PC_control(dungeon_t *d);
+(rlg327.c)
+
+Data Structure:
+Add:
+pair_t portion;
+uint32_t is_look_mode;
+uint32_t quit;
+in dungeon_t(dungeon.h)

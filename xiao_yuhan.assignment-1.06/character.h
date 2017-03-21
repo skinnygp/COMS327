@@ -4,7 +4,15 @@
 # include <stdint.h>
 
 # include "dims.h"
-
+#ifdef __cplusplus
+class character {
+ public:
+  char symbol;
+  pair_t position;
+  int32_t speed;
+  uint32_t alive;
+  uint32_t sequence_number;
+};
 typedef struct dungeon dungeon_t;
 typedef struct npc npc_t;
 typedef struct pc pc_t;

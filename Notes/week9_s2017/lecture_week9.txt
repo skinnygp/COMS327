@@ -1,0 +1,46 @@
+* Using C and C++ in the same program.
+  C++ uses name mangling; C doesn't.  Name mangling is necessary in order to
+  allow function overloading.  Mangled names encode the formal parameters so
+  that the compiler can choose the right function based on the arguments.
+  In order for C++ to make calls to C functions or vice versa, it's necessary
+  to tell the C++ compiler not to mangle the names.  We'll need this with any
+  functions that we wish to call in both C and C++.  When compiling with a
+  C++ compiler, you tell the compiler to use a C calling convention (no name
+  mangling) by declaring the function 'extern "C"', or by putting the
+  declaration inside an 'extern "C"' block.  Usually this is done with the
+  following construction:
+
+    #ifdef __cplusplus
+    exterrn "C" {
+    #endif
+
+    /* Prototypes of functions that you want to use in C and C++ */
+
+    #ifdef __cplusplus
+    }
+    #endif
+
+  C doesn't know anything about 'extern "C"', so the guards around this block
+  ensure that when you include this header in C code, that extra stuff is
+  stripped out by the preprocessor, but when used in C++ code, it remains.
+* String class example
+  In which we develop a string class, string229.
+
+* Overloading
+  Functions
+    Functions can have the same name, as long as they have different
+    formal parameters.  Compiler figures out which one to call based on
+    actual parameters
+  Operators
+    Operators are overloaded by defining special "operator<operator>()"
+    functions, where <operator> is the actual operator, for instance,
+    overload the addition operator by defining operator+().
+* Classes
+  public
+    Anybody can see this field
+  private
+    Only members of this class can see it
+  protected
+    Only this class and subclasses can see it
+  friend
+    Your friends have full access to your privates.

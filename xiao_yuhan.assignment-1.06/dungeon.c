@@ -655,7 +655,7 @@ void render_dungeon(dungeon_t *d)
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
       if (charpair(p)) {
-        putchar(charpair(p)->symbol);
+        putchar(getSymbol(d->character[p[dim_y]][p[dim_x]]));
       } else {
         switch (mappair(p)) {
         case ter_wall:
@@ -1023,8 +1023,8 @@ void render_distance_map(dungeon_t *d)
 
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (p[dim_x] ==  d->pc.position[dim_x] &&
-          p[dim_y] ==  d->pc.position[dim_y]) {
+      if (p[dim_x] ==  getX(d->pc) &&
+          p[dim_y] ==  getY(d->pc)) {
         putchar('@');
       } else {
         switch (mappair(p)) {
@@ -1056,8 +1056,8 @@ void render_tunnel_distance_map(dungeon_t *d)
 
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (p[dim_x] ==  d->pc.position[dim_x] &&
-          p[dim_y] ==  d->pc.position[dim_y]) {
+      if (p[dim_x] ==  getX(d->pc) &&
+          p[dim_y] ==  getY(d->pc)) {
         putchar('@');
       } else {
         switch (mappair(p)) {

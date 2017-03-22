@@ -16,30 +16,28 @@
 
 void do_combat(dungeon_t *d, character_t *atk, character_t *def)
 {
-  if (def->alive) {
-    def->alive = 0;
+  if (isAlive(def)) {
+    setAlive(def, 0);
     if (def != &d->pc) {
       d->num_monsters--;
     }
-    atk->kills[kill_direct]++;
-    atk->kills[kill_avenged] += (def->kills[kill_direct] +
-                                  def->kills[kill_avenged]);
+
   }
 }
 
 void move_character(dungeon_t *d, character_t *c, pair_t next)
 {
   if (charpair(next) &&
-      ((next[dim_y] != c->position[dim_y]) ||
-       (next[dim_x] != c->position[dim_x]))) {
+      ((next[dim_y] != getY(c) ||
+       (next[dim_x] != getX(c))))) {
     do_combat(d, c, charpair(next));
   } else {
     /* No character in new position. */
 
-    d->character[c->position[dim_y]][c->position[dim_x]] = NULL;
-    c->position[dim_y] = next[dim_y];
-    c->position[dim_x] = next[dim_x];
-    d->character[c->position[dim_y]][c->position[dim_x]] = c;
+    d->character[getY(c)][getX(c)] = NULL;
+    setY(c, next[dim_y]);
+    setX(c, next[dim_x]);
+    d->character[getY(c)][getX(c)] = c;
   }
 }
 
@@ -62,7 +60,7 @@ void do_moves(dungeon_t *d)
     /* The next line is buggy.  Monsters get first turn before PC.  *
      * Monster gen code always leaves PC in a monster-free room, so *
      * not a big issue, but it needs a better solution.             */
-    e->time = d->time + (1000 / d->pc.speed)
+    e->time = d->time + (1000 / getSpeed(d->pc))
 ;
     e->sequence = 0;
     e->c = &d->pc;
@@ -76,9 +74,9 @@ void do_moves(dungeon_t *d)
     if (e->type == event_character_turn) {
       c = e->c;
     }
-    if (!c->alive) {
-      if (d->character[c->position[dim_y]][c->position[dim_x]] == c) {
-        d->character[c->position[dim_y]][c->position[dim_x]] = NULL;
+    if (!isAlive(c)) {
+      if (d->character[getY(c)][getX(c)] == c) {
+        d->character[getY(c)][getX(c)] = NULL;
       }
       if (c != &d->pc) {
         event_delete(e);
@@ -89,7 +87,7 @@ void do_moves(dungeon_t *d)
     npc_next_pos(d, c, next);
     move_character(d, c, next);
 
-    heap_insert(&d->events, update_event(d, e, 1000 / c->speed));
+    heap_insert(&d->events, update_event(d, e, 1000 / getSpeed(c)));
   }
 
   if (pc_is_alive(d) && e->c == &d->pc) {
@@ -107,24 +105,20 @@ void dir_nearest_wall(dungeon_t *d, character_t *c, pair_t dir)
 {
   dir[dim_x] = dir[dim_y] = 0;
 
-  if (c->position[dim_x] != 1 && c->position[dim_x] != DUNGEON_X - 2) {
-    dir[dim_x] = (c->position[dim_x] > DUNGEON_X - c->position[dim_x] ? 1 : -1);
+  if (getX(c) != 1 && getX(c) != DUNGEON_X - 2) {
+    dir[dim_x] = (getX(c) > DUNGEON_X - getX(c) ? 1 : -1);
   }
-  if (c->position[dim_y] != 1 && c->position[dim_y] != DUNGEON_Y - 2) {
-    dir[dim_y] = (c->position[dim_y] > DUNGEON_Y - c->position[dim_y] ? 1 : -1);
+  if (getY(c) != 1 && getY(c) != DUNGEON_Y - 2) {
+    dir[dim_y] = (getY(c) > DUNGEON_Y - getY(c) ? 1 : -1);
   }
 }
 
 uint32_t against_wall(dungeon_t *d, character_t *c)
 {
-  return ((mapxy(c->position[dim_x] - 1,
-                 c->position[dim_y]    ) == ter_wall_immutable) ||
-          (mapxy(c->position[dim_x] + 1,
-                 c->position[dim_y]    ) == ter_wall_immutable) ||
-          (mapxy(c->position[dim_x]    ,
-                 c->position[dim_y] - 1) == ter_wall_immutable) ||
-          (mapxy(c->position[dim_x]    ,
-                 c->position[dim_y] + 1) == ter_wall_immutable));
+  return ((mapxy(getX(c) - 1, getY(c)) == ter_wall_immutable) ||
+          (mapxy(getX(c) + 1, getY(c)) == ter_wall_immutable) ||
+          (mapxy(getX(c), getY(c) - 1) == ter_wall_immutable) ||
+          (mapxy(getX(c), getY(c) + 1) == ter_wall_immutable));
 }
 
 uint32_t in_corner(dungeon_t *d, character_t *c)
@@ -133,14 +127,14 @@ uint32_t in_corner(dungeon_t *d, character_t *c)
 
   num_immutable = 0;
 
-  num_immutable += (mapxy(c->position[dim_x] - 1,
-                          c->position[dim_y]    ) == ter_wall_immutable);
-  num_immutable += (mapxy(c->position[dim_x] + 1,
-                          c->position[dim_y]    ) == ter_wall_immutable);
-  num_immutable += (mapxy(c->position[dim_x]    ,
-                          c->position[dim_y] - 1) == ter_wall_immutable);
-  num_immutable += (mapxy(c->position[dim_x]    ,
-                          c->position[dim_y] + 1) == ter_wall_immutable);
+  num_immutable += (mapxy(getX(c) - 1,
+                          getY(c)   ) == ter_wall_immutable);
+  num_immutable += (mapxy(getX(c) + 1,
+                          getY(c)    ) == ter_wall_immutable);
+  num_immutable += (mapxy(getX(c)    ,
+                          getY(c) - 1) == ter_wall_immutable);
+  num_immutable += (mapxy(getX(c)    ,
+                          getY(c) + 1) == ter_wall_immutable);
 
   return num_immutable > 1;
 }

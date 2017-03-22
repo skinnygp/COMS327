@@ -1,0 +1,308 @@
+
+character.h,130
+# define CHARACTER_H2,20
+class character_t 20,184
+  typedef void character_t;38,888
+  typedef struct dungeon dungeon_t;40,925
+
+dims.h,147
+# define DIMS_H2,15
+typedef enum dim 7,190
+  dim_x,8,209
+  dim_y,9,218
+  num_dims10,227
+} dim_t;11,238
+typedef int16_t pair_t[pair_t13,248
+
+dungeon.c,1233
+#define RUN_ON_MAC13,255
+#define htobe32(30,521
+#define htobe16(31,544
+#define be32toh(32,567
+#define be16toh(33,590
+typedef struct corridor_path 35,620
+} corridor_path_t;40,723
+static uint32_t in_room(42,743
+static int32_t corridor_path_cmp(58,1134
+static void dijkstra_corridor(62,1284
+static void dijkstra_corridor_inv(161,5019
+#define hardnesspair_inv(214,6339
+static int connect_two_rooms(264,8976
+static int create_cycle(283,9628
+static int connect_rooms(325,11193
+int gaussian[gaussian338,11386
+typedef struct queue_node 346,11542
+} queue_node_t;349,11609
+static int smooth_hardness(351,11626
+static int empty_dungeon(509,15902
+static int make_stairs(530,16345
+static int place_rooms(552,17052
+static int make_rooms(616,19577
+int gen_dungeon(641,20178
+void render_dungeon(651,20317
+void delete_dungeon(689,21206
+void init_dungeon(696,21340
+int write_dungeon_map(703,21497
+int write_rooms(716,21726
+uint32_t calculate_dungeon_size(736,22145
+int write_dungeon(743,22367
+int read_dungeon_map(802,23752
+int read_rooms(825,24350
+int calculate_num_rooms(855,25119
+int read_dungeon(863,25359
+int read_pgm(937,27060
+void render_distance_map(1020,29185
+void render_tunnel_distance_map(1053,30009
+
+dungeon.h,1012
+# define DUNGEON_H2,18
+#define DUNGEON_X 9,122
+#define DUNGEON_Y 10,157
+#define MIN_ROOMS 11,192
+#define MAX_ROOMS 12,226
+#define ROOM_MIN_X 13,260
+#define ROOM_MIN_Y 14,293
+#define ROOM_MAX_X 15,326
+#define ROOM_MAX_Y 16,360
+#define VISUAL_RANGE 17,394
+#define PC_SPEED 18,428
+#define MAX_MONSTERS 19,462
+#define SAVE_DIR 20,496
+#define DUNGEON_SAVE_FILE 21,537
+#define DUNGEON_SAVE_SEMANTIC 22,578
+#define DUNGEON_SAVE_VERSION 23,624
+#define mappair(25,659
+#define mapxy(26,716
+#define hardnesspair(27,751
+#define hardnessxy(28,818
+#define charpair(29,863
+#define charxy(30,927
+typedef enum __attribute__ ((__packed__)) terrain_type 32,970
+  ter_debug,33,1027
+  ter_wall,34,1040
+  ter_wall_immutable,35,1052
+  ter_floor,36,1074
+  ter_floor_room,37,1087
+  ter_floor_hall,38,1105
+  ter_stair_up,39,1123
+  ter_stair_down,40,1139
+} terrain_type_t;41,1157
+typedef struct room 43,1176
+} room_t;46,1232
+typedef void pc_t;51,1280
+typedef struct dungeon 55,1308
+} dungeon_t;85,2783
+
+event.c,178
+static uint32_t next_event_number(4,43
+int32_t compare_events(14,369
+event_t *new_event(new_event25,689
+event_t *update_event(update_event42,967
+void event_delete(50,1115
+
+event.h,153
+# define EVENT_H2,16
+typedef enum event_type 9,80
+  event_character_turn,10,106
+} event_type_t;11,130
+typedef struct event 13,147
+} event_t;20,264
+
+heap.c,798
+#undef min4,39
+struct heap_node 6,51
+#define splice_heap_node_lists(16,212
+#define insert_heap_node_in_list(25,524
+#define remove_heap_node_from_list(32,748
+void print_heap_node(37,881
+void print_heap(53,1203
+void print_heap_node_list(70,1505
+void heap_init(86,1704
+void heap_node_delete(96,1940
+void heap_delete(114,2244
+heap_node_t *heap_insert(heap_insert125,2409
+void *heap_peek_min(heap_peek_min145,2725
+static void heap_link(150,2801
+static void heap_consolidate(164,3123
+void *heap_remove_min(heap_remove_min205,4056
+int heap_combine(240,4590
+static void heap_cut(269,5241
+static void heap_cascading_cut(283,5522
+int heap_decrease_key(297,5748
+int heap_decrease_key_no_replace(311,5990
+int32_t compare(335,6564
+char *print_int(print_int340,6663
+int main(349,6781
+
+heap.h,111
+# define HEAP_H2,15
+typedef struct heap_node heap_node_t;11,114
+typedef struct heap 13,153
+} heap_t;18,301
+
+macros.h,611
+# define MACROS_H2,17
+#  define dprintf(16,213
+#  define dfprintf(17,256
+#  define dprintf(19,320
+#  define dfprintf(20,343
+# define fieldwidth(23,382
+# define exit(37,1201
+# define fopen(42,1441
+#  define malloc(76,3348
+#  define calloc(92,4430
+#  define strdup(107,5435
+#  define free(117,6055
+# define swap(125,6303
+# define memswap(131,6415
+# define structdup(137,6543
+# define datacmp(144,6927
+# define max2(153,7400
+# define min2(160,7576
+# define max 167,7752
+# define min 168,7770
+# define max3(170,7789
+# define min3(171,7830
+# define frand(173,7872
+# define structdup(180,7984
+
+move.c,166
+void do_combat(17,250
+void move_character(28,425
+void do_moves(44,816
+void dir_nearest_wall(104,2702
+uint32_t against_wall(116,3029
+uint32_t in_corner(124,3345
+
+move.h,93
+# define MOVE_H2,15
+typedef struct dungeon dungeon_t;8,74
+typedef void character_t;15,206
+
+npc.h,1155
+# define NPC_H2,14
+typedef uint32_t npc_characteristics_t;15,174
+class  npc_t 17,233
+  typedef void npc_t;35,538
+  # define NPC_SMART 38,570
+  # define NPC_TELEPATH 39,610
+  # define NPC_TUNNEL 40,650
+  # define NPC_ERRATIC 41,690
+  # define NPC_BIT04 42,730
+  # define NPC_BIT05 43,770
+  # define NPC_BIT06 44,810
+  # define NPC_BIT07 45,850
+  # define NPC_BIT08 46,890
+  # define NPC_BIT09 47,930
+  # define NPC_BIT10 48,970
+  # define NPC_BIT11 49,1010
+  # define NPC_BIT12 50,1050
+  # define NPC_BIT13 51,1090
+  # define NPC_BIT14 52,1130
+  # define NPC_BIT15 53,1170
+  # define NPC_BIT16 54,1210
+  # define NPC_BIT17 55,1250
+  # define NPC_BIT18 56,1290
+  # define NPC_BIT19 57,1330
+  # define NPC_BIT20 58,1370
+  # define NPC_BIT21 59,1410
+  # define NPC_BIT22 60,1450
+  # define NPC_BIT23 61,1490
+  # define NPC_BIT24 62,1530
+  # define NPC_BIT25 63,1570
+  # define NPC_BIT26 64,1610
+  # define NPC_BIT27 65,1650
+  # define NPC_BIT28 66,1690
+  # define NPC_BIT29 67,1730
+  # define NPC_BIT30 68,1770
+  # define NPC_BIT31 69,1810
+  # define has_characteristic(71,1851
+  typedef struct dungeon dungeon_t;74,1965
+
+path.c,247
+static dungeon_t *dungeon;dungeon12,633
+typedef struct path 14,661
+} path_t;17,720
+static int32_t dist_cmp(19,731
+static int32_t tunnel_cmp(26,1085
+void dijkstra(33,1433
+#define tunnel_movement_cost(143,5905
+void dijkstra_tunnel(146,6042
+
+path.h,60
+# define PATH_H2,15
+typedef struct dungeon dungeon_t;4,32
+
+pc.h,105
+# define PC_H2,13
+class pc_t 16,201
+typedef void pc_t;24,335
+typedef struct dungeon dungeon_t;27,363
+
+rlg327.c,195
+const char *victory victory16,286
+const char *tombstone tombstone47,1857
+void usage(68,2908
+int main(79,3182
+void portion(285,10132
+void PC_control(327,11405
+void do_look_mode(529,16710
+
+utils.c,25
+int makedirectory(9,124
+
+utils.h,77
+# define UTILS_H2,16
+# define rand_under(6,147
+# define rand_range(10,290
+
+character.cpp,354
+void character_delete(20,206
+uint32_t can_see(25,261
+char getSymbol(115,2587
+char setSymbol(120,2643
+int getX(124,2720
+int getY(128,2778
+int8_t setX(132,2836
+int8_t setY(136,2911
+int32_t getSpeed(140,2986
+int32_t setSpeed(144,3042
+uint32_t isAlive(148,3121
+uint32_t setAlive(152,3177
+uint32_t getSeqNum(156,3262
+uint32_t setSeqNum(160,3330
+
+npc.cpp,980
+void npc_delete(22,267
+static uint32_t max_monster_cells(27,310
+void gen_monsters(41,557
+void npc_next_pos_rand_tunnel(81,1821
+void npc_next_pos_rand(126,2680
+void npc_next_pos_line_of_sight(158,3245
+void npc_next_pos_line_of_sight_tunnel(182,3925
+void npc_next_pos_gradient(217,4724
+static void npc_next_pos_00(340,9405
+static void npc_next_pos_01(355,9873
+static void npc_next_pos_02(376,10544
+static void npc_next_pos_03(384,10818
+static void npc_next_pos_04(390,10987
+static void npc_next_pos_05(405,11462
+static void npc_next_pos_06(426,12140
+static void npc_next_pos_07(434,12421
+static void npc_next_pos_08(440,12590
+static void npc_next_pos_09(450,12825
+static void npc_next_pos_0a(460,13060
+static void npc_next_pos_0b(470,13295
+static void npc_next_pos_0c(480,13530
+static void npc_next_pos_0d(490,13772
+static void npc_next_pos_0e(500,14014
+static void npc_next_pos_0f(510,14256
+void npc_next_pos(543,15144
+uint32_t dungeon_has_npcs(551,15339
+
+pc.cpp,126
+void pc_delete(21,225
+uint32_t pc_is_alive(26,268
+void place_pc(31,331
+void config_pc(41,760
+uint32_t pc_in_room(60,1150

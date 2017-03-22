@@ -181,10 +181,10 @@ int main(int argc, char *argv[])
             usage(argv[0]);
           }
           do_place_pc = 1;
-          if ((d.player.position[dim_y] = atoi(argv[++i])) < 1 ||
-              d.player.position[dim_y] > DUNGEON_Y - 2         ||
-              (d.player.position[dim_x] = atoi(argv[++i])) < 1 ||
-              d.player.position[dim_x] > DUNGEON_X - 2) {
+          if (setY(d.pc, atoi(argv[++i])) < 1 ||
+              getY(d.pc) > DUNGEON_Y - 2         ||
+              setX(d.pc, atoi(argv[++i])) < 1 ||
+              getX(d.pc) > DUNGEON_X - 2) {
             fprintf(stderr, "Invalid PC position.\n");
             usage(argv[0]);
           }
@@ -225,8 +225,8 @@ int main(int argc, char *argv[])
 
   config_pc(&d);
   gen_monsters(&d);
-  d.portion[dim_x] = (d.player.position[dim_x] - 40);
-  d.portion[dim_y] = (d.player.position[dim_y] - 11);
+  d.portion[dim_x] = (getX(d.pc) - 40);
+  d.portion[dim_y] = (getY(d.pc) - 11);
   if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
   if (d.portion[dim_x] + 80 >= 159) d.portion[dim_x] = 79;
   if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
@@ -237,17 +237,17 @@ int main(int argc, char *argv[])
     portion(&d);
     do_moves(&d);
     if(d.is_look_mode == 0){
-      if(d.portion[dim_x] + 79 - d.player.position[dim_x] < 5){
-        d.portion[dim_x] = (d.player.position[dim_x] - 40);
+      if(d.portion[dim_x] + 79 - getX(d.pc) < 5){
+        d.portion[dim_x] = (getX(d.pc) - 40);
       }
-      if(d.player.position[dim_x] - d.portion[dim_x] < 5){
-        d.portion[dim_x] = (d.player.position[dim_x] - 40);
+      if(getX(d.pc) - d.portion[dim_x] < 5){
+        d.portion[dim_x] = (getX(d.pc) - 40);
       }
-      if(d.portion[dim_y] + 21 - d.player.position[dim_y] < 5){
-        d.portion[dim_y] = (d.player.position[dim_y] - 11);
+      if(d.portion[dim_y] + 21 - getY(d.pc) < 5){
+        d.portion[dim_y] = (getY(d.pc) - 11);
       }
-      if(d.player.position[dim_y] - d.portion[dim_y] < 5){
-        d.portion[dim_y] = (d.player.position[dim_y] - 11);
+      if(getY(d.pc) - d.portion[dim_y] < 5){
+        d.portion[dim_y] = (getY(d.pc) - 11);
       }
       if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
       if (d.portion[dim_x] + 80 >= 159) d.portion[dim_x] = 79;
@@ -268,14 +268,14 @@ int main(int argc, char *argv[])
     //        d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
   }
   else{
-    printf(pc_is_alive(&d) ? victory : tombstone);
+    // printf(pc_is_alive(&d) ? victory : tombstone);
     // printf("\nYou defended your life in the face of %u deadly beasts.\n"
     //        "You avenged the cruel and untimely murders of %u peaceful dungeon residents.\n",
     //        d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
   }
 
 
-  pc_delete(d.player.pc);
+  pc_delete(d.pc);
 
   delete_dungeon(&d);
 
@@ -289,7 +289,8 @@ void portion(dungeon_t *d)
   for (p[dim_y] = 1; p[dim_y] < 22; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < 80; p[dim_x]++) {
       if (charxy(d->portion[dim_x] + p[dim_x],d->portion[dim_y] + p[dim_y])){
-        mvaddch(p[dim_y], p[dim_x], charxy(d->portion[dim_x] + p[dim_x], d->portion[dim_y] + p[dim_y])->symbol);
+
+        mvaddch(p[dim_y], p[dim_x], getSymbol(d->character[d->portion[dim_y] + p[dim_y]][d->portion[dim_x] + p[dim_x]]));
       } else {
         switch (mapxy(d->portion[dim_x] + p[dim_x],
                       d->portion[dim_y] + p[dim_y])) {
@@ -315,7 +316,7 @@ void portion(dungeon_t *d)
       }
     }
   }
-  mvprintw(0, 0, "PC position: %d %d.",d->player.position[dim_x], d->player.position[dim_y]);
+  mvprintw(0, 0, "PC position: %d %d.",getX(d->pc), getY(d->pc));
   if(d->is_look_mode){
     mvprintw(22, 0, "Look Mode: Press esc to enter Control Mode.");
   }
@@ -326,8 +327,8 @@ void portion(dungeon_t *d)
 void PC_control(dungeon_t *d)
 {
   pair_t next;
-  next[dim_x] = d->player.position[dim_x];
-  next[dim_y] = d->player.position[dim_y];
+  next[dim_x] = getX(d->pc);
+  next[dim_y] = getY(d->pc);
 
   int unbound = 1;
   int input;
@@ -349,7 +350,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]++;
         }
         else {
-          move_character(d, &d->player, next);
+          move_character(d, d->pc, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -364,7 +365,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]++;
         }
         else {
-          move_character(d, &d->player, next);
+          move_character(d, d->pc, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -381,7 +382,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]++;
         }
         else {
-          move_character(d, &d->player, next);
+          move_character(d, d->pc, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -396,7 +397,7 @@ void PC_control(dungeon_t *d)
           next[dim_x]--;
         }
         else {
-          move_character(d, &d->player, next);
+          move_character(d, d->pc, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -413,7 +414,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]--;
         }
         else {
-          move_character(d, &d->player, next);
+          move_character(d, d->pc, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -428,7 +429,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]--;
         }
         else {
-          move_character(d, &d->player, next);
+          move_character(d, d->pc, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -445,7 +446,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]--;
         }
         else {
-          move_character(d, &d->player, next);
+          move_character(d, d->pc, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -460,7 +461,7 @@ void PC_control(dungeon_t *d)
           next[dim_x]++;
         }
         else {
-          move_character(d, &d->player, next);
+          move_character(d, d->pc, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -474,13 +475,13 @@ void PC_control(dungeon_t *d)
         if(mappair(next) == ter_stair_down){
           unbound = 0;
           delete_dungeon(d);
-	  free(d->player.pc);
+	  free(d->pc);
           init_dungeon(d);
           gen_dungeon(d);
           config_pc(d);
           gen_monsters(d);
-          d->portion[dim_x] = (d->player.position[dim_x] - 40);
-          d->portion[dim_y] = (d->player.position[dim_y] - 11);
+          d->portion[dim_x] = (getX(d->pc) - 40);
+          d->portion[dim_y] = (getY(d->pc) - 11);
           if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
           if (d->portion[dim_x] + 80 >= 159) d->portion[dim_x] = 79;
           if (d->portion[dim_y] < 0) d->portion[dim_y] = 0;
@@ -497,13 +498,13 @@ void PC_control(dungeon_t *d)
         if(mappair(next) == ter_stair_up){
           unbound = 0;
           delete_dungeon(d);
-	  free(d->player.pc);
+	  free(d->pc);
           init_dungeon(d);
           gen_dungeon(d);
           config_pc(d);
           gen_monsters(d);
-          d->portion[dim_x] = (d->player.position[dim_x] - 40);
-          d->portion[dim_y] = (d->player.position[dim_y] - 11);
+          d->portion[dim_x] = (getX(d->pc) - 40);
+          d->portion[dim_y] = (getY(d->pc) - 11);
           if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
           if (d->portion[dim_x] + 80 >= 159) d->portion[dim_x] = 79;
           if (d->portion[dim_y] < 0) d->portion[dim_y] = 0;
@@ -533,8 +534,8 @@ void do_look_mode(dungeon_t *d)
     input = getch();
     switch (input) {
       case 27:
-        d->portion[dim_x] = (d->player.position[dim_x] - 40);
-        d->portion[dim_y] = (d->player.position[dim_y] - 11);
+        d->portion[dim_x] = (getX(d->pc) - 40);
+        d->portion[dim_y] = (getY(d->pc) - 11);
         if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
         if (d->portion[dim_x] + 80 >= 159) d->portion[dim_x] = 79;
         if (d->portion[dim_y] < 0) d->portion[dim_y] = 0;

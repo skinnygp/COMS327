@@ -1,7 +1,7 @@
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
   #endif
-
   #include <stdlib.h>
 
   #include "character.h"
@@ -9,17 +9,20 @@ extern "C"{
   #include "npc.h"
   #include "pc.h"
   #include "dungeon.h"
-
-#ifdef __cplusplus
+  #ifdef __cplusplus
 }
   #endif
 
-void character_delete(character *v)
+
+
+
+
+void character_delete(character_t *v)
 {
   delete v;
 }
 
-uint32_t can_see(dungeon_t *d, character *voyeur, character *exhibitionist)
+uint32_t can_see(dungeon_t *d, character_t *voyeur, pair_t exhibitionist)
 {
   /* Application of Bresenham's Line Drawing Algorithm.  If we can draw *
    * a line from v to e without intersecting any walls, then v can see  *
@@ -35,8 +38,8 @@ uint32_t can_see(dungeon_t *d, character *voyeur, character *exhibitionist)
 
   first[dim_x] = getX(voyeur);
   first[dim_y] = getY(voyeur);
-  second[dim_x] = getX(exhibitionist);
-  second[dim_y] = getY(exhibitionist);
+  second[dim_x] = exhibitionist[dim_x];
+  second[dim_y] = exhibitionist[dim_y];
 
   if ((abs(first[dim_x] - second[dim_x]) > VISUAL_RANGE) ||
       (abs(first[dim_y] - second[dim_y]) > VISUAL_RANGE)) {
@@ -109,52 +112,52 @@ uint32_t can_see(dungeon_t *d, character *voyeur, character *exhibitionist)
   return 1;
 }
 
-char getSymbol(character *c)
+char getSymbol(character_t *c)
 {
   return c->symbol;
 }
 
-char setSymbol(character *c, char symbol)
+char setSymbol(character_t *c, char symbol)
 {
   return c->symbol = symbol;
 }
-int8_t getX(character *c)
+int getX(character_t *c)
 {
   return c->position[dim_x];
 }
-int8_t getY(character *c)
+int getY(character_t *c)
 {
   return c->position[dim_y];
 }
-int8_t setX(character *c, int8_t x)
+int8_t setX(character_t *c, int8_t x)
 {
   return c->position[dim_x] = x;
 }
-int8_t setY(character *c, int8_t y)
+int8_t setY(character_t *c, int8_t y)
 {
   return c->position[dim_y] = y;
 }
-int32_t getSpeed(character *c)
+int32_t getSpeed(character_t *c)
 {
   return c->speed;
 }
-int32_t setSpeed(character *c, int32_t speed)
+int32_t setSpeed(character_t *c, int32_t speed)
 {
   return c->speed = speed;
 }
-uint32_t isAlive(character *c)
+uint32_t isAlive(character_t *c)
 {
   return c->alive;
 }
-uint32_t setAlive(character *c, uint32_t isAlive)
+uint32_t setAlive(character_t *c, uint32_t isAlive)
 {
   return c->alive = isAlive;
 }
-uint32_t getSeqNum(character *c)
+uint32_t getSeqNum(character_t *c)
 {
   return c->sequence_number;
 }
-uint32_t setSeqNum(character *c, uint32_t SN)
+uint32_t setSeqNum(character_t *c, uint32_t SN)
 {
   return c->sequence_number = SN;
 }

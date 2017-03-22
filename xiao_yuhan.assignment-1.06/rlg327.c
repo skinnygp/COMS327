@@ -263,15 +263,15 @@ int main(int argc, char *argv[])
   }
   if(d.quit == 1){
     printf("You quit!");
-    printf("\nYou defended your life in the face of %u deadly beasts.\n"
-           "You avenged the cruel and untimely murders of %u peaceful dungeon residents.\n",
-           d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
+    // printf("\nYou defended your life in the face of %u deadly beasts.\n"
+    //        "You avenged the cruel and untimely murders of %u peaceful dungeon residents.\n",
+    //        d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
   }
   else{
     printf(pc_is_alive(&d) ? victory : tombstone);
-    printf("\nYou defended your life in the face of %u deadly beasts.\n"
-           "You avenged the cruel and untimely murders of %u peaceful dungeon residents.\n",
-           d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
+    // printf("\nYou defended your life in the face of %u deadly beasts.\n"
+    //        "You avenged the cruel and untimely murders of %u peaceful dungeon residents.\n",
+    //        d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
   }
 
 

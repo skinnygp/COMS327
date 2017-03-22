@@ -1,24 +1,22 @@
-#include <stdlib.h>
+#ifdef __cplusplus
+extern "C"{
+  #endif
 
-#include "character.h"
-#include "heap.h"
-#include "npc.h"
-#include "pc.h"
-#include "dungeon.h"
+  #include <stdlib.h>
 
-void character_delete(void *v)
+  #include "character.h"
+  #include "heap.h"
+  #include "npc.h"
+  #include "pc.h"
+  #include "dungeon.h"
+
+#ifdef __cplusplus
+}
+  #endif
+
+void character_delete(character_t *v)
 {
-  /* The PC is never malloc()ed anymore, do don't attempt to free it here. */
-  character_t *c;
-
-  if (v) {
-    c = v;
-
-    if (c->npc) {
-      npc_delete(c->npc);
-      free(c);
-    }
-  }
+  delete v;
 }
 
 uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist)
@@ -35,10 +33,10 @@ uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist)
   pair_t del, f;
   int16_t a, b, c, i;
 
-  first[dim_x] = voyeur->position[dim_x];
-  first[dim_y] = voyeur->position[dim_y];
-  second[dim_x] = exhibitionist->position[dim_x];
-  second[dim_y] = exhibitionist->position[dim_y];
+  first[dim_x] = getX(voyeur);
+  first[dim_y] = getY(voyeur);
+  second[dim_x] = getX(exhibitionist);
+  second[dim_y] = getY(exhibitionist);
 
   if ((abs(first[dim_x] - second[dim_x]) > VISUAL_RANGE) ||
       (abs(first[dim_y] - second[dim_y]) > VISUAL_RANGE)) {
@@ -71,6 +69,7 @@ uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist)
     c = a - del[dim_x];
     b = c - del[dim_x];
     for (i = 0; i <= del[dim_x]; i++) {
+      /*need add*/
       if ((mappair(first) < ter_floor) && i && (i != del[dim_x])) {
         return 0;
       }
@@ -89,6 +88,9 @@ uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist)
     c = a - del[dim_y];
     b = c - del[dim_y];
     for (i = 0; i <= del[dim_y]; i++) {
+
+      /*need add*/
+
       if ((mappair(first) < ter_floor) && i && (i != del[dim_y])) {
         return 0;
       }
@@ -105,4 +107,54 @@ uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist)
   }
 
   return 1;
+}
+
+char getSymbol(character_t *c)
+{
+  return c->symbol;
+}
+
+char setSymbol(character_t *c, char symbol)
+{
+  return c->symbol = symbol;
+}
+int8_t getX(character_t *c)
+{
+  return c->position[dim_x];
+}
+int8_t getY(character_t *c)
+{
+  return c->position[dim_y];
+}
+int8_t setX(character_t *c, int8_t x)
+{
+  return c->position[dim_x] = x;
+}
+int8_t setY(character_t *c, int8_t y)
+{
+  return c->position[dim_y] = y;
+}
+int32_t getSpeed(character_t *c)
+{
+  return c->speed;
+}
+int32_t setSpeed(character_t *c, int32_t speed)
+{
+  return c->speed = speed;
+}
+uint32_t isAlive(character_t *c)
+{
+  return c->alive;
+}
+uint32_t setAlive(character_t *c, uint32_t isAlive)
+{
+  return c->alive = isAlive;
+}
+uint32_t getSeqNum(character_t *c)
+{
+  return c->sequence_number;
+}
+uint32_t setSeqNum(character_t *c, uint32_t SN)
+{
+  return c->sequence_number = SN;
 }

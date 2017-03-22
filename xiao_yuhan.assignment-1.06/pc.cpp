@@ -1,18 +1,24 @@
-#include <stdlib.h>
+#ifdef __cplusplus
+extern "C"
+{
 
-#include "string.h"
+  #endif
+  #include <stdlib.h>
 
-#include "dungeon.h"
-#include "pc.h"
-#include "utils.h"
-#include "move.h"
-#include "path.h"
+  #include "string.h"
+
+  #include "dungeon.h"
+  #include "pc.h"
+  #include "utils.h"
+  #include "move.h"
+  #include "path.h"
+  #ifdef __cplusplus
+  }
+#endif
 
 void pc_delete(pc_t *pc)
 {
-  if (pc) {
-    free(pc);
-  }
+  delete pc;
 }
 
 uint32_t pc_is_alive(dungeon_t *d)
@@ -32,7 +38,8 @@ void place_pc(dungeon_t *d)
 
 void config_pc(dungeon_t *d)
 {
-  memset(&d->pc, 0, sizeof (d->pc));
+  /*memset(&d->pc, 0, sizeof (d->pc));*/
+  d->pc = new pc_t;
   d->pc.symbol = '@';
 
   place_pc(d);
@@ -40,11 +47,10 @@ void config_pc(dungeon_t *d)
   d->pc.speed = PC_SPEED;
   d->pc.alive = 1;
   d->pc.sequence_number = 0;
-  d->pc.pc = calloc(1, sizeof (*d->pc.pc));
-  d->pc.npc = NULL;
-  d->pc.kills[kill_direct] = d->pc.kills[kill_avenged] = 0;
+  //d->pc.pc = calloc(1, sizeof (*d->pc.pc));
+  //d->pc.npc = NULL;
 
-  d->character[d->pc.position[dim_y]][d->pc.position[dim_x]] = &d->pc;
+  d->character[d->pc.position[dim_y]][d->pc.position[dim_x]] = d->pc;
 
   dijkstra(d);
   dijkstra_tunnel(d);

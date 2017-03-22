@@ -45,7 +45,13 @@ typedef struct room {
   pair_t size;
 } room_t;
 
-typedef struct character character_t;
+#ifdef __cplusplus
+class pc_t;
+
+extern "C" {
+#else
+typedef void pc_t;
+#endif
 
 typedef struct dungeon {
   uint32_t num_rooms;
@@ -63,7 +69,7 @@ typedef struct dungeon {
   uint8_t pc_distance[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_tunnel[DUNGEON_Y][DUNGEON_X];
   character_t *character[DUNGEON_Y][DUNGEON_X];
-  character_t pc;
+  pc_t pc;
   heap_t events;
   uint16_t num_monsters;
   uint16_t max_monsters;
@@ -88,5 +94,7 @@ int read_dungeon(dungeon_t *d, char *file);
 int read_pgm(dungeon_t *d, char *pgm);
 void render_distance_map(dungeon_t *d);
 void render_tunnel_distance_map(dungeon_t *d);
-
+# ifdef __cplusplus
+}
+#endif
 #endif

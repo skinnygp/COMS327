@@ -39,4 +39,4 @@ clobber: clean
 
 etags:
 	@$(ECHO) Updating TAGS
-	@etags *.[ch]
+	@etags *.[ch] *.cpp

@@ -181,10 +181,10 @@ int main(int argc, char *argv[])
             usage(argv[0]);
           }
           do_place_pc = 1;
-          if ((d.pc.position[dim_y] = atoi(argv[++i])) < 1 ||
-              d.pc.position[dim_y] > DUNGEON_Y - 2         ||
-              (d.pc.position[dim_x] = atoi(argv[++i])) < 1 ||
-              d.pc.position[dim_x] > DUNGEON_X - 2) {
+          if ((d.player.position[dim_y] = atoi(argv[++i])) < 1 ||
+              d.player.position[dim_y] > DUNGEON_Y - 2         ||
+              (d.player.position[dim_x] = atoi(argv[++i])) < 1 ||
+              d.player.position[dim_x] > DUNGEON_X - 2) {
             fprintf(stderr, "Invalid PC position.\n");
             usage(argv[0]);
           }
@@ -225,8 +225,8 @@ int main(int argc, char *argv[])
 
   config_pc(&d);
   gen_monsters(&d);
-  d.portion[dim_x] = (d.pc.position[dim_x] - 40);
-  d.portion[dim_y] = (d.pc.position[dim_y] - 11);
+  d.portion[dim_x] = (d.player.position[dim_x] - 40);
+  d.portion[dim_y] = (d.player.position[dim_y] - 11);
   if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
   if (d.portion[dim_x] + 80 >= 159) d.portion[dim_x] = 79;
   if (d.portion[dim_y] < 0) d.portion[dim_y] = 0;
@@ -237,17 +237,17 @@ int main(int argc, char *argv[])
     portion(&d);
     do_moves(&d);
     if(d.is_look_mode == 0){
-      if(d.portion[dim_x] + 79 - d.pc.position[dim_x] < 5){
-        d.portion[dim_x] = (d.pc.position[dim_x] - 40);
+      if(d.portion[dim_x] + 79 - d.player.position[dim_x] < 5){
+        d.portion[dim_x] = (d.player.position[dim_x] - 40);
       }
-      if(d.pc.position[dim_x] - d.portion[dim_x] < 5){
-        d.portion[dim_x] = (d.pc.position[dim_x] - 40);
+      if(d.player.position[dim_x] - d.portion[dim_x] < 5){
+        d.portion[dim_x] = (d.player.position[dim_x] - 40);
       }
-      if(d.portion[dim_y] + 21 - d.pc.position[dim_y] < 5){
-        d.portion[dim_y] = (d.pc.position[dim_y] - 11);
+      if(d.portion[dim_y] + 21 - d.player.position[dim_y] < 5){
+        d.portion[dim_y] = (d.player.position[dim_y] - 11);
       }
-      if(d.pc.position[dim_y] - d.portion[dim_y] < 5){
-        d.portion[dim_y] = (d.pc.position[dim_y] - 11);
+      if(d.player.position[dim_y] - d.portion[dim_y] < 5){
+        d.portion[dim_y] = (d.player.position[dim_y] - 11);
       }
       if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
       if (d.portion[dim_x] + 80 >= 159) d.portion[dim_x] = 79;
@@ -275,7 +275,7 @@ int main(int argc, char *argv[])
   }
 
 
-  pc_delete(d.pc.pc);
+  pc_delete(d.player.pc);
 
   delete_dungeon(&d);
 
@@ -315,7 +315,7 @@ void portion(dungeon_t *d)
       }
     }
   }
-  mvprintw(0, 0, "PC position: %d %d.",d->pc.position[dim_x], d->pc.position[dim_y]);
+  mvprintw(0, 0, "PC position: %d %d.",d->player.position[dim_x], d->player.position[dim_y]);
   if(d->is_look_mode){
     mvprintw(22, 0, "Look Mode: Press esc to enter Control Mode.");
   }
@@ -326,8 +326,8 @@ void portion(dungeon_t *d)
 void PC_control(dungeon_t *d)
 {
   pair_t next;
-  next[dim_x] = d->pc.position[dim_x];
-  next[dim_y] = d->pc.position[dim_y];
+  next[dim_x] = d->player.position[dim_x];
+  next[dim_y] = d->player.position[dim_y];
 
   int unbound = 1;
   int input;
@@ -349,7 +349,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]++;
         }
         else {
-          move_character(d, &d->pc, next);
+          move_character(d, &d->player, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -364,7 +364,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]++;
         }
         else {
-          move_character(d, &d->pc, next);
+          move_character(d, &d->player, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -381,7 +381,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]++;
         }
         else {
-          move_character(d, &d->pc, next);
+          move_character(d, &d->player, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -396,7 +396,7 @@ void PC_control(dungeon_t *d)
           next[dim_x]--;
         }
         else {
-          move_character(d, &d->pc, next);
+          move_character(d, &d->player, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -413,7 +413,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]--;
         }
         else {
-          move_character(d, &d->pc, next);
+          move_character(d, &d->player, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -428,7 +428,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]--;
         }
         else {
-          move_character(d, &d->pc, next);
+          move_character(d, &d->player, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -445,7 +445,7 @@ void PC_control(dungeon_t *d)
           next[dim_y]--;
         }
         else {
-          move_character(d, &d->pc, next);
+          move_character(d, &d->player, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -460,7 +460,7 @@ void PC_control(dungeon_t *d)
           next[dim_x]++;
         }
         else {
-          move_character(d, &d->pc, next);
+          move_character(d, &d->player, next);
           unbound = 0;
           dijkstra(d);
           dijkstra_tunnel(d);
@@ -474,13 +474,13 @@ void PC_control(dungeon_t *d)
         if(mappair(next) == ter_stair_down){
           unbound = 0;
           delete_dungeon(d);
-	  free(d->pc.pc);
+	  free(d->player.pc);
           init_dungeon(d);
           gen_dungeon(d);
           config_pc(d);
           gen_monsters(d);
-          d->portion[dim_x] = (d->pc.position[dim_x] - 40);
-          d->portion[dim_y] = (d->pc.position[dim_y] - 11);
+          d->portion[dim_x] = (d->player.position[dim_x] - 40);
+          d->portion[dim_y] = (d->player.position[dim_y] - 11);
           if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
           if (d->portion[dim_x] + 80 >= 159) d->portion[dim_x] = 79;
           if (d->portion[dim_y] < 0) d->portion[dim_y] = 0;
@@ -497,13 +497,13 @@ void PC_control(dungeon_t *d)
         if(mappair(next) == ter_stair_up){
           unbound = 0;
           delete_dungeon(d);
-	  free(d->pc.pc);
+	  free(d->player.pc);
           init_dungeon(d);
           gen_dungeon(d);
           config_pc(d);
           gen_monsters(d);
-          d->portion[dim_x] = (d->pc.position[dim_x] - 40);
-          d->portion[dim_y] = (d->pc.position[dim_y] - 11);
+          d->portion[dim_x] = (d->player.position[dim_x] - 40);
+          d->portion[dim_y] = (d->player.position[dim_y] - 11);
           if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
           if (d->portion[dim_x] + 80 >= 159) d->portion[dim_x] = 79;
           if (d->portion[dim_y] < 0) d->portion[dim_y] = 0;
@@ -533,8 +533,8 @@ void do_look_mode(dungeon_t *d)
     input = getch();
     switch (input) {
       case 27:
-        d->portion[dim_x] = (d->pc.position[dim_x] - 40);
-        d->portion[dim_y] = (d->pc.position[dim_y] - 11);
+        d->portion[dim_x] = (d->player.position[dim_x] - 40);
+        d->portion[dim_y] = (d->player.position[dim_y] - 11);
         if (d->portion[dim_x] < 0) d->portion[dim_x] = 0;
         if (d->portion[dim_x] + 80 >= 159) d->portion[dim_x] = 79;
         if (d->portion[dim_y] < 0) d->portion[dim_y] = 0;

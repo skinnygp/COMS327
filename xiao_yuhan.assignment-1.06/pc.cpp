@@ -16,7 +16,7 @@ extern "C"
   }
 #endif
 
-void pc_delete(pc_t *pc)
+void pc_delete(pc *pc)
 {
   delete pc;
 }
@@ -39,7 +39,7 @@ void place_pc(dungeon_t *d)
 void config_pc(dungeon_t *d)
 {
   /*memset(&d->pc, 0, sizeof (d->pc));*/
-  d->pc = new pc_t;
+  d->pc = new pc;
   d->pc.symbol = '@';
 
   place_pc(d);

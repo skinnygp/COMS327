@@ -14,12 +14,12 @@ extern "C"{
 }
   #endif
 
-void character_delete(character_t *v)
+void character_delete(character *v)
 {
   delete v;
 }
 
-uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist)
+uint32_t can_see(dungeon_t *d, character *voyeur, character *exhibitionist)
 {
   /* Application of Bresenham's Line Drawing Algorithm.  If we can draw *
    * a line from v to e without intersecting any walls, then v can see  *
@@ -109,52 +109,52 @@ uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist)
   return 1;
 }
 
-char getSymbol(character_t *c)
+char getSymbol(character *c)
 {
   return c->symbol;
 }
 
-char setSymbol(character_t *c, char symbol)
+char setSymbol(character *c, char symbol)
 {
   return c->symbol = symbol;
 }
-int8_t getX(character_t *c)
+int8_t getX(character *c)
 {
   return c->position[dim_x];
 }
-int8_t getY(character_t *c)
+int8_t getY(character *c)
 {
   return c->position[dim_y];
 }
-int8_t setX(character_t *c, int8_t x)
+int8_t setX(character *c, int8_t x)
 {
   return c->position[dim_x] = x;
 }
-int8_t setY(character_t *c, int8_t y)
+int8_t setY(character *c, int8_t y)
 {
   return c->position[dim_y] = y;
 }
-int32_t getSpeed(character_t *c)
+int32_t getSpeed(character *c)
 {
   return c->speed;
 }
-int32_t setSpeed(character_t *c, int32_t speed)
+int32_t setSpeed(character *c, int32_t speed)
 {
   return c->speed = speed;
 }
-uint32_t isAlive(character_t *c)
+uint32_t isAlive(character *c)
 {
   return c->alive;
 }
-uint32_t setAlive(character_t *c, uint32_t isAlive)
+uint32_t setAlive(character *c, uint32_t isAlive)
 {
   return c->alive = isAlive;
 }
-uint32_t getSeqNum(character_t *c)
+uint32_t getSeqNum(character *c)
 {
   return c->sequence_number;
 }
-uint32_t setSeqNum(character_t *c, uint32_t SN)
+uint32_t setSeqNum(character *c, uint32_t SN)
 {
   return c->sequence_number = SN;
 }

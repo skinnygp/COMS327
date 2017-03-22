@@ -12,7 +12,7 @@ extern "C"
 #endif
 typedef uint32_t npc_characteristics_t;
 #ifdef __cplusplus
-class  npc_t : public character_t{
+class  npc : public character{
  public:
   npc_characteristics_t characteristics;
   uint32_t have_seen_pc;
@@ -30,7 +30,7 @@ extern "C"
 
   #else
 
-  typedef void npc_t;
+  typedef void npc;
 
   #endif
   # define NPC_SMART         0x00000001
@@ -72,8 +72,8 @@ extern "C"
   typedef struct dungeon dungeon_t;
 
   void gen_monsters(dungeon_t *d);
-  void npc_delete(npc_t *n);
-  void npc_next_pos(dungeon_t *d, npc_t *c, pair_t next);
+  void npc_delete(npc *n);
+  void npc_next_pos(dungeon_t *d, npc *c, pair_t next);
   uint32_t dungeon_has_npcs(dungeon_t *d);
 
 

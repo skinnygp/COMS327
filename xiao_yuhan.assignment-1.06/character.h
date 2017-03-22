@@ -15,7 +15,7 @@ extern "C"{
   #endif
 
 #ifdef __cplusplus
-class character_t {
+class character {
  public:
   char symbol;
   pair_t position;
@@ -33,26 +33,26 @@ class character_t {
 
 extern "C"{
   # else
-  typedef void character_t;
+  typedef void character;
   #endif
   typedef struct dungeon dungeon_t;
   int32_t compare_characters_by_next_turn(const void *character1,
                                         const void *character2);
-  uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist);
-  void character_delete(character_t *v);
-  char getSymbol(character_t *c);
-  char setSymbol(character_t *c, char symbol);
+  uint32_t can_see(dungeon_t *d, character *voyeur, character *exhibitionist);
+  void character_delete(character *v);
+  char getSymbol(character *c);
+  char setSymbol(character *c, char symbol);
   /*pair_t getPosition(character *c);*/
-  int8_t getX(character_t *c);
-  int8_t getY(character_t *c);
-  int8_t setX(character_t *c, int8_t x);
-  int8_t setY(character_t *c, int8_t y);
-  int32_t getSpeed(character_t *c);
-  int32_t setSpeed(character_t *c, int32_t speed);
-  uint32_t isAlive(character_t *c);
-  uint32_t setAlive(character_t *c, uint32_t isAlive);
-  uint32_t getSeqNum(character_t *c);
-  uint32_t setSeqNum(character_t *c, uint32_t SN);
+  int8_t getX(character *c);
+  int8_t getY(character *c);
+  int8_t setX(character *c, int8_t x);
+  int8_t setY(character *c, int8_t y);
+  int32_t getSpeed(character *c);
+  int32_t setSpeed(character *c, int32_t speed);
+  uint32_t isAlive(character *c);
+  uint32_t setAlive(character *c, uint32_t isAlive);
+  uint32_t getSeqNum(character *c);
+  uint32_t setSeqNum(character *c, uint32_t SN);
   #ifdef __cplusplus
  }
   #endif

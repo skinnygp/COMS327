@@ -26,8 +26,8 @@
 #define mapxy(x, y) (d->map[y][x])
 #define hardnesspair(pair) (d->hardness[pair[dim_y]][pair[dim_x]])
 #define hardnessxy(x, y) (d->hardness[y][x])
-#define charpair(pair) (d->character[pair[dim_y]][pair[dim_x]])
-#define charxy(x, y) (d->character[y][x])
+#define charpair(pair) (d->characterMap[pair[dim_y]][pair[dim_x]])
+#define charxy(x, y) (d->characterMap[y][x])
 
 typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_debug,
@@ -44,15 +44,11 @@ typedef struct room {
   pair_t position;
   pair_t size;
 } room_t;
-
 #ifdef __cplusplus
-class pc_t;
-
-extern "C" {
+class pc;
 #else
-typedef void pc_t;
+typedef void pc;
 #endif
-
 typedef struct dungeon {
   uint32_t num_rooms;
   room_t *rooms;
@@ -68,8 +64,8 @@ typedef struct dungeon {
   uint8_t hardness[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_distance[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_tunnel[DUNGEON_Y][DUNGEON_X];
-  character_t *character[DUNGEON_Y][DUNGEON_X];
-  pc_t pc;
+  character *characterMap[DUNGEON_Y][DUNGEON_X];
+  pc player;
   heap_t events;
   uint16_t num_monsters;
   uint16_t max_monsters;
@@ -94,7 +90,5 @@ int read_dungeon(dungeon_t *d, char *file);
 int read_pgm(dungeon_t *d, char *pgm);
 void render_distance_map(dungeon_t *d);
 void render_tunnel_distance_map(dungeon_t *d);
-# ifdef __cplusplus
-}
-#endif
+
 #endif

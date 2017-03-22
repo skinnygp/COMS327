@@ -526,6 +526,22 @@ static int empty_dungeon(dungeon_t *d)
   return 0;
 }
 
+static int empty_PCmap(dungeon_t *d)
+{
+  uint8_t x, y;
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      PCmapxy(x, y) = ter_wall;
+      if (y == 0 || y == DUNGEON_Y - 1 ||
+          x == 0 || x == DUNGEON_X - 1) {
+        PCmapxy(x, y) = ter_wall_immutable;
+      }
+      PCcharxy(x, y) = NULL;
+    }
+  }
+  return 0;
+}
+
 //@author: yuhan xiao
 static int make_stairs(dungeon_t *d){
   pair_t position;
@@ -696,6 +712,7 @@ void delete_dungeon(dungeon_t *d)
 void init_dungeon(dungeon_t *d)
 {
   empty_dungeon(d);
+  empty_PCmap(d);
   memset(&d->events, 0, sizeof (d->events));
   heap_init(&d->events, compare_events, event_delete);
 }

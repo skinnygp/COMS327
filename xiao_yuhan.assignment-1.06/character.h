@@ -9,6 +9,11 @@ extern "C"
 
   # include "dims.h"
 
+  typedef enum kill_type {
+  kill_direct,
+  kill_avenged,
+  num_kill_types
+  } kill_type_t;
   #ifdef __cplusplus
 }
   #endif
@@ -31,6 +36,7 @@ class character_t {
    * metadata: locally, how old is this character_t; and globally, how many   *
    * character_ts have been created by the game.                              */
   uint32_t sequence_number;
+  uint32_t kills[num_kill_types];
 };
 
 extern "C"{
@@ -38,6 +44,9 @@ extern "C"{
   typedef void character_t;
   #endif
   typedef struct dungeon dungeon_t;
+  typedef struct dice_t dice_t;
+
+
   int32_t compare_character_ts_by_next_turn(const void *character_t1,
                                         const void *character_t2);
   uint32_t can_see(dungeon_t *d, character_t *voyeur, pair_t exhibitionist);

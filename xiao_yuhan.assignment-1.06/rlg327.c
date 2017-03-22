@@ -17,8 +17,12 @@ void renew_PCMap(dungeon_t *d)
   int x, y;
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
-      if(y-getY(d->pc)==5 || getY(d->pc)-y==5 || x-getX(d->pc)==5 || getX(d->pc)-x==5){
-        set_PCMap(d->pc, x, y, mapxy(x,y));
+      if(((y-getY(d->pc)<=5 && y-getY(d->pc)>=0)
+      || (getY(d->pc)-y<=5 && getY(d->pc)-y>=0))
+      && ((x-getX(d->pc)<=5 && x-getX(d->pc)>=0)
+      || (getX(d->pc)-x<=5 && getX(d->pc)-x>=0))
+    ){
+        PCmapxy(x, y) = mapxy(x, y);
       }
     }
   }
@@ -28,8 +32,12 @@ void renew_PCCharacter(dungeon_t *d)
   int x, y;
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
-      if(y-getY(d->pc)==5 || getY(d->pc)-y==5 || x-getX(d->pc)==5 || getX(d->pc)-x==5){
-        set_PCCharacter(d->pc, x, y, charxy(x,y));
+      if(((y-getY(d->pc)<=5 && y-getY(d->pc)>=0)
+      || (getY(d->pc)-y<=5 && getY(d->pc)-y>=0))
+      && ((x-getX(d->pc)<=5 && x-getX(d->pc)>=0)
+      || (getX(d->pc)-x<=5 && getX(d->pc)-x>=0))
+    ){
+        PCcharxy(x, y) = charxy(x , y);
       }
     }
   }
@@ -245,9 +253,9 @@ int main(int argc, char *argv[])
   }
 
   config_pc(&d);
+  gen_monsters(&d);
   renew_PCMap(&d);
   renew_PCCharacter(&d);
-  gen_monsters(&d);
   d.portion[dim_x] = (getX(d.pc) - 40);
   d.portion[dim_y] = (getY(d.pc) - 11);
   if (d.portion[dim_x] < 0) d.portion[dim_x] = 0;
@@ -279,6 +287,8 @@ int main(int argc, char *argv[])
     }
     do_moves(&d);
     PC_control(&d);
+    renew_PCMap(&d);
+    renew_PCCharacter(&d);
   }
   portion(&d);
   endwin();
@@ -287,25 +297,11 @@ int main(int argc, char *argv[])
   }
   if(d.quit == 1){
     printf("You quit!");
-    // printf("\nYou defended your life in the face of %u deadly beasts.\n"
-    //        "You avenged the cruel and untimely murders of %u peaceful dungeon residents.\n",
-    //        d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
-  }
-  else{
-
-    // printf(pc_is_alive(&d) ? victory : tombstone);
-    // printf("\nYou defended your life in the face of %u deadly beasts.\n"
-    //        "You avenged the cruel and untimely murders of %u peaceful dungeon residents.\n",
-    //        d.pc.kills[kill_direct], d.pc.kills[kill_avenged]);
   }
   if(pc_is_alive(&d)){
     pc_delete(d.pc);
   }
-
-
-
   delete_dungeon(&d);
-
   return 0;
 }
 
@@ -315,10 +311,10 @@ void portion(dungeon_t *d)
   clear();
   for (p[dim_y] = 1; p[dim_y] < 22; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < 80; p[dim_x]++) {
-      if (get_PCCharacter(d, d->portion[dim_x] + p[dim_x], d->portion[dim_y] + p[dim_y])){
+      if (PCcharxy( d->portion[dim_x] + p[dim_x], d->portion[dim_y] + p[dim_y])){
         mvaddch(p[dim_y], p[dim_x], getSymbol(d->character[d->portion[dim_y] + p[dim_y]][d->portion[dim_x] + p[dim_x]]));
       } else {
-        switch (get_PCMap(d, d->portion[dim_x] + p[dim_x],
+        switch (PCmapxy( d->portion[dim_x] + p[dim_x],
                       d->portion[dim_y] + p[dim_y])) {
         case ter_debug:
         case ter_wall:
@@ -550,8 +546,6 @@ void PC_control(dungeon_t *d)
         break;
     }
   }
-  renew_PCMap(d);
-  renew_PCCharacter(d);
 }
 
 void do_look_mode(dungeon_t *d)

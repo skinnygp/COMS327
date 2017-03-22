@@ -72,7 +72,7 @@ void gen_monsters(dungeon_t *d)
     m->have_seen_pc = 0;
 
 
-  
+    d->character[p[dim_y]][p[dim_x]] = m;
 
     heap_insert(&d->events, new_event(d, event_character_turn, m, 0));
   }

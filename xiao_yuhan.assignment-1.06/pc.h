@@ -14,9 +14,6 @@ extern "C"
 #endif
 # ifdef __cplusplus
 class pc_t : public character_t {
- public:
-  terrain_type_t PCMap[DUNGEON_Y][DUNGEON_X];
-  character_t *PCCharacter[DUNGEON_Y][DUNGEON_X];
 };
 /*typedef struct pc {
 } pc_t;*/
@@ -33,10 +30,7 @@ uint32_t pc_is_alive(dungeon_t *d);
 void config_pc(dungeon_t *d);
 void place_pc(dungeon_t *d);
 uint32_t pc_in_room(dungeon_t *d, uint32_t room);
-void set_PCMap(pc_t *pc, int x, int y, terrain_type_t ch);
-terrain_type_t get_PCMap(pc_t *pc, int x, int y);
-void set_PCCharacter(pc_t *pc, int x, int y, character_t *ch);
-character_t* get_PCCharacter(pc_t *pc, int x, int y);
+
 # ifdef __cplusplus
 }
 # endif

@@ -16,7 +16,7 @@
 #define ROOM_MAX_Y             15
 #define VISUAL_RANGE           20
 #define PC_SPEED               10
-#define MAX_MONSTERS           25
+#define MAX_MONSTERS           5
 #define SAVE_DIR               ".rlg327"
 #define DUNGEON_SAVE_FILE      "dungeon"
 #define DUNGEON_SAVE_SEMANTIC  "RLG327-S2017"
@@ -24,10 +24,12 @@
 
 #define mappair(pair) (d->map[pair[dim_y]][pair[dim_x]])
 #define mapxy(x, y) (d->map[y][x])
+#define PCmapxy(x, y) (d->PCmap[y][x])
 #define hardnesspair(pair) (d->hardness[pair[dim_y]][pair[dim_x]])
 #define hardnessxy(x, y) (d->hardness[y][x])
 #define charpair(pair) (d->character[pair[dim_y]][pair[dim_x]])
 #define charxy(x, y) (d->character[y][x])
+#define PCcharxy(x, y) (d->PCcharacter[y][x])
 
 typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_debug,
@@ -56,6 +58,7 @@ typedef struct dungeon {
   uint32_t num_rooms;
   room_t *rooms;
   terrain_type_t map[DUNGEON_Y][DUNGEON_X];
+  terrain_type_t PCmap[DUNGEON_Y][DUNGEON_X];
   /* Since hardness is usually not used, it would be expensive to pull it *
    * into cache every time we need a map cell, so we store it in a        *
    * parallel array, rather than using a structure to represent the       *
@@ -68,6 +71,7 @@ typedef struct dungeon {
   uint8_t pc_distance[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_tunnel[DUNGEON_Y][DUNGEON_X];
   character_t *character[DUNGEON_Y][DUNGEON_X];
+  character_t *PCcharacter[DUNGEON_Y][DUNGEON_X];
   pc_t *pc;
   heap_t events;
   uint16_t num_monsters;

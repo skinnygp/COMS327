@@ -72,7 +72,7 @@ void gen_monsters(dungeon_t *d)
     m->have_seen_pc = 0;
 
 
-    d->character[p[dim_y]][p[dim_x]] = m;
+  
 
     heap_insert(&d->events, new_event(d, event_character_turn, m, 0));
   }
@@ -542,8 +542,8 @@ void (*npc_move_func[])(dungeon_t *d, npc_t *c, pair_t next) = {
 
 void npc_next_pos(dungeon_t *d, npc_t *c, pair_t next)
 {
-  next[dim_y] = c->position[dim_y];
-  next[dim_x] = c->position[dim_x];
+  next[dim_y] = getY(c);
+  next[dim_x] = getX(c);
 
   npc_move_func[c->characteristics & 0x0000000f](d, c, next);
 }

@@ -18,10 +18,9 @@ void do_combat(dungeon_t *d, character_t *atk, character_t *def)
 {
   if (isAlive(def)) {
     setAlive(def, 0);
-    if (def != &d->pc) {
+    if (def != d->pc) {
       d->num_monsters--;
     }
-
   }
 }
 
@@ -63,13 +62,13 @@ void do_moves(dungeon_t *d)
     e->time = d->time + (1000 / getSpeed(d->pc))
 ;
     e->sequence = 0;
-    e->c = &d->pc;
+    e->c = d->pc;
     heap_insert(&d->events, e);
   }
 
   while (pc_is_alive(d) &&
          (e = heap_remove_min(&d->events)) &&
-         ((e->type != event_character_turn) || (e->c != &d->pc))) {
+         ((e->type != event_character_turn) || (e->c != d->pc))) {
     d->time = e->time;
     if (e->type == event_character_turn) {
       c = e->c;
@@ -78,7 +77,7 @@ void do_moves(dungeon_t *d)
       if (d->character[getY(c)][getX(c)] == c) {
         d->character[getY(c)][getX(c)] = NULL;
       }
-      if (c != &d->pc) {
+      if (c != d->pc) {
         event_delete(e);
       }
       continue;
@@ -90,7 +89,7 @@ void do_moves(dungeon_t *d)
     heap_insert(&d->events, update_event(d, e, 1000 / getSpeed(c)));
   }
 
-  if (pc_is_alive(d) && e->c == &d->pc) {
+  if (pc_is_alive(d) && e->c == d->pc) {
     c = e->c;
     d->time = e->time;
     /* Kind of kludgey, but because the PC is never in the queue when   *

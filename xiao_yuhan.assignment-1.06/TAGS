@@ -168,11 +168,11 @@ macros.h,611
 
 move.c,166
 void do_combat(17,250
-void move_character(28,425
-void do_moves(44,816
-void dir_nearest_wall(104,2702
-uint32_t against_wall(116,3029
-uint32_t in_corner(124,3345
+void move_character(27,423
+void do_moves(43,814
+void dir_nearest_wall(103,2696
+uint32_t against_wall(115,3023
+uint32_t in_corner(123,3339
 
 move.h,93
 # define MOVE_H2,15
@@ -236,17 +236,19 @@ typedef struct dungeon dungeon_t;4,32
 pc.h,105
 # define PC_H2,13
 class pc_t 16,201
-typedef void pc_t;24,335
-typedef struct dungeon dungeon_t;27,363
+typedef void pc_t;25,395
+typedef struct dungeon dungeon_t;28,423
 
-rlg327.c,195
-const char *victory victory16,286
-const char *tombstone tombstone47,1857
-void usage(68,2908
-int main(79,3182
-void portion(285,10132
-void PC_control(327,11405
-void do_look_mode(529,16710
+rlg327.c,252
+void renew_PCMap(15,285
+void renew_PCCharacter(26,556
+const char *victory victory37,840
+const char *tombstone tombstone68,2411
+void usage(89,3462
+int main(100,3736
+void portion(312,10761
+void PC_control(353,12053
+void do_look_mode(557,17436
 
 utils.c,25
 int makedirectory(9,124
@@ -276,33 +278,37 @@ npc.cpp,980
 void npc_delete(22,267
 static uint32_t max_monster_cells(27,310
 void gen_monsters(41,557
-void npc_next_pos_rand_tunnel(81,1821
-void npc_next_pos_rand(126,2680
-void npc_next_pos_line_of_sight(158,3245
-void npc_next_pos_line_of_sight_tunnel(182,3925
-void npc_next_pos_gradient(217,4724
-static void npc_next_pos_00(340,9405
-static void npc_next_pos_01(355,9873
-static void npc_next_pos_02(376,10544
-static void npc_next_pos_03(384,10818
-static void npc_next_pos_04(390,10987
-static void npc_next_pos_05(405,11462
-static void npc_next_pos_06(426,12140
-static void npc_next_pos_07(434,12421
-static void npc_next_pos_08(440,12590
-static void npc_next_pos_09(450,12825
-static void npc_next_pos_0a(460,13060
-static void npc_next_pos_0b(470,13295
-static void npc_next_pos_0c(480,13530
-static void npc_next_pos_0d(490,13772
-static void npc_next_pos_0e(500,14014
-static void npc_next_pos_0f(510,14256
-void npc_next_pos(543,15144
-uint32_t dungeon_has_npcs(551,15339
+void npc_next_pos_rand_tunnel(81,1782
+void npc_next_pos_rand(126,2641
+void npc_next_pos_line_of_sight(158,3206
+void npc_next_pos_line_of_sight_tunnel(182,3886
+void npc_next_pos_gradient(217,4685
+static void npc_next_pos_00(340,9366
+static void npc_next_pos_01(355,9834
+static void npc_next_pos_02(376,10505
+static void npc_next_pos_03(384,10779
+static void npc_next_pos_04(390,10948
+static void npc_next_pos_05(405,11423
+static void npc_next_pos_06(426,12101
+static void npc_next_pos_07(434,12382
+static void npc_next_pos_08(440,12551
+static void npc_next_pos_09(450,12786
+static void npc_next_pos_0a(460,13021
+static void npc_next_pos_0b(470,13256
+static void npc_next_pos_0c(480,13491
+static void npc_next_pos_0d(490,13733
+static void npc_next_pos_0e(500,13975
+static void npc_next_pos_0f(510,14217
+void npc_next_pos(543,15105
+uint32_t dungeon_has_npcs(551,15278
 
-pc.cpp,126
+pc.cpp,252
 void pc_delete(21,225
 uint32_t pc_is_alive(26,268
 void place_pc(31,331
 void config_pc(41,760
 uint32_t pc_in_room(60,1150
+void set_PCMap(74,1700
+terrain_type_t get_PCMap(78,1786
+void set_PCCharacter(82,1865
+character_t* get_PCCharacter(86,1961

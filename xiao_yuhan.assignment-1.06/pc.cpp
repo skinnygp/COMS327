@@ -71,3 +71,19 @@ uint32_t pc_in_room(dungeon_t *d, uint32_t room)
 
   return 0;
 }
+void set_PCMap(pc_t *pc, int x, int y, terrain_type_t ch)
+{
+  pc->PCMap[y][x] = ch;
+}
+terrain_type_t get_PCMap(pc_t *pc, int x, int y)
+{
+  return pc->PCMap[y][x];
+}
+void set_PCCharacter(pc_t *pc, int x, int y, character_t *ch)
+{
+  pc->PCCharacter[y][x] = ch;
+}
+character_t* get_PCCharacter(pc_t *pc, int x, int y)
+{
+  return pc->PCCharacter[y][x];
+}

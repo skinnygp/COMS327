@@ -16,7 +16,7 @@
 #define ROOM_MAX_Y             15
 #define VISUAL_RANGE           20
 #define PC_SPEED               10
-#define MAX_MONSTERS           5
+#define MAX_MONSTERS           1
 #define SAVE_DIR               ".rlg327"
 #define DUNGEON_SAVE_FILE      "dungeon"
 #define DUNGEON_SAVE_SEMANTIC  "RLG327-S2017"

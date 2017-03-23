@@ -1,17 +1,21 @@
 README
 Author: Yuhan Xiao
-Date: Mar 8, 2017
+Date: Mar 22, 2017
 
 included:
-Same with Assignment-1.04
+Same with my Assignment-1.05 (no io.c and io.h)
 this README
 Makefile
 CHANGELOG
 
 
-Project Description: Add User Interface with Ncurses for our dungeon.
+Project Description: “Fog of War” and interfacing C with C++
 Note:
-* Every case works perfect. If it stuck when you press a valid button, wait witll it work. 
+* Big Note: Since there are bugs in npc_next_pos, test it with ONLY ONE monster is better! (./rlg327 -n 1)!!!!!!!!!!!1
+            too many monsters may cause game stuck which is super annoying.
+            In case you do not want to do that, I have changed the MAX_MONSTERS to 5.
+* Fog of war: PC can see 5*5 even it's in ter_floor_hall.
+* Segmentation fault may occur.
 * First line shows PC's position.
 * 23rd line shows modes(control/look).
 * 24th line shows wrong move when move cannot be done.
@@ -22,14 +26,16 @@ Note:
 
 
 Relevant Functions:
-void do_look_mode(dungeon_t *d);
-void portion(dungeon_t *d);
-void PC_control(dungeon_t *d);
+void renew_PCMap(dungeon_t *d)
+void renew_PCCharacter(dungeon_t *d)
 (rlg327.c)
+#define PCmapxy(x, y) (d->PCmap[y][x])
+#define PCcharxy(x, y) (d->PCcharacter[y][x])
+(dungeon.h)
+All functions c to cpp
 
 Data Structure:
 Add:
-pair_t portion;
-uint32_t is_look_mode;
-uint32_t quit;
+character_t *PCcharacter[DUNGEON_Y][DUNGEON_X];
+terrain_type_t PCmap[DUNGEON_Y][DUNGEON_X];
 in dungeon_t(dungeon.h)

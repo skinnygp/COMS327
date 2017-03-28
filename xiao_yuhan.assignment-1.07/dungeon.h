@@ -48,11 +48,11 @@ typedef struct room {
   pair_t size;
 } room_t;
 
-# ifdef __cplusplus
+// # ifdef __cplusplus
 class pc;
-# else
-typedef void pc;
-# endif
+// # else
+// typedef void pc;
+// # endif
 
 typedef struct dungeon {
   uint32_t num_rooms;

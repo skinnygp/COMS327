@@ -8,7 +8,7 @@
 
 typedef uint32_t npc_characteristics_t;
 
-# ifdef __cplusplus
+// # ifdef __cplusplus
 class npc : public character {
  public:
   npc_characteristics_t characteristics;
@@ -16,10 +16,10 @@ class npc : public character {
   pair_t pc_last_known_position;
 };
 
-extern "C" {
-# else
-typedef void npc;
-# endif
+// extern "C" {
+// # else
+// typedef void npc;
+// # endif
 
 # define NPC_SMART         0x00000001
 # define NPC_TELEPATH      0x00000002
@@ -64,7 +64,7 @@ void npc_delete(npc *n);
 void npc_next_pos(dungeon_t *d, npc *c, pair_t next);
 uint32_t dungeon_has_npcs(dungeon_t *d);
 
-# ifdef __cplusplus
-}
-# endif
+// # ifdef __cplusplus
+// }
+// # endif
 #endif

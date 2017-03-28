@@ -11,7 +11,7 @@ typedef enum kill_type {
   num_kill_types
 } kill_type_t;
 
-# ifdef __cplusplus
+// # ifdef __cplusplus
 class character {
  public:
   char symbol;
@@ -29,10 +29,10 @@ class character {
   uint32_t kills[num_kill_types];
 };
 
-extern "C" {
-# else
-typedef void character;
-#endif
+// extern "C" {
+// # else
+// typedef void character;
+// #endif
 
 typedef struct dungeon dungeon_t;
 
@@ -57,7 +57,7 @@ uint32_t character_get_ikills(const character *c);
 uint32_t character_increment_dkills(character *c);
 uint32_t character_increment_ikills(character *c, uint32_t k);
 
-# ifdef __cplusplus
-}
-# endif
+// # ifdef __cplusplus
+// }
+// # endif
 #endif

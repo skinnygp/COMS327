@@ -1,9 +1,9 @@
 #ifndef HEAP_H
 # define HEAP_H
 
-# ifdef __cplusplus
-extern "C" {
-# endif
+// # ifdef __cplusplus
+// extern "C" {
+// # endif
 
 # include <stdint.h>
 
@@ -28,8 +28,8 @@ int heap_combine(heap_t *h, heap_t *h1, heap_t *h2);
 int heap_decrease_key(heap_t *h, heap_node_t *n, void *v);
 int heap_decrease_key_no_replace(heap_t *h, heap_node_t *n);
 
-# ifdef __cplusplus
-}
-# endif
+// # ifdef __cplusplus
+// }
+// # endif
 
 #endif

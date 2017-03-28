@@ -1,1 +1,1 @@
-heap.o: heap.c heap.h macros.h
+heap.o: heap.cpp heap.h macros.h

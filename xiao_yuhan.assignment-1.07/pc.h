@@ -7,17 +7,17 @@
 # include "character.h"
 # include "dungeon.h"
 
-# ifdef __cplusplus
+// # ifdef __cplusplus
 class pc : public character {
  public:
   terrain_type_t known_terrain[DUNGEON_Y][DUNGEON_X];
   unsigned char visible[DUNGEON_Y][DUNGEON_X];
 };
 
-extern "C" {
-# else
-typedef void pc;
-# endif
+// extern "C" {
+// # else
+// typedef void pc;
+// # endif
 
 void pc_delete(pc *pc);
 uint32_t pc_is_alive(dungeon_t *d);
@@ -32,7 +32,7 @@ void pc_observe_terrain(pc *p, dungeon_t *d);
 int32_t is_illuminated(pc *p, int16_t y, int16_t x);
 void pc_reset_visibility(pc *p);
 
-# ifdef __cplusplus
-}
-# endif
+// # ifdef __cplusplus
+// }
+// # endif
 #endif

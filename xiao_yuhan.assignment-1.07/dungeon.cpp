@@ -90,7 +90,7 @@ static void dijkstra_corridor(dungeon_t *d, pair_t from, pair_t to)
     }
   }
 
-  while ((p = heap_remove_min(&h))) {
+  while ((p = (corridor_path_t *)heap_remove_min(&h))) {
     p->hn = NULL;
 
     if ((p->pos[dim_y] == to[dim_y]) && p->pos[dim_x] == to[dim_x]) {
@@ -189,7 +189,7 @@ static void dijkstra_corridor_inv(dungeon_t *d, pair_t from, pair_t to)
     }
   }
 
-  while ((p = heap_remove_min(&h))) {
+  while ((p = (corridor_path_t *)heap_remove_min(&h))) {
     p->hn = NULL;
 
     if ((p->pos[dim_y] == to[dim_y]) && p->pos[dim_x] == to[dim_x]) {
@@ -361,9 +361,9 @@ static int smooth_hardness(dungeon_t *d)
     } while (hardness[y][x]);
     hardness[y][x] = i;
     if (i == 1) {
-      head = tail = malloc(sizeof (*tail));
+      head = tail = (queue_node_t *)malloc(sizeof (*tail));
     } else {
-      tail->next = malloc(sizeof (*tail));
+      tail->next = (struct queue_node *)malloc(sizeof (*tail));
       tail = tail->next;
     }
     tail->next = NULL;
@@ -386,7 +386,7 @@ static int smooth_hardness(dungeon_t *d)
 
     if (x - 1 >= 0 && y - 1 >= 0 && !hardness[y - 1][x - 1]) {
       hardness[y - 1][x - 1] = i;
-      tail->next = malloc(sizeof (*tail));
+      tail->next = (struct queue_node *)malloc(sizeof (*tail));
       tail = tail->next;
       tail->next = NULL;
       tail->x = x - 1;
@@ -394,7 +394,7 @@ static int smooth_hardness(dungeon_t *d)
     }
     if (x - 1 >= 0 && !hardness[y][x - 1]) {
       hardness[y][x - 1] = i;
-      tail->next = malloc(sizeof (*tail));
+      tail->next = (struct queue_node *)malloc(sizeof (*tail));
       tail = tail->next;
       tail->next = NULL;
       tail->x = x - 1;
@@ -402,7 +402,7 @@ static int smooth_hardness(dungeon_t *d)
     }
     if (x - 1 >= 0 && y + 1 < DUNGEON_Y && !hardness[y + 1][x - 1]) {
       hardness[y + 1][x - 1] = i;
-      tail->next = malloc(sizeof (*tail));
+      tail->next = (struct queue_node *)malloc(sizeof (*tail));
       tail = tail->next;
       tail->next = NULL;
       tail->x = x - 1;
@@ -410,7 +410,7 @@ static int smooth_hardness(dungeon_t *d)
     }
     if (y - 1 >= 0 && !hardness[y - 1][x]) {
       hardness[y - 1][x] = i;
-      tail->next = malloc(sizeof (*tail));
+      tail->next = (struct queue_node *)malloc(sizeof (*tail));
       tail = tail->next;
       tail->next = NULL;
       tail->x = x;
@@ -418,7 +418,7 @@ static int smooth_hardness(dungeon_t *d)
     }
     if (y + 1 < DUNGEON_Y && !hardness[y + 1][x]) {
       hardness[y + 1][x] = i;
-      tail->next = malloc(sizeof (*tail));
+      tail->next = (struct queue_node *)malloc(sizeof (*tail));
       tail = tail->next;
       tail->next = NULL;
       tail->x = x;
@@ -426,7 +426,7 @@ static int smooth_hardness(dungeon_t *d)
     }
     if (x + 1 < DUNGEON_X && y - 1 >= 0 && !hardness[y - 1][x + 1]) {
       hardness[y - 1][x + 1] = i;
-      tail->next = malloc(sizeof (*tail));
+      tail->next = (struct queue_node *)malloc(sizeof (*tail));
       tail = tail->next;
       tail->next = NULL;
       tail->x = x + 1;
@@ -434,7 +434,7 @@ static int smooth_hardness(dungeon_t *d)
     }
     if (x + 1 < DUNGEON_X && !hardness[y][x + 1]) {
       hardness[y][x + 1] = i;
-      tail->next = malloc(sizeof (*tail));
+      tail->next = (struct queue_node *)malloc(sizeof (*tail));
       tail = tail->next;
       tail->next = NULL;
       tail->x = x + 1;
@@ -442,7 +442,7 @@ static int smooth_hardness(dungeon_t *d)
     }
     if (x + 1 < DUNGEON_X && y + 1 < DUNGEON_Y && !hardness[y + 1][x + 1]) {
       hardness[y + 1][x + 1] = i;
-      tail->next = malloc(sizeof (*tail));
+      tail->next = (struct queue_node *)malloc(sizeof (*tail));
       tail = tail->next;
       tail->next = NULL;
       tail->x = x + 1;
@@ -594,7 +594,7 @@ static int make_rooms(dungeon_t *d)
   if (d->rooms) { /* We're here on a "do over" */
     free(d->rooms);
   }
-  d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
+  d->rooms = (room_t *)malloc(sizeof (*d->rooms) * d->num_rooms);
 
   for (i = 0; i < d->num_rooms; i++) {
     d->rooms[i].size[dim_x] = ROOM_MIN_X;
@@ -741,14 +741,14 @@ int write_dungeon(dungeon_t *d, char *file)
   if (!file) {
     if (!(home = getenv("HOME"))) {
       fprintf(stderr, "\"HOME\" is undefined.  Using working directory.\n");
-      home = ".";
+      home = (char *)".";
     }
 
     len = (strlen(home) + strlen(SAVE_DIR) + strlen(DUNGEON_SAVE_FILE) +
            1 /* The NULL terminator */                                 +
            2 /* The slashes */);
 
-    filename = malloc(len * sizeof (*filename));
+    filename = (char *)malloc(len * sizeof (*filename));
     sprintf(filename, "%s/%s/", home, SAVE_DIR);
     makedirectory(filename);
     strcat(filename, DUNGEON_SAVE_FILE);
@@ -863,14 +863,14 @@ int read_dungeon(dungeon_t *d, char *file)
   if (!file) {
     if (!(home = getenv("HOME"))) {
       fprintf(stderr, "\"HOME\" is undefined.  Using working directory.\n");
-      home = ".";
+      home = (char *)".";
     }
 
     len = (strlen(home) + strlen(SAVE_DIR) + strlen(DUNGEON_SAVE_FILE) +
            1 /* The NULL terminator */                                 +
            2 /* The slashes */);
 
-    filename = malloc(len * sizeof (*filename));
+    filename = (char *)malloc(len * sizeof (*filename));
     sprintf(filename, "%s/%s/%s", home, SAVE_DIR, DUNGEON_SAVE_FILE);
 
     if (!(f = fopen(filename, "r"))) {
@@ -916,7 +916,7 @@ int read_dungeon(dungeon_t *d, char *file)
   }
   read_dungeon_map(d, f);
   d->num_rooms = calculate_num_rooms(buf.st_size);
-  d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
+  d->rooms = (room_t *)malloc(sizeof (*d->rooms) * d->num_rooms);
   read_rooms(d, f);
 
   fclose(f);
@@ -969,7 +969,7 @@ int read_pgm(dungeon_t *d, char *pgm)
       }
     }
   }
-  d->rooms = malloc(sizeof (*d->rooms) * d->num_rooms);
+  d->rooms = (room_t *)malloc(sizeof (*d->rooms) * d->num_rooms);
 
   for (i = 0, y = 0; y < 103; y++) {
     for (x = 0; x < 158; x++) {

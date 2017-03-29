@@ -9,6 +9,7 @@
 #include "move.h"
 #include "io.h"
 
+
 const char *victory =
   "                                       o\n"
   "                                      $\"\"$o\n"

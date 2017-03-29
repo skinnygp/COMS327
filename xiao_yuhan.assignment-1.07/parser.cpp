@@ -41,10 +41,10 @@ int parse(vector<Monster_Definitions> &m)
     }
     int count;
     int check = 0;
+    int have_name, have_desc, have_color, have_speed, have_symb, have_dam, have_hp, have_abil;
+    Monster_Definitions mon;
+    string name, desc, color, speed, symb, dam, hp, abil;
     for(!fs.eof(), count = 0, !check; count < 8; count ++){
-      int have_name, have_desc, have_color, have_speed, have_symb, have_dam, have_hp, have_abil;
-      Monster_Definitions m;
-      string name, desc, color, speed, symb, dam, hp, abil;
       getline(fs, line);
       string op;
 			stringstream s(line);
@@ -223,20 +223,25 @@ int parse(vector<Monster_Definitions> &m)
       check = 1;
     }
     if(!check){
-      
+      mon = Monster_Definitions(name, desc, symb, color, speed, abil, hp, dam);
     }
-
+    m.push_back(mon);
 
   }
-
-
-
+  return 1;
 }
+
 int printMD(vector<Monster_Definitions> &m)
 {
-
+  vector<Monster_Definitions>::iterator i;
+  for (i = m.begin(); i != m.end(); i++) {
+    cout << *i << endl;
+  }
+  return 1;
 }
+
 int deleteMD(vector<Monster_Definitions> &m)
 {
-
+  m.clear();
+  return 1;
 }

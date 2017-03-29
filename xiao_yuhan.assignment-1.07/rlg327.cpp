@@ -2,13 +2,14 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <vector>
 
 #include "dungeon.h"
 #include "pc.h"
 #include "npc.h"
 #include "move.h"
 #include "io.h"
-
+#include "parser.h"
 
 const char *victory =
   "                                       o\n"
@@ -75,6 +76,10 @@ void usage(char *name)
 
 int main(int argc, char *argv[])
 {
+  std::vector<Monster_Definitions> md;
+  parse(md);
+  printMD(md);
+  deleteMD(md);
   dungeon_t d;
   time_t seed;
   struct timeval tv;

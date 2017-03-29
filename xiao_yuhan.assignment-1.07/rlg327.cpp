@@ -2,14 +2,108 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <vector>
+#include <iostream>
+#include <cstdlib>
+#include <ncurses.h>
+#include <cstring>
+// #include <cstdio.h>
+#include <sstream>
+#include <fstream>
 
 #include "dungeon.h"
 #include "pc.h"
 #include "npc.h"
 #include "move.h"
 #include "io.h"
-#include "parser.h"
+using namespace std;
+int parse(void)
+{
+  string file;
+  ifstream fs;
+  file = getenv("HOME");
+  file += "/.rlg327/monster_desc.txt";
+  fs.open(file.c_str());
+  if(!fs.is_open()){
+    cerr << "File cannot open\n" << endl;
+    return -1;
+  }
+  string line;
+  // stringstream metadata;
+  // metadata << "RLG327 MONSTER DESCRIPTION 1";
+  getline(fs, line);
+  if(line != "RLG327 MONSTER DESCRIPTION 1"){
+    cerr << "metadata is not correct\n" << endl;
+    return -1;
+  }
+
+  while(fs.peek() != EOF){
+    string name, desc, color, speed, symb, dam, hp, abil;
+    getline(fs, line);
+    if(line == "") continue;
+    string op;
+		stringstream s(line);
+		s >> op;
+
+    if(op == "BEGIN"){
+      continue;
+    }
+    else if(op == "NAME"){
+      while (s.peek() == ' ') s.get();
+      getline(s, name);
+      cout << name << endl;
+    }
+
+    else if(op == "SYMB"){
+      while (s.peek() == ' ') s.get();
+      getline(s, symb);
+      cout << symb << endl;
+      }
+
+    else if(op == "DESC"){
+      while(getline(fs, line)){
+        if(line == ".") break;
+        if(fs.peek() == '.') desc += line;
+        else desc += line + "\n";
+      }
+      cout << desc << endl;
+    }
+
+    else if(op == "COLOR"){
+      while (s.peek() == ' ') s.get();
+      getline(s, color);
+      cout << color << endl;
+    }
+
+    else if(op == "SPEED"){
+      while (s.peek() == ' ') s.get();
+      getline(s, speed);
+      cout << speed << endl;
+    }
+
+    else if(op == "DAM"){
+      while (s.peek() == ' ') s.get();
+      getline(s, dam);
+      cout << dam << endl;
+    }
+
+    else if(op == "HP"){
+      while (s.peek() == ' ') s.get();
+      getline(s, hp);
+      cout << hp << endl;
+    }
+
+    else if(op == "ABIL"){
+      while (s.peek() == ' ') s.get();
+      getline(s, abil);
+      cout << abil << endl;
+    }
+    else if(op == "END"){
+      cout << "\n" << endl;
+      continue;
+    }
+  }
+  return 1;
+}
 
 const char *victory =
   "                                       o\n"
@@ -76,10 +170,7 @@ void usage(char *name)
 
 int main(int argc, char *argv[])
 {
-  std::vector<Monster_Definitions> md;
-  parse(md);
-  printMD(md);
-  deleteMD(md);
+  parse();
   dungeon_t d;
   time_t seed;
   struct timeval tv;

@@ -1,0 +1,23 @@
+README
+Author: Yuhan Xiao
+Date: Mar 22, 2017
+
+included:
+Four more files than Assignment-1.05(dice.h, dice.cpp, parser.h and parser.cpp. But their are not used in this assignment).
+this README
+Makefile
+CHANGELOG
+
+Project Description: 1. Rename your C files to C++ files
+                     2. Parsing Monster Definitions
+Note:
+* I added return 0 after parsing so it will not generate the dungeon after print monster definitions.
+* There is no function to parse object_desc.txt.
+* The order of the parse information depends on the order in monster_desc.txt. (No specific order)
+* Shows file cannot open if there is no monster_desc.txt in /.rlg327
+* Shows metadata is not correct if the first line is not RLG327 MONSTER DESCRIPTION 1
+* All used code is in rlg327.cpp
+
+Relevant Functions:
+int parse(void) in
+All functions c to cpp

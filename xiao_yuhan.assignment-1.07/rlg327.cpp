@@ -171,6 +171,7 @@ void usage(char *name)
 int main(int argc, char *argv[])
 {
   parse();
+  return 0;
   dungeon_t d;
   time_t seed;
   struct timeval tv;

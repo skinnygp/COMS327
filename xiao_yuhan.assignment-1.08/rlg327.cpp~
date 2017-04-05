@@ -4,7 +4,6 @@
 #include <unistd.h>
 
 #include "macros.h"
-#undef swap
 #include "dungeon.h"
 #include "pc.h"
 #include "npc.h"

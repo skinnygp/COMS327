@@ -2,7 +2,7 @@
 # define DESCRIPTIONS_H
 
 # include <stdint.h>
-# undef swap
+// # undef swap
 # include <vector>
 # include <string>
 # include "dice.h"

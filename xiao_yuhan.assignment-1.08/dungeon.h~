@@ -3,7 +3,6 @@
 
 # include "heap.h"
 # include "macros.h"
-#undef swap
 #undef max
 # include "dims.h"
 # include "character.h"

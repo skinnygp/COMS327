@@ -4,6 +4,10 @@
 #include "utils.h"
 #include <cstring>
 
+int16_t *object_get_pos(object *o)
+{
+  return o->position;
+}
 object::object(const object_description &o)
 {
   symbol = object_symbol[o.get_type()];

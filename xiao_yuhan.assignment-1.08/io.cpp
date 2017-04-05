@@ -230,7 +230,12 @@ void io_display(dungeon_t *d)
         else if(d->object_map[d->io_offset[dim_y] + y]
                             [d->io_offset[dim_x] + x] &&
                           object_get_display(d->object_map[d->io_offset[dim_y] + y]
-                                              [d->io_offset[dim_x] + x])){
+                                              [d->io_offset[dim_x] + x]) &&
+                          can_see(d,
+                          character_get_pos(d->PC),
+                          object_get_pos(d->object_map[d->io_offset[dim_y] + y]
+                                                             [d->io_offset[dim_x] + x]),
+                                                      1)){
         attron(COLOR_PAIR(object_get_color(d->object_map[d->io_offset[dim_y] + y]
                                                         [d->io_offset[dim_x] + x])));
         mvaddch(y + 1, x,

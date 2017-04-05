@@ -43,6 +43,7 @@ int32_t object_get_weight(object *o);
 int32_t object_get_speed(object *o);
 int32_t object_get_attr(object *o);
 int32_t object_get_val(object *o);
+int16_t *object_get_pos(object *o);
 int16_t object_get_position_x(object *o);
 int16_t object_get_position_y(object *o);
 int32_t object_get_display(object *o);

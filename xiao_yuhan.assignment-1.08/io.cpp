@@ -9,6 +9,7 @@
 #include "pc.h"
 #include "utils.h"
 #include "dungeon.h"
+#include "object.h"
 
 /* Same ugly hack we did in path.c */
 static dungeon_t *dungeon;
@@ -226,6 +227,18 @@ void io_display(dungeon_t *d)
         attroff(COLOR_PAIR(d->character_map[d->io_offset[dim_y] + y]
                                           [d->io_offset[dim_x] + x]->color));
                                         }
+        else if(d->object_map[d->io_offset[dim_y] + y]
+                            [d->io_offset[dim_x] + x] &&
+                          object_get_display(d->object_map[d->io_offset[dim_y] + y]
+                                              [d->io_offset[dim_x] + x])){
+        attron(COLOR_PAIR(object_get_color(d->object_map[d->io_offset[dim_y] + y]
+                                   [d->io_offset[dim_x] + x])));
+        mvaddch(y + 1, x,
+                object_get_symbol(d->object_map[d->io_offset[dim_y] + y]
+                                                    [d->io_offset[dim_x] + x]));
+                attroff(COLOR_PAIR(object_get_color(d->object_map[d->io_offset[dim_y] + y]
+                                                  [d->io_offset[dim_x] + x])));
+                }
         else {
         switch (pc_learned_terrain(d->PC,
                                    d->io_offset[dim_y] + y,

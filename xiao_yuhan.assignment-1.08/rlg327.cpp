@@ -11,6 +11,7 @@
 #include "move.h"
 #include "io.h"
 #include "descriptions.h"
+#include "object.h"
 
 const char *victory =
   "                                       o\n"
@@ -233,6 +234,7 @@ int main(int argc, char *argv[])
   while (pc_is_alive(&d) && dungeon_has_npcs(&d) && !d.quit) {
     do_moves(&d);
   }
+  display_object(&d);
   io_display(&d);
 
   if (!d.quit) {

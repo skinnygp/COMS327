@@ -676,6 +676,7 @@ void init_dungeon(dungeon_t *d)
 {
   empty_dungeon(d);
   memset(&d->events, 0, sizeof (d->events));
+  memset(&d->objmap, 0, sizeof (d->objmap));
   heap_init(&d->events, compare_events, event_delete);
 }
 
@@ -1067,8 +1068,6 @@ void new_dungeon(dungeon_t *d)
   uint32_t sequence_number;
 
   sequence_number = d->character_sequence_number;
-
-  delete_dungeon(d);
   int x, y;
   for(y = 0; y < DUNGEON_Y; y++){
     for(x = 0; x < DUNGEON_X; x++){
@@ -1077,6 +1076,8 @@ void new_dungeon(dungeon_t *d)
       }
     }
   }
+  delete_dungeon(d);
+
   init_dungeon(d);
   gen_dungeon(d);
   d->character_sequence_number = sequence_number;

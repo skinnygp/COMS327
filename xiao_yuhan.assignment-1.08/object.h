@@ -28,6 +28,7 @@ class object{
 
 typedef struct dungeon dungeon_t;
 
+void display_object(dungeon_t *d);
 void gen_object(dungeon_t *d);
 void object_delete(object *o);
 char object_get_symbol(object *o);
@@ -46,5 +47,5 @@ int16_t object_get_position_x(object *o);
 int16_t object_get_position_y(object *o);
 int32_t object_get_display(object *o);
 int32_t object_set_display(object *o);
-
+int32_t object_set_undisplay(object *o);
 #endif

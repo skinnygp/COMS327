@@ -276,7 +276,15 @@ int main(int argc, char *argv[])
   //     }
   //   }
   // }
-
+  //int x, y;
+  //for (y = 0; y < DUNGEON_Y; y++) {
+  //for (x = 0; x < DUNGEON_X; x++) {
+  //  if (d.object_map[y][x]) {
+  //    object_delete(d.object_map[y][x]);
+  //    d.object_map[y][x] = NULL;
+  //  }
+  //}
+  //}
   delete_dungeon(&d);
 
   return 0;

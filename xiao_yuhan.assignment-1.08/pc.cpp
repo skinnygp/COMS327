@@ -47,7 +47,7 @@ void config_pc(dungeon_t *d)
   d->PC->alive = 1;
   d->PC->sequence_number = 0;
   d->PC->kills[kill_direct] = d->PC->kills[kill_avenged] = 0;
-  d->PC->color = COLOR_BLUE;
+  d->PC->color = COLOR_CYAN;
 
   d->character_map[character_get_y(d->PC)][character_get_x(d->PC)] = d->PC;
 

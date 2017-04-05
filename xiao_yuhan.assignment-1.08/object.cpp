@@ -39,7 +39,7 @@ void display_object(dungeon_t *d)
 void gen_object(dungeon_t *d)
 {
   int i;
-  for (i = 0; i < 60; i++){
+  for (i = 0; i < 100; i++){
     object *o;
     const std::vector<object_description> &v = d->object_descriptions;
     const object_description &od = v[rand_range(0, v.size() - 1)];

@@ -57,7 +57,7 @@ static void dijkstra_corridor(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-  
+
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -156,7 +156,7 @@ static void dijkstra_corridor_inv(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-  
+
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -615,7 +615,7 @@ static void place_stairs(dungeon_t *d)
            (p[dim_x] = rand_range(1, DUNGEON_X - 2)) &&
            ((mappair(p) < ter_floor)                 ||
             (mappair(p) > ter_stairs)))
-      
+
       ;
     mappair(p) = ter_stairs_up;
   } while (rand_under(3, 4));
@@ -1069,7 +1069,14 @@ void new_dungeon(dungeon_t *d)
   sequence_number = d->character_sequence_number;
 
   delete_dungeon(d);
-
+  int x, y;
+  for(y = 0; y < DUNGEON_Y; y++){
+    for(x = 0; x < DUNGEON_X; x++){
+      if(d.character_map[y][x]){
+        character_delete(d.character_map[y][x]);
+      }
+    }
+  }
   init_dungeon(d);
   gen_dungeon(d);
   d->character_sequence_number = sequence_number;

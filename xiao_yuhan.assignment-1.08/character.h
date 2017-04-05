@@ -34,6 +34,7 @@ class character {
   uint32_t color;
   uint32_t hp;
   const dice *damage;
+  const char *desc;
 };
 
 typedef struct dungeon dungeon_t;

@@ -1,7 +1,9 @@
 #ifndef CHARACTER_H
 # define CHARACTER_H
 
+# include <vector>
 # include <stdint.h>
+# include <cstdlib>
 
 # include "dims.h"
 
@@ -11,9 +13,14 @@ typedef enum kill_type {
   num_kill_types
 } kill_type_t;
 
+class dice;
+
 class character {
  public:
   char symbol;
+  // char get_symbol(){
+  //   return symbol;
+  // };
   pair_t position;
   int32_t speed;
   uint32_t alive;
@@ -26,6 +33,13 @@ class character {
    * characters have been created by the game.                              */
   uint32_t sequence_number;
   uint32_t kills[num_kill_types];
+  const char *name;
+  std::vector<uint32_t> color;
+  // uint32_t get_color(){
+  //   return (color[rand() % (color.size())]);
+  // };
+  uint32_t hp;
+  const dice *damage;
 };
 
 typedef struct dungeon dungeon_t;
@@ -50,5 +64,5 @@ uint32_t character_get_dkills(const character *c);
 uint32_t character_get_ikills(const character *c);
 uint32_t character_increment_dkills(character *c);
 uint32_t character_increment_ikills(character *c, uint32_t k);
-
+const char *character_get_name(const character *c);
 #endif

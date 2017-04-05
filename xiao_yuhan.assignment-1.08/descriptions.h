@@ -2,10 +2,11 @@
 # define DESCRIPTIONS_H
 
 # include <stdint.h>
-# undef swap
+// # undef swap
 # include <vector>
 # include <string>
 # include "dice.h"
+// # include "npc.h"
 
 typedef struct dungeon dungeon_t;
 
@@ -37,7 +38,7 @@ typedef enum object_type {
 } object_type_t;
 
 extern const char object_symbol[];
-
+class npc;
 class monster_description {
  private:
   std::string name, description;
@@ -46,6 +47,7 @@ class monster_description {
   uint32_t abilities;
   dice speed, hitpoints, damage;
  public:
+
   monster_description() : name(),       description(), symbol(0),   color(0),
                           abilities(0), speed(),       hitpoints(), damage()
   {
@@ -60,6 +62,8 @@ class monster_description {
            const dice &damage);
   std::ostream &print(std::ostream &o);
   char get_symbol() { return symbol; }
+  static npc *create(dungeon_t *d);
+  friend npc;
 };
 
 class object_description {

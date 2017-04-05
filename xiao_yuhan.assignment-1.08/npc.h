@@ -7,12 +7,14 @@
 # include "character.h"
 
 typedef uint32_t npc_characteristics_t;
-
+class monster_description;
 class npc : public character {
  public:
+  npc(const monster_description &m);
   npc_characteristics_t characteristics;
   uint32_t have_seen_pc;
   pair_t pc_last_known_position;
+  const char *desc;
 };
 
 # define NPC_SMART         0x00000001

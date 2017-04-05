@@ -6,6 +6,11 @@
 #include "pc.h"
 #include "dungeon.h"
 
+
+const char *character_get_name(character *c)
+{
+  return c->name;
+}
 void character_delete(character *c)
 {
   delete c;

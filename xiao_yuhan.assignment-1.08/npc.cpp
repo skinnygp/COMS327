@@ -9,6 +9,18 @@
 #include "event.h"
 #include "pc.h"
 
+
+npc::npc(const monster_description &m)
+{
+  symbol = m.symbol;
+  color = m.color;
+  speed = m.speed.roll();
+  hp = m.hitpoints.roll();
+  damage = &m.damage;
+  characteristics = m.abilities;
+  name = m.name.c_str();
+  desc = m.description.c_str();
+}
 void npc_delete(npc *n)
 {
   if (n) {
@@ -32,47 +44,11 @@ static uint32_t max_monster_cells(dungeon_t *d)
 
 void gen_monsters(dungeon_t *d)
 {
-  uint32_t i;
-  npc *m;
-  uint32_t room;
-  pair_t p;
-  const static char symbol[] = "0123456789abcdef";
-  uint32_t c;
-
-  if (d->max_monsters < (c = max_monster_cells(d))) {
-    d->num_monsters = d->max_monsters;
-  } else {
-    d->num_monsters = c;
+  int i;
+  for (i = 0; i < d->max_monsters; i++) {
+    monster_description::create(d);
   }
-
-  for (i = 0; i < d->num_monsters; i++) {
-    m = new npc;
-    memset(m, 0, sizeof (*m));
-
-    do {
-      room = rand_range(1, d->num_rooms - 1);
-      p[dim_y] = rand_range(d->rooms[room].position[dim_y],
-                            (d->rooms[room].position[dim_y] +
-                             d->rooms[room].size[dim_y] - 1));
-      p[dim_x] = rand_range(d->rooms[room].position[dim_x],
-                            (d->rooms[room].position[dim_x] +
-                             d->rooms[room].size[dim_x] - 1));
-    } while (d->character_map[p[dim_y]][p[dim_x]]);
-    m->position[dim_y] = p[dim_y];
-    m->position[dim_x] = p[dim_x];
-    d->character_map[p[dim_y]][p[dim_x]] = m;
-    m->speed = rand_range(5, 20);
-    m->alive = 1;
-    m->sequence_number = ++d->character_sequence_number;
-    m->characteristics = rand() & 0x0000000f;
-    m->symbol = symbol[m->characteristics];
-    m->have_seen_pc = 0;
-    m->kills[kill_direct] = m->kills[kill_avenged] = 0;
-
-    d->character_map[p[dim_y]][p[dim_x]] = m;
-
-    heap_insert(&d->events, new_event(d, event_character_turn, m, 0));
-  }
+  d->num_monsters = d->max_monsters;
 }
 
 void npc_next_pos_rand_tunnel(dungeon_t *d, character *c, pair_t next)

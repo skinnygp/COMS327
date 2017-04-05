@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
- 
+
  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
     write_dungeon(&d, save_file);
   }
 
-  printf(pc_is_alive(&d) ? victory : tombstone);
+  printf("%s", pc_is_alive(&d) ? victory : tombstone);
   printf("\nYou defended your life in the face of %u deadly beast%s.\n"
          "You avenged the cruel and untimely murders of %u "
          "peaceful dungeon resident%s.\n",

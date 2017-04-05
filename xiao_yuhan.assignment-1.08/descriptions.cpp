@@ -15,6 +15,7 @@
 #include "dice.h"
 #include "character.h"
 #include "utils.h"
+#include "event.h"
 
 #define MONSTER_FILE_SEMANTIC          "RLG327 MONSTER DESCRIPTION"
 #define MONSTER_FILE_VERSION           1U
@@ -114,18 +115,52 @@ extern const char object_symbol[] = {
   '%', /* objtype_CONTAINER */
 };
 
+npc *monster_description::create(dungeon_t *d)
+{
+  npc *n;
+  const std::vector<monster_description> &v = d->monster_descriptions;
+  const monster_description &m = v[rand_range(0, v.size() - 1)];
+  n = new npc(m);
+  uint32_t room;
+  pair_t p;
+  do {
+      room = rand_range(1, d->num_rooms - 1);
+      p[dim_y] = rand_range(d->rooms[room].position[dim_y],
+                            (d->rooms[room].position[dim_y] +
+                             d->rooms[room].size[dim_y] - 1));
+      p[dim_x] = rand_range(d->rooms[room].position[dim_x],
+                            (d->rooms[room].position[dim_x] +
+                             d->rooms[room].size[dim_x] - 1));
+    } while (d->character_map[p[dim_y]][p[dim_x]]);
+
+    n->position[dim_y] = p[dim_y];
+    n->position[dim_x] = p[dim_x];
+    d->character_map[p[dim_y]][p[dim_x]] = n;
+    n->alive = 1;
+    n->sequence_number = ++d->character_sequence_number;
+    n->have_seen_pc = 0;
+    n->pc_last_known_position[dim_y] = 0;
+    n->pc_last_known_position[dim_x] = 0;
+
+    d->character_map[p[dim_y]][p[dim_x]] = n;
+
+    heap_insert(&d->events, new_event(d, event_character_turn, n, 0));
+
+    return n;
+}
+
 static inline void eat_whitespace(std::ifstream &f)
 {
   while (isspace(f.peek())) {
     f.get();
-  }  
+  }
 }
 
 static inline void eat_blankspace(std::ifstream &f)
 {
   while (isblank(f.peek())) {
     f.get();
-  }  
+  }
 }
 
 static uint32_t parse_name(std::ifstream &f,

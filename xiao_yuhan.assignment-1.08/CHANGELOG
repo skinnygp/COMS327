@@ -1,0 +1,14 @@
+CHANGELOG
+Author: Yuhan Xiao
+
+Day One   (Mar 28, 2017): Started reading the description of this assignment.
+Day One   (Mar 28, 2017): Started Project and I Jeremy's code of Assignment-1.05.
+Day One   (Mar 28, 2017): Changed all C file to C++ file.
+Day One   (Mar 28, 2017): Fixed all the error on mac.
+Day One   (Mar 28, 2017): Finished dice.h & dice.cpp but their are not used in this assignment.
+
+Day Two   (Mar 29, 2017): Created parser.h & parser.cpp but their not used in this assignment
+Day Two   (Mar 29, 2017): Finished function parse() in rlg327.cpp
+
+Day Two   (Mar 29, 2017): Debugged in linux.
+Day Two   (Mar 29, 2017): Finished README and CHANGELOG.

@@ -87,11 +87,11 @@ int main(int argc, char *argv[])
   char *load_file;
   char *pgm_file;
 
-  parse_descriptions(&d);
-  print_descriptions(&d);
-  destroy_descriptions(&d);
-
-  return 0;
+  // parse_descriptions(&d);
+  // print_descriptions(&d);
+  // destroy_descriptions(&d);
+  //
+  // return 0;
 
   memset(&d, 0, sizeof (d));
 
@@ -217,6 +217,7 @@ int main(int argc, char *argv[])
 
   io_init_terminal();
   init_dungeon(&d);
+  parse_descriptions(&d);
 
   if (do_load) {
     read_dungeon(&d, load_file);
@@ -240,11 +241,15 @@ int main(int argc, char *argv[])
   }
 
   io_reset_terminal();
+  destroy_descriptions(&d);
 
   if (do_save) {
     write_dungeon(&d, save_file);
   }
-
+  if(d.quit){
+    std::cout << "You Quit" << std::endl;
+  }
+  else{
   printf("%s", pc_is_alive(&d) ? victory : tombstone);
   printf("\nYou defended your life in the face of %u deadly beast%s.\n"
          "You avenged the cruel and untimely murders of %u "
@@ -253,7 +258,7 @@ int main(int argc, char *argv[])
          character_get_dkills(d.PC) == 1 ? "" : "s",
          character_get_ikills(d.PC),
          character_get_ikills(d.PC) == 1 ? "" : "s");
-
+}
   if (pc_is_alive(&d)) {
     /* If the PC is dead, it's in the move heap and will get automatically *
      * deleted when the heap destructs.  In that case, we can't call       *

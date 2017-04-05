@@ -88,6 +88,7 @@ void do_moves(dungeon_t *d)
     if (!character_is_alive(c)) {
       if (d->character_map[character_get_y(c)][character_get_x(c)] == c) {
         d->character_map[character_get_y(c)][character_get_x(c)] = NULL;
+        character_delete(d->character_map[character_get_y(c)][character_get_x(c)]);
       }
       if (c != d->PC) {
         event_delete(e);

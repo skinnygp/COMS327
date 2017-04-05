@@ -13,7 +13,7 @@
 npc::npc(const monster_description &m)
 {
   symbol = m.symbol;
-  color = m.color[rand_range(0, m.color.size() - 1)];
+  color = m.color[0];
   speed = m.speed.roll();
   hp = m.hitpoints.roll();
   damage = &m.damage;

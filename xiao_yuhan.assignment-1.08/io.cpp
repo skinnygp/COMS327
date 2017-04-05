@@ -232,12 +232,12 @@ void io_display(dungeon_t *d)
                           object_get_display(d->object_map[d->io_offset[dim_y] + y]
                                               [d->io_offset[dim_x] + x])){
         attron(COLOR_PAIR(object_get_color(d->object_map[d->io_offset[dim_y] + y]
-                                   [d->io_offset[dim_x] + x])));
+                                                        [d->io_offset[dim_x] + x])));
         mvaddch(y + 1, x,
                 object_get_symbol(d->object_map[d->io_offset[dim_y] + y]
-                                                    [d->io_offset[dim_x] + x]));
-                attroff(COLOR_PAIR(object_get_color(d->object_map[d->io_offset[dim_y] + y]
-                                                  [d->io_offset[dim_x] + x])));
+                                                [d->io_offset[dim_x] + x]));
+        attroff(COLOR_PAIR(object_get_color(d->object_map[d->io_offset[dim_y] + y]
+                                                          [d->io_offset[dim_x] + x])));
                 }
         else {
         switch (pc_learned_terrain(d->PC,

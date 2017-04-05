@@ -32,7 +32,7 @@ void display_object(dungeon_t *d)
     }
   }
 }
-void gen_objects(dungeon_t *d)
+void gen_object(dungeon_t *d)
 {
   int i;
   for (i = 0; i < 40; i++){

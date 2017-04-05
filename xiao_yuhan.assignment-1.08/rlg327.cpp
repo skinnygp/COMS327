@@ -229,6 +229,7 @@ int main(int argc, char *argv[])
 
   config_pc(&d);
   gen_monsters(&d);
+  gen_object(&d);
 
   io_display(&d);
   while (pc_is_alive(&d) && dungeon_has_npcs(&d) && !d.quit) {
@@ -267,14 +268,14 @@ int main(int argc, char *argv[])
      * delete_pc(), because it will lead to a double delete.               */
     character_delete(d.PC);
   }
-  int x, y;
-  for(y = 0; y < DUNGEON_Y; y++){
-    for(x = 0; x < DUNGEON_X; x++){
-      if(d.character_map[y][x]){
-        character_delete(d.character_map[y][x]);
-      }
-    }
-  }
+  // int x, y;
+  // for(y = 0; y < DUNGEON_Y; y++){
+  //   for(x = 0; x < DUNGEON_X; x++){
+  //     if(d.character_map[y][x]){
+  //       character_delete(d.character_map[y][x]);
+  //     }
+  //   }
+  // }
 
   delete_dungeon(&d);
 

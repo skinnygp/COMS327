@@ -3,21 +3,23 @@ Author: Yuhan Xiao
 Date: April 5, 2017
 
 included:
-Four more files than Assignment-1.05(dice.h, dice.cpp, parser.h and parser.cpp. But their are not used in this assignment).
+Two more files than Assignment-1.07(object.h and object.cpp).
 this README
 Makefile
 CHANGELOG
 
-Project Description: 1. Rename your C files to C++ files
-                     2. Parsing Monster Definitions
+Project Description: Loading all of the objects and monsters
 Note:
-* I added return 0 after parsing so it will not generate the dungeon after print monster definitions.
-* There is no function to parse object_desc.txt.
-* The order of the parse information depends on the order in monster_desc.txt. (No specific order)
-* Shows file cannot open if there is no monster_desc.txt in /.rlg327
-* Shows metadata is not correct if the first line is not RLG327 MONSTER DESCRIPTION 1
-* All used code is in rlg327.cpp
+* I have changed the color of PC to CYAN.
+* The max number of objects is 100 in a dungeon.
+* In order that you died before found any object, you better set monster to 1.
 
 Relevant Functions:
-int parse(void) in
-All functions c to cpp
+All functions in object.h & object.cpp
+gen_monsters(dungeon_t *d) in npc.cpp
+static npc *create(dungeon_t *d); in descriptions.h & description.cpp
+npc(const monster_description &m) in npc class
+
+Relevant Structure
+All structure in object.h
+Added field in character.h

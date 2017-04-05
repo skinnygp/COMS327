@@ -13,6 +13,7 @@ Day Two   (Apr 4, 2017): Found and Fixed bug: cannot modify npc class in descrip
 Day Three (Apr 5, 2017): Created object.h and object.cpp.
 Day Three (Apr 5, 2017): Added object class and functions in object.h
 Day Three (Apr 5, 2017): Finished all functions in object.cpp.
+Day Three (Apr 5, 2017): Added object.o in Makefile.
 
 
 Day Three (Apr 5, 2017): Debugged in linux.

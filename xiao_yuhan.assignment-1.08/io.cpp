@@ -219,16 +219,12 @@ void io_display(dungeon_t *d)
                                                     [d->io_offset[dim_x] + x]),
                   1)) {
         attron(COLOR_PAIR(d->character_map[d->io_offset[dim_y] + y]
-                                          [d->io_offset[dim_x] + x]->color[rand() % (
-                                          d->character_map[d->io_offset[dim_y] + y]
-                                          [d->io_offset[dim_x] + x]->color.size())]));
+                                          [d->io_offset[dim_x] + x]->color));
         mvaddch(y + 1, x,
                 character_get_symbol(d->character_map[d->io_offset[dim_y] + y]
                                                      [d->io_offset[dim_x] + x]));
         attroff(COLOR_PAIR(d->character_map[d->io_offset[dim_y] + y]
-                                          [d->io_offset[dim_x] + x]->color[rand() % (
-                                          d->character_map[d->io_offset[dim_y] + y]
-                                          [d->io_offset[dim_x] + x]->color.size())]));
+                                          [d->io_offset[dim_x] + x]->color));
                                         }
         else {
         switch (pc_learned_terrain(d->PC,

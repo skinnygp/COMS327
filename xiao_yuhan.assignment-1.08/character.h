@@ -18,9 +18,6 @@ class dice;
 class character {
  public:
   char symbol;
-  // char get_symbol(){
-  //   return symbol;
-  // };
   pair_t position;
   int32_t speed;
   uint32_t alive;
@@ -34,10 +31,7 @@ class character {
   uint32_t sequence_number;
   uint32_t kills[num_kill_types];
   const char *name;
-  std::vector<uint32_t> color;
-  // uint32_t get_color(){
-  //   return (color[rand() % (color.size())]);
-  // };
+  uint32_t color;
   uint32_t hp;
   const dice *damage;
 };

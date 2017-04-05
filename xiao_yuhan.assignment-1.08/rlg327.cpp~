@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include "macros.h"
+#undef swap
 #include "dungeon.h"
 #include "pc.h"
 #include "npc.h"
@@ -88,9 +89,8 @@ int main(int argc, char *argv[])
 
   parse_descriptions(&d);
   print_descriptions(&d);
-  destroy_descriptions(&d);
-
-  return 0;
+  
+  //return 0;
 
   memset(&d, 0, sizeof (d));
 
@@ -261,6 +261,7 @@ int main(int argc, char *argv[])
   }
 
   delete_dungeon(&d);
+  destroy_descriptions(&d);
 
   return 0;
 }

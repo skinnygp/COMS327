@@ -87,11 +87,10 @@ int main(int argc, char *argv[])
   char *load_file;
   char *pgm_file;
 
-  // parse_descriptions(&d);
-  // print_descriptions(&d);
-  // destroy_descriptions(&d);
-  //
-  // return 0;
+  //parse_descriptions(&d);
+  //print_descriptions(&d);
+
+  //return 0;
 
   memset(&d, 0, sizeof (d));
 
@@ -246,8 +245,9 @@ int main(int argc, char *argv[])
   if (do_save) {
     write_dungeon(&d, save_file);
   }
+
   if(d.quit){
-    std::cout << "You Quit" << std::endl;
+    std::cout << "You Quit!" << std::endl;
   }
   else{
   printf("%s", pc_is_alive(&d) ? victory : tombstone);
@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
          character_get_dkills(d.PC) == 1 ? "" : "s",
          character_get_ikills(d.PC),
          character_get_ikills(d.PC) == 1 ? "" : "s");
-}
+  }
   if (pc_is_alive(&d)) {
     /* If the PC is dead, it's in the move heap and will get automatically *
      * deleted when the heap destructs.  In that case, we can't call       *

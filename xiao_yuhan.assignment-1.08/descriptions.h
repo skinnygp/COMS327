@@ -106,7 +106,7 @@ class object_description {
   inline const dice &get_speed() const { return speed; }
   inline const dice &get_attribute() const { return attribute; }
   inline const dice &get_value() const { return value; }
-  friend npc;
+  friend object;
 };
 
 std::ostream &operator<<(std::ostream &o, monster_description &m);

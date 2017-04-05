@@ -676,7 +676,7 @@ void init_dungeon(dungeon_t *d)
 {
   empty_dungeon(d);
   memset(&d->events, 0, sizeof (d->events));
-  memset(&d->objmap, 0, sizeof (d->objmap));
+  memset(&d->object_map, 0, sizeof (d->object_map));
   heap_init(&d->events, compare_events, event_delete);
 }
 
@@ -1071,8 +1071,8 @@ void new_dungeon(dungeon_t *d)
   int x, y;
   for(y = 0; y < DUNGEON_Y; y++){
     for(x = 0; x < DUNGEON_X; x++){
-      if(d.character_map[y][x]){
-        character_delete(d.character_map[y][x]);
+      if(character_map[y][x]){
+        character_delete(character_map[y][x]);
       }
     }
   }

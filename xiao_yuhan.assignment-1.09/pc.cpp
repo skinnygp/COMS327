@@ -34,7 +34,7 @@ void place_pc(dungeon_t *d)
   io_update_offset(d);
 
   pc_init_known_terrain(d->PC);
-  pc_observe_terrain(d->PC,d);
+
   io_display(d);
 }
 

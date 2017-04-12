@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
- 
+
  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
   config_pc(&d);
   gen_monsters(&d);
   gen_objects(&d);
-  pc_observe_terrain(d.PC, &d);  
+  pc_observe_terrain(d.PC, &d);
 
   io_display(&d);
   while (pc_is_alive(&d) && dungeon_has_npcs(&d) && !d.quit) {
@@ -264,7 +264,14 @@ int main(int argc, char *argv[])
     /* If the PC is dead, it's in the move heap and will get automatically *
      * deleted when the heap destructs.  In that case, we can't call       *
      * delete_pc(), because it will lead to a double delete.               */
-    character_delete(d.PC);
+     int i;
+     for(i = 0; i < 12; i++){
+       if(d.PC->equipment_slot[i]) delete d.PC->equipment_slot[i];
+     }
+     for(i = 0; i < 10; i++){
+       if(d.PC->carry_slot[i]) delete d.PC->carry_slot[i];
+     }
+     character_delete(d.PC);
   }
 
   delete_dungeon(&d);

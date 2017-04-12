@@ -23,6 +23,7 @@ int pc::pick_up_object(dungeon_t *d)
   if(check_space() != -1 && objpair(position)){
     carry_slot[check_space()] = objpair(position);
     io_queue_message("Picking up a %s ...... Done!", objpair(position)->get_name());
+    objpair(position) = 0;
   }
   else if(check_space() == -1 && objpair(position)){
     io_queue_message("Bag is full. Unable to pick up %s!", objpair(position)->get_name());

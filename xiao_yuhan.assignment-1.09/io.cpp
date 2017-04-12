@@ -457,15 +457,16 @@ void io_wear_mode(dungeon_t *d)
 {
   int32_t key;
   int i;
+  mvprintw(2, 1,  "|-------------------Wear Mode--------------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 2, 1, "%c. %s ", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 2, 1, "%c. Empty", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
   }
-  mvprintw(14, 1, "Choose an object to wear");
-  mvprintw(15, 1, "Enter esc to abort");
-  refresh();
+  mvprintw(15, 1, "|Choose an object to wear                        |");
+  mvprintw(16, 1, "|Enter esc to abort                              |");
+  mvprintw(18, 1, "|------------------------------------------------|");
   do {
     if ((key = getch()) == 27 /* ESC */) {
       io_calculate_offset(d);
@@ -474,11 +475,12 @@ void io_wear_mode(dungeon_t *d)
     }
     else if(key != '0' && key != '1' && key != '2' && key != '3' && key != '4' && key != '5'
       && key != '6' && key != '7' && key != '8' && key != '9'){
-        mvprintw(16, 1, "Wrong number!");
+        mvprintw(17, 1, "|Wrong number!                                   |");
         continue;
       }
     else if(d->PC->wear_object(key - '0')){
-      continue;
+      io_display(d);
+      return;
     }
     else{
       io_display(d);
@@ -491,90 +493,92 @@ void io_take_off_mode(dungeon_t *d)
 {
   int32_t key;
   int i;
+  mvprintw(2, 1, "|-----------------Take Off Mode------------------|");
   for(i = 0; i < 12; i++){
     if(d->PC->equipment_slot[i]){
       switch (i) {
         case 0:
-          mvprintw(i + 2, 1, "a. WEAPON: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|a. WEAPON: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 1:
-          mvprintw(i + 2, 1, "b. OFFHAND: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|b. OFFHAND: %-36s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 2:
-          mvprintw(i + 2, 1, "c. RANGED: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|c. RANGED: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 3:
-          mvprintw(i + 2, 1, "d. ARMOR: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|d. ARMOR: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 4:
-          mvprintw(i + 2, 1, "e. HELMET: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|e. HELMET: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 5:
-          mvprintw(i + 2, 1, "f. CLOAK: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|f. CLOAK: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 6:
-          mvprintw(i + 2, 1, "g. GLOVES: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|g. GLOVES: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 7:
-          mvprintw(i + 2, 1, "h. BOOTS: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|h. BOOTS: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 8:
-          mvprintw(i + 2, 1, "i. AMULET: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|i. AMULET: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 9:
-          mvprintw(i + 2, 1, "j. LIGHT: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|j. LIGHT: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 10:
-          mvprintw(i + 2, 1, "k. RING1: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|k. RING1: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 11:
-          mvprintw(i + 2, 1, "l. RING2: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|l. RING2: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
       }
     }
     else {
       switch (i) {
         case 0:
-          mvprintw(i + 2, 1, "a. WEAPON: Empty");
+          mvprintw(i + 3, 1, "|a. WEAPON: Empty                                |");
           break;
         case 1:
-          mvprintw(i + 2, 1, "b. OFFHAND: Empty ");
+          mvprintw(i + 3, 1, "|b. OFFHAND: Empty                               |");
           break;
         case 2:
-          mvprintw(i + 2, 1, "c. RANGED: Empty ");
+          mvprintw(i + 3, 1, "|c. RANGED: Empty                                |");
           break;
         case 3:
-          mvprintw(i + 2, 1, "d. ARMOR: Empty ");
+          mvprintw(i + 3, 1, "|d. ARMOR: Empty                                 |");
           break;
         case 4:
-          mvprintw(i + 2, 1, "e. HELMET: Empty ");
+          mvprintw(i + 3, 1, "|e. HELMET: Empty                                |");
           break;
         case 5:
-          mvprintw(i + 2, 1, "f. CLOAK: Empty ");
+          mvprintw(i + 3, 1, "|f. CLOAK: Empty                                 |");
           break;
         case 6:
-          mvprintw(i + 2, 1, "g. GLOVES: Empty ");
+          mvprintw(i + 3, 1, "|g. GLOVES: Empty                                |");
           break;
         case 7:
-          mvprintw(i + 2, 1, "h. BOOTS: Empty ");
+          mvprintw(i + 3, 1, "|h. BOOTS: Empty                                 |");
           break;
         case 8:
-          mvprintw(i + 2, 1, "i. AMULET: Empty ");
+          mvprintw(i + 3, 1, "|i. AMULET: Empty                                |");
           break;
         case 9:
-          mvprintw(i + 2, 1, "j. LIGHT: Empty ");
+          mvprintw(i + 3, 1, "|j. LIGHT: Empty                                 |");
           break;
         case 10:
-          mvprintw(i + 2, 1, "k. RING1: Empty ");
+          mvprintw(i + 3, 1, "|k. RING1: Empty                                 |");
           break;
         case 11:
-          mvprintw(i + 2, 1, "l. RING2: Empty ");
+          mvprintw(i + 3, 1, "|l. RING2: Empty                                 |");
           break;
       }
     }
   }
-  mvprintw(16, 1, "Choose an object to take off");
-  mvprintw(17, 1, "Enter esc to abort");
+  mvprintw(17, 1, "|Choose an object to take off                    |");
+  mvprintw(18, 1, "|Enter esc to abort                              |");
+  mvprintw(19, 1, "|------------------------------------------------|");
   refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
@@ -584,11 +588,12 @@ void io_take_off_mode(dungeon_t *d)
     }
     else if(key != 'a' && key != 'b' && key != 'c' && key != 'd' && key != 'e' && key != 'f'
       && key != 'g' && key != 'h' && key != 'i' && key != 'j' && key != 'k' && key != 'l'){
-        mvprintw(18, 1, "Wrong number!");
+        mvprintw(18, 1, "|Wrong number!                                   |");
         continue;
       }
     else if(d->PC->take_off_object(d->PC->equipment_slot[key - 'a'])){
-      continue;
+      io_display(d);
+      return;
     }
     else{
       d->PC->equipment_slot[key - 'a'] = NULL;
@@ -602,15 +607,16 @@ void io_drop_mode(dungeon_t *d)
 {
   int32_t key;
   int i;
+  mvprintw(2, 1,  "|-------------------Drop Mode--------------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 2, 1, "%c. %s ", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 2, 1, "%c. Empty", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
   }
-  mvprintw(14, 1, "Choose an object to drop");
-  mvprintw(15, 1, "Enter esc to abort");
-  refresh();
+  mvprintw(15, 1, "|Choose an object to drop                        |");
+  mvprintw(16, 1, "|Enter esc to abort                              |");
+  mvprintw(18, 1, "|------------------------------------------------|");
   do {
     if ((key = getch()) == 27 /* ESC */) {
       io_calculate_offset(d);
@@ -619,11 +625,12 @@ void io_drop_mode(dungeon_t *d)
     }
     else if(key != '0' && key != '1' && key != '2' && key != '3' && key != '4' && key != '5'
       && key != '6' && key != '7' && key != '8' && key != '9'){
-        mvprintw(16, 1, "Wrong number!");
+        mvprintw(17, 1, "|Wrong number!                                   |");
         continue;
       }
     else if(d->PC->drop_object(d, d->PC->carry_slot[key - '0'])){
-      continue;
+      io_display(d);
+      return;
     }
     else{
       d->PC->carry_slot[key - '0'] = NULL;
@@ -637,14 +644,16 @@ void io_expunge_mode(dungeon_t *d)
 {
   int32_t key;
   int i;
+  mvprintw(2, 1,  "|------------------Expunge Mode------------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 2, 1, "%c. %s ", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 2, 1, "%c. Empty", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
   }
-  mvprintw(14, 1, "Choose an object to expunge");
-  mvprintw(15, 1, "Enter esc to abort");
+  mvprintw(15, 1, "|Choose an object to expunge                     |");
+  mvprintw(16, 1, "|Enter esc to abort                              |");
+  mvprintw(18, 1, "|------------------------------------------------|");
   refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
@@ -654,11 +663,12 @@ void io_expunge_mode(dungeon_t *d)
     }
     else if(key != '0' && key != '1' && key != '2' && key != '3' && key != '4' && key != '5'
       && key != '6' && key != '7' && key != '8' && key != '9'){
-        mvprintw(16, 1, "Wrong number!");
+        mvprintw(17, 1, "|Wrong number!                                   |");
         continue;
       }
     else if(d->PC->expunge_object(d->PC->carry_slot[key - '0'])){
-      continue;
+      io_display(d);
+      return;
     }
     else{
       d->PC->carry_slot[key - '0'] = NULL;
@@ -672,14 +682,16 @@ void io_inventory_mode(dungeon_t *d)
 {
   int32_t key;
   int i;
+  mvprintw(2, 1,  "|-----------------Inventory Mode-----------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 2, 1, "%c. %s ", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 2, 1, "%c. Empty", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
   }
-  // mvprintw(14, 1, "Choose an object to expunge");
-  mvprintw(15, 1, "Enter esc to abort");
+  // mvprintw(15, 1, "|Choose an object to expunge                     |");
+  mvprintw(16, 1, "|Enter esc to abort                              |");
+  mvprintw(17, 1, "|------------------------------------------------|");
   refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
@@ -694,90 +706,92 @@ void io_equipment_mode(dungeon_t *d)
 {
   int32_t key;
   int i;
+  mvprintw(2, 1, "|-----------------Equipment Mode-----------------|");
   for(i = 0; i < 12; i++){
     if(d->PC->equipment_slot[i]){
       switch (i) {
         case 0:
-          mvprintw(i + 2, 1, "a. WEAPON: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|a. WEAPON: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 1:
-          mvprintw(i + 2, 1, "b. OFFHAND: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|b. OFFHAND: %-36s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 2:
-          mvprintw(i + 2, 1, "c. RANGED: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|c. RANGED: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 3:
-          mvprintw(i + 2, 1, "d. ARMOR: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|d. ARMOR: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 4:
-          mvprintw(i + 2, 1, "e. HELMET: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|e. HELMET: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 5:
-          mvprintw(i + 2, 1, "f. CLOAK: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|f. CLOAK: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 6:
-          mvprintw(i + 2, 1, "g. GLOVES: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|g. GLOVES: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 7:
-          mvprintw(i + 2, 1, "h. BOOTS: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|h. BOOTS: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 8:
-          mvprintw(i + 2, 1, "i. AMULET: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|i. AMULET: %-37s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 9:
-          mvprintw(i + 2, 1, "j. LIGHT: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|j. LIGHT: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 10:
-          mvprintw(i + 2, 1, "k. RING1: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|k. RING1: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
         case 11:
-          mvprintw(i + 2, 1, "l. RING2: %s ", d->PC->equipment_slot[i]->get_name());
+          mvprintw(i + 3, 1, "|l. RING2: %-38s|", d->PC->equipment_slot[i]->get_name());
           break;
       }
     }
     else {
       switch (i) {
         case 0:
-          mvprintw(i + 2, 1, "a. WEAPON: Empty");
+          mvprintw(i + 3, 1, "|a. WEAPON: Empty                                |");
           break;
         case 1:
-          mvprintw(i + 2, 1, "b. OFFHAND: Empty ");
+          mvprintw(i + 3, 1, "|b. OFFHAND: Empty                               |");
           break;
         case 2:
-          mvprintw(i + 2, 1, "c. RANGED: Empty ");
+          mvprintw(i + 3, 1, "|c. RANGED: Empty                                |");
           break;
         case 3:
-          mvprintw(i + 2, 1, "d. ARMOR: Empty ");
+          mvprintw(i + 3, 1, "|d. ARMOR: Empty                                 |");
           break;
         case 4:
-          mvprintw(i + 2, 1, "e. HELMET: Empty ");
+          mvprintw(i + 3, 1, "|e. HELMET: Empty                                |");
           break;
         case 5:
-          mvprintw(i + 2, 1, "f. CLOAK: Empty ");
+          mvprintw(i + 3, 1, "|f. CLOAK: Empty                                 |");
           break;
         case 6:
-          mvprintw(i + 2, 1, "g. GLOVES: Empty ");
+          mvprintw(i + 3, 1, "|g. GLOVES: Empty                                |");
           break;
         case 7:
-          mvprintw(i + 2, 1, "h. BOOTS: Empty ");
+          mvprintw(i + 3, 1, "|h. BOOTS: Empty                                 |");
           break;
         case 8:
-          mvprintw(i + 2, 1, "i. AMULET: Empty ");
+          mvprintw(i + 3, 1, "|i. AMULET: Empty                                |");
           break;
         case 9:
-          mvprintw(i + 2, 1, "j. LIGHT: Empty ");
+          mvprintw(i + 3, 1, "|j. LIGHT: Empty                                 |");
           break;
         case 10:
-          mvprintw(i + 2, 1, "k. RING1: Empty ");
+          mvprintw(i + 3, 1, "|k. RING1: Empty                                 |");
           break;
         case 11:
-          mvprintw(i + 2, 1, "l. RING2: Empty ");
+          mvprintw(i + 3, 1, "|l. RING2: Empty                                 |");
           break;
       }
     }
   }
-  // mvprintw(16, 1, "Choose an object to take off");
-  mvprintw(17, 1, "Enter esc to abort");
+  // mvprintw(17, 1, "|Choose an object to take off                    |");
+  mvprintw(18, 1, "|Enter esc to abort                              |");
+  mvprintw(19, 1, "|------------------------------------------------|");
   refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
@@ -792,14 +806,16 @@ void io_inspect_mode(dungeon_t *d)
 {
   int32_t key;
   int i;
+  mvprintw(2, 1,  "|------------------Inspect Mode------------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 2, 1, "%c. %s ", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 2, 1, "%c. Empty", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
   }
-  mvprintw(14, 1, "Choose an object to inspect");
-  mvprintw(15, 1, "Enter esc to abort");
+  mvprintw(15, 1, "|Choose an object to inspect                     |");
+  mvprintw(16, 1, "|Enter esc to abort                              |");
+  mvprintw(18, 1, "|------------------------------------------------|");
   refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
@@ -809,11 +825,11 @@ void io_inspect_mode(dungeon_t *d)
     }
     else if(key != '0' && key != '1' && key != '2' && key != '3' && key != '4' && key != '5'
       && key != '6' && key != '7' && key != '8' && key != '9'){
-        mvprintw(16, 1, "Wrong number!");
+        mvprintw(17, 1, "|Wrong number!                                   |");
         continue;
       }
     else if (!d->PC->carry_slot[key - '0']) {
-      mvprintw(16, 1, "Empty slot!");
+      mvprintw(16, 1, "|Empty slot!                                     |");
       refresh();
       continue;
     }

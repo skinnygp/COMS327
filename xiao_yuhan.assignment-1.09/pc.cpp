@@ -84,6 +84,10 @@ int pc::drop_object(dungeon_t *d, object *o)
     io_queue_message("No object in this position!");
     return 1;
   }
+  else if(objpair(position)){
+    io_queue_message("Cannot drop here! There is an object on the floor!");
+    return 1;
+  }
   objpair(position) = o;
   io_queue_message("Droping off object %s ...... Done!", o->get_name());
   //NULL
@@ -96,13 +100,10 @@ int pc::expunge_object(object *o)
     io_queue_message("No object in this position!");
     return 1;
   }
-  delete o;
   io_queue_message("Expunging object %s ...... Done!", o->get_name());
-  //NULL
+  delete o;
   return 0;
 }
-
-
 
 
 void pc_delete(pc *pc)

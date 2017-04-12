@@ -15,7 +15,6 @@ class pc : public character {
   object *carry_slot[10];
 
   int check_space();
-  object *get_object(dungeon_t *d, object *o);
   int pick_up_object(dungeon_t *d);
   int wear_object(object *o);
   int renew_speed();

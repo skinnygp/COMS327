@@ -18,44 +18,86 @@ int pc::check_space()
   }
   return -1;
 }
-object *pc::get_object(dungeon_t *d, object *o)
-{
-  object *ob;
-  ob = objpair(o->get_position());
-  objpair(o->get_position()) = ob->next;
-  ob->next = 0;
-  return ob;
-}
 int pc::pick_up_object(dungeon_t *d)
 {
   if(check_space() != -1 && objpair(position)){
-    carry_slot[check_space()] = get_object(d, objpair(position));
-    io_queue_message("Picking up a %s ... Done!", objpair(position)->get_name());
+    carry_slot[check_space()] = objpair(position);
+    io_queue_message("Picking up a %s ...... Done!", objpair(position)->get_name());
   }
   else if(check_space() == -1 && objpair(position)){
     io_queue_message("Bag is full. Unable to pick up %s!", objpair(position)->get_name());
   }
   return 0;
 }
-int wear_object(object *o)
+int pc::renew_speed()
 {
-
+  int i;
+  speed = 10;
+  for(i = 0; i < 12; i++){
+    if(equipment_slot[i]) speed += equipment_slot[i]->get_speed();
+  }
+  if(speed < 1) speed = 1;
+  return 0;
 }
-int renew_speed()
+int pc::wear_object(object *o)
 {
-
+  if (!o) {
+    io_queue_message("No object in this position!");
+    return 1;
+  }
+  object *ob;
+  uint32_t i;
+  i = o->get_type() - 1;
+  if(i > objtype_SCROLL - 1){
+    io_queue_message("This object cannot be worn");
+  }
+  if(o->get_type() == objtype_RING && equipment_slot[i] && !equipment_slot[i++]) i++;
+  ob = o;
+  o = equipment_slot[i];
+  equipment_slot[i] = ob;
+  io_queue_message("Wearing object %s ...... Done!", equipment_slot[i]->get_name());
+  renew_speed();
+  return 0;
 }
-int take_off_object(object *o)
+int pc::take_off_object(object *o)
 {
+  if (!o) {
+    io_queue_message("No object in this position!");
+    return 1;
+  }
+  else if(check_space() == -1){
+    io_queue_message("Baf is full! Unable to take off this object!");
+    return 1;
+  }
+  carry_slot[check_space()] = o;
+  io_queue_message("Taking off object %s ...... Done!", o->get_name());
+  //NULL;
+  renew_speed();
 
+  return 0;
 }
-int drop_object(dungeon_t *d, object *o)
+int pc::drop_object(dungeon_t *d, object *o)
 {
+  if (!o) {
+    io_queue_message("No object in this position!");
+    return 1;
+  }
+  objpair(position) = o;
+  io_queue_message("Droping off object %s ...... Done!", o->get_name());
+  //NULL
+  return 0;
 
 }
 int expunge_object(object *o)
 {
-
+  if (!o) {
+    io_queue_message("No object in this position!");
+    return 1;
+  }
+  delete o;
+  io_queue_message("Expunging object %s ...... Done!", o->get_name());
+  //NULL
+  return 0;
 }
 
 

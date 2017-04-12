@@ -10,6 +10,57 @@
 #include "io.h"
 #include "object.h"
 
+int pc::check_space()
+{
+  int i;
+  for(i = 0; i < 10; i++){
+    if(!carry_slot[i]) return i;
+  }
+  return -1;
+}
+object *pc::get_object(dungeon_t *d, object *o)
+{
+  object *ob;
+  ob = objpair(o->get_position());
+  objpair(o->get_position()) = ob->next;
+  ob->next = 0;
+  return ob;
+}
+int pc::pick_up_object(dungeon_t *d)
+{
+  if(check_space() != -1 && objpair(position)){
+    carry_slot[check_space()] = get_object(d, objpair(position));
+    io_queue_message("Picking up a %s ... Done!", objpair(position)->get_name());
+  }
+  else if(check_space() == -1 && objpair(position)){
+    io_queue_message("Bag is full. Unable to pick up %s!", objpair(position)->get_name());
+  }
+  return 0;
+}
+int wear_object(object *o)
+{
+
+}
+int renew_speed()
+{
+
+}
+int take_off_object(object *o)
+{
+
+}
+int drop_object(dungeon_t *d, object *o)
+{
+
+}
+int expunge_object(object *o)
+{
+
+}
+
+
+
+
 void pc_delete(pc *pc)
 {
   if (pc) {
@@ -29,7 +80,7 @@ void place_pc(dungeon_t *d)
                                     d->rooms->size[dim_y] - 1)));
   character_set_x(d->PC, rand_range(d->rooms->position[dim_x],
                                    (d->rooms->position[dim_x] +
-                                    d->rooms->size[dim_x] - 1))); 
+                                    d->rooms->size[dim_x] - 1)));
   io_calculate_offset(d);
   io_update_offset(d);
 
@@ -56,6 +107,16 @@ void config_pc(dungeon_t *d)
   d->PC->color.push_back(COLOR_WHITE);
   d->PC->damage = &pc_dice;
   d->PC->name = "Isabella Garcia-Shapiro";
+
+  d->PC->hp = 5000;
+
+  int i;
+  for(i = 0; i < 12; i++){
+    d->PC->equipment_slot[i] = NULL;
+  }
+  for(i = 0; i < 10; i++){
+    d->PC->carry_slot[i] = NULL;
+  }
 
   d->character_map[character_get_y(d->PC)][character_get_x(d->PC)] = d->PC;
 
@@ -250,7 +311,7 @@ void pc_observe_terrain(pc *p, dungeon_t *d)
     can_see(d, p->position, where, 1, 1);
     where[dim_y] = y_max;
     can_see(d, p->position, where, 1, 1);
-  }       
+  }
 }
 
 int32_t is_illuminated(pc *p, int16_t y, int16_t x)

@@ -11,6 +11,17 @@ class pc : public character {
  public:
   terrain_type_t known_terrain[DUNGEON_Y][DUNGEON_X];
   unsigned char visible[DUNGEON_Y][DUNGEON_X];
+  object *equipment_slot[12];
+  object *carry_slot[10];
+
+  int check_space();
+  object *get_object(dungeon_t *d, object *o);
+  int pick_up_object(dungeon_t *d);
+  int wear_object(object *o);
+  int renew_speed();
+  int take_off_object(object *o);
+  int drop_object(dungeon_t *d, object *o);
+  int expunge_object(object *o);
 };
 
 void pc_delete(pc *pc);

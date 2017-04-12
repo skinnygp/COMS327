@@ -460,9 +460,9 @@ void io_wear_mode(dungeon_t *d)
   mvprintw(2, 1,  "|-------------------Wear Mode--------------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 3, 1, "|%c. %-46s|", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                        |", '0' + i);
   }
   mvprintw(13, 1, "|------------------------------------------------|");
   mvprintw(14, 1, "|------------------------------------------------|");
@@ -578,6 +578,8 @@ void io_take_off_mode(dungeon_t *d)
       }
     }
   }
+  mvprintw(15, 1, "|------------------------------------------------|");
+  mvprintw(16, 1, "|------------------------------------------------|");
   mvprintw(17, 1, "|Choose an object to take off                    |");
   mvprintw(18, 1, "|Enter esc to abort                              |");
   mvprintw(19, 1, "|------------------------------------------------|");
@@ -590,7 +592,7 @@ void io_take_off_mode(dungeon_t *d)
     }
     else if(key != 'a' && key != 'b' && key != 'c' && key != 'd' && key != 'e' && key != 'f'
       && key != 'g' && key != 'h' && key != 'i' && key != 'j' && key != 'k' && key != 'l'){
-        mvprintw(18, 1, "|Wrong number!                                   |");
+        mvprintw(20, 1, "Wrong number!");
         continue;
       }
     else if(d->PC->take_off_object(d->PC->equipment_slot[key - 'a'])){
@@ -612,9 +614,9 @@ void io_drop_mode(dungeon_t *d)
   mvprintw(2, 1,  "|-------------------Drop Mode--------------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 3, 1, "|%c. %-46s|", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                        |", '0' + i);
   }
   mvprintw(13, 1, "|------------------------------------------------|");
   mvprintw(14, 1, "|------------------------------------------------|");
@@ -651,9 +653,9 @@ void io_expunge_mode(dungeon_t *d)
   mvprintw(2, 1,  "|------------------Expunge Mode------------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 3, 1, "|%c. %-46s|", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                        |", '0' + i);
   }
   mvprintw(13, 1, "|------------------------------------------------|");
   mvprintw(14, 1, "|------------------------------------------------|");
@@ -691,9 +693,9 @@ void io_inventory_mode(dungeon_t *d)
   mvprintw(2, 1,  "|-----------------Inventory Mode-----------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 3, 1, "|%c. %-46s|", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                        |", '0' + i);
   }
   mvprintw(13, 1, "|------------------------------------------------|");
   mvprintw(14, 1, "|------------------------------------------------|");
@@ -797,7 +799,9 @@ void io_equipment_mode(dungeon_t *d)
       }
     }
   }
-  // mvprintw(17, 1, "|Choose an object to take off                    |");
+  mvprintw(15, 1, "|------------------------------------------------|");
+  mvprintw(16, 1, "|------------------------------------------------|");
+  mvprintw(17, 1, "|------------------------------------------------|");
   mvprintw(18, 1, "|Enter esc to abort                              |");
   mvprintw(19, 1, "|------------------------------------------------|");
   refresh();
@@ -817,9 +821,9 @@ void io_inspect_mode(dungeon_t *d)
   mvprintw(2, 1,  "|------------------Inspect Mode------------------|");
   for(i = 0; i < 10; i++){
     if(d->PC->carry_slot[i]){
-      mvprintw(i + 3, 1, "|%c. %-46s|", '0' + i, d->PC->carry_slot[i]->get_name());
+      mvprintw(i + 3, 1, "|%c. %-45s|", '0' + i, d->PC->carry_slot[i]->get_name());
     }
-    else mvprintw(i + 3, 1, "|%c. Empty                                       |", '0' + i);
+    else mvprintw(i + 3, 1, "|%c. Empty                                        |", '0' + i);
   }
   mvprintw(13, 1, "|------------------------------------------------|");
   mvprintw(14, 1, "|------------------------------------------------|");

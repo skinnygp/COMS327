@@ -219,7 +219,7 @@ static void io_redisplay_visible_monsters(dungeon_t *d)
 
   pc_offset[dim_y] = d->PC->position[dim_y] - d->io_offset[dim_y] + 1;
   pc_offset[dim_x] = d->PC->position[dim_x] - d->io_offset[dim_x];
-  
+
 
   for (pos[dim_y] = -PC_VISUAL_RANGE;
        pos[dim_y] <= PC_VISUAL_RANGE;
@@ -446,10 +446,44 @@ void io_display(dungeon_t *d)
   mvprintw(23, 0, "PC position is (%3d,%2d); offset is (%3d,%2d).",
            character_get_x(d->PC), character_get_y(d->PC),
            d->io_offset[dim_x], d->io_offset[dim_y]);
+  mvprintw(24, 0, "HP: %d   ;   Speed: %d", d->PC->hp, d->PC->speed);
 
   io_print_message_queue(0, 0);
 
   refresh();
+}
+
+void io_wear_mode(dungeon_t *d)
+{
+  int32_t key;
+  int i;
+  for(i = 0; i < 10; i++){
+    if(d->PC->carry_slot[i]){
+      mvprintw(i + 2, 1, "%c. %s ", i, d->PC->carry_slot[i]->get_name());
+    }
+    else mvprintw(i + 2, 1, "%c.  ", i);
+  }
+  mvprintw(14, 1, "Choose an object to wear");
+  mvprintw(15, 1, "Enter esc to abort");
+
+  do {
+    if ((key = getch()) == 27 /* ESC */) {
+      io_calculate_offset(d);
+      io_display(d);
+      return;
+    }
+    if(key != '0' && key != '1' && key != '2' && key != '3' && key != '4' && key != '5'
+      && key != '6' && key != '7' && key != '8' && key != '9'){
+        mvprintw(16, 1, "Wrong number!");
+        continue;
+      }
+    if(!d->PC->wear_object(d->PC->carry_slot[key - '0'])){
+      continue;
+    }
+    else{
+      io_wear_mode(d);
+    }
+  }while(1);
 }
 
 void io_look_mode(dungeon_t *d)
@@ -462,7 +496,7 @@ void io_look_mode(dungeon_t *d)
       io_display(d);
       return;
     }
-    
+
     switch (key) {
     case '1':
     case 'b':
@@ -734,6 +768,8 @@ static void io_list_monsters(dungeon_t *d)
   io_display(d);
 }
 
+
+
 void io_handle_input(dungeon_t *d)
 {
   uint32_t fail_code;
@@ -833,6 +869,34 @@ void io_handle_input(dungeon_t *d)
 #endif
     case 'L':
       io_look_mode(d);
+      fail_code = 1;
+      break;
+    case 'w':
+      io_wear_mode(d);
+      fail_code = 1;
+      break;
+    case 't':
+      io_take_off_mode(d);
+      fail_code = 1;
+      break;
+    case 'd':
+      io_drop_mode(d);
+      fail_code = 1;
+      break;
+    case 'x':
+      io_expunge_mode(d);
+      fail_code = 1;
+      break;
+    case 'i':
+      io_inventory_mode(d);
+      fail_code = 1;
+      break;
+    case 'e':
+      io_equipment_mode(d);
+      fail_code = 1;
+      break;
+    case 'I':
+      io_inspect_mode(d);
       fail_code = 1;
       break;
     case 'g':

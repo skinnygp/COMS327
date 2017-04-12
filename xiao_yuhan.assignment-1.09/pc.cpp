@@ -51,6 +51,7 @@ int pc::wear_object(object *o)
   i = o->get_type() - 1;
   if(i > objtype_SCROLL - 1){
     io_queue_message("This object cannot be worn");
+    return 1;
   }
   if(o->get_type() == objtype_RING && equipment_slot[i] && !equipment_slot[i++]) i++;
   ob = o;

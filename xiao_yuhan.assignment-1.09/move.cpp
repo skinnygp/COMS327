@@ -233,6 +233,7 @@ uint32_t move_pc(dungeon_t *d, uint32_t dir)
 
   if ((dir != '>') && (dir != '<') && (mappair(next) >= ter_floor)) {
     move_character(d, d->PC, next);
+    d->PC->pick_up_object(d);
     io_update_offset(d);
     dijkstra(d);
     dijkstra_tunnel(d);

@@ -41,6 +41,7 @@ class object {
   bool have_seen() { return seen; }
   void has_been_seen() { seen = true; }
   int16_t *get_position() { return position; }
+  const char *get_description() { return description.c_str(); }
 };
 
 void gen_objects(dungeon_t *d);

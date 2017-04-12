@@ -465,7 +465,7 @@ void io_wear_mode(dungeon_t *d)
   }
   mvprintw(14, 1, "Choose an object to wear");
   mvprintw(15, 1, "Enter esc to abort");
-
+  refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
       io_calculate_offset(d);
@@ -477,11 +477,12 @@ void io_wear_mode(dungeon_t *d)
         mvprintw(16, 1, "Wrong number!");
         continue;
       }
-    else if(d->PC->wear_object(d->PC->carry_slot[key - '0'])){
+    else if(d->PC->wear_object(key - '0')){
       continue;
     }
     else{
-      io_wear_mode(d);
+      io_display(d);
+      return;
     }
   }while(1);
 }
@@ -574,7 +575,7 @@ void io_take_off_mode(dungeon_t *d)
   }
   mvprintw(16, 1, "Choose an object to take off");
   mvprintw(17, 1, "Enter esc to abort");
-
+  refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
       io_calculate_offset(d);
@@ -591,7 +592,8 @@ void io_take_off_mode(dungeon_t *d)
     }
     else{
       d->PC->equipment_slot[key - 'a'] = NULL;
-      io_take_off_mode(d);
+      io_display(d);
+      return;
     }
   }while(1);
 }
@@ -608,7 +610,7 @@ void io_drop_mode(dungeon_t *d)
   }
   mvprintw(14, 1, "Choose an object to drop");
   mvprintw(15, 1, "Enter esc to abort");
-
+  refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
       io_calculate_offset(d);
@@ -625,7 +627,8 @@ void io_drop_mode(dungeon_t *d)
     }
     else{
       d->PC->carry_slot[key - '0'] = NULL;
-      io_drop_mode(d);
+      io_display(d);
+      return;
     }
   }while(1);
 }
@@ -642,7 +645,7 @@ void io_expunge_mode(dungeon_t *d)
   }
   mvprintw(14, 1, "Choose an object to expunge");
   mvprintw(15, 1, "Enter esc to abort");
-
+  refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
       io_calculate_offset(d);
@@ -659,7 +662,8 @@ void io_expunge_mode(dungeon_t *d)
     }
     else{
       d->PC->carry_slot[key - '0'] = NULL;
-      io_expunge_mode(d);
+      io_display(d);
+      return;
     }
   }while(1);
 }
@@ -676,7 +680,7 @@ void io_inventory_mode(dungeon_t *d)
   }
   // mvprintw(14, 1, "Choose an object to expunge");
   mvprintw(15, 1, "Enter esc to abort");
-
+  refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
       io_calculate_offset(d);
@@ -774,7 +778,7 @@ void io_equipment_mode(dungeon_t *d)
   }
   // mvprintw(16, 1, "Choose an object to take off");
   mvprintw(17, 1, "Enter esc to abort");
-
+  refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
       io_calculate_offset(d);
@@ -796,7 +800,7 @@ void io_inspect_mode(dungeon_t *d)
   }
   mvprintw(14, 1, "Choose an object to inspect");
   mvprintw(15, 1, "Enter esc to abort");
-
+  refresh();
   do {
     if ((key = getch()) == 27 /* ESC */) {
       io_calculate_offset(d);
@@ -810,11 +814,13 @@ void io_inspect_mode(dungeon_t *d)
       }
     else if (!d->PC->carry_slot[key - '0']) {
       mvprintw(16, 1, "Empty slot!");
-      // refresh();
+      refresh();
       continue;
     }
     else{
-      
+      io_queue_message(d->PC->carry_slot[key - '0']->get_description());
+      io_display(d);
+      return;
     }
   }while(1);
 }

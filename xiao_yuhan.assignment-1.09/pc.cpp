@@ -40,24 +40,24 @@ int pc::renew_speed()
   if(speed < 1) speed = 1;
   return 0;
 }
-int pc::wear_object(object *o)
+int pc::wear_object(int index)
 {
-  if (!o) {
+  if (!carry_slot[index]) {
     io_queue_message("No object in this position!");
     return 1;
   }
   object *ob;
-  uint32_t i;
-  i = o->get_type() - 1;
-  if(i > objtype_SCROLL - 1){
+  uint32_t in;
+  in = carry_slot[index]->get_type() - 1;
+  if(in > objtype_SCROLL - 1){
     io_queue_message("This object cannot be worn");
     return 1;
   }
-  if(o->get_type() == objtype_RING && equipment_slot[i] && !equipment_slot[i++]) i++;
-  ob = o;
-  o = equipment_slot[i];
-  equipment_slot[i] = ob;
-  io_queue_message("Wearing object %s ...... Done!", equipment_slot[i]->get_name());
+  if(carry_slot[index]->get_type() == objtype_RING && equipment_slot[in] && !equipment_slot[in++]) in++;
+  ob = carry_slot[index];
+  carry_slot[index] = equipment_slot[in];
+  equipment_slot[in] = ob;
+  io_queue_message("Wearing object %s ...... Done!", equipment_slot[in]->get_name());
   renew_speed();
   return 0;
 }
@@ -90,7 +90,7 @@ int pc::drop_object(dungeon_t *d, object *o)
   return 0;
 
 }
-int expunge_object(object *o)
+int pc::expunge_object(object *o)
 {
   if (!o) {
     io_queue_message("No object in this position!");

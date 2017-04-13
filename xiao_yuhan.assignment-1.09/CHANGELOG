@@ -1,0 +1,20 @@
+CHANGELOG
+Author: Yuhan Xiao
+
+Day One   (Apr 3, 2017): Started reading the description of this assignment.
+Day One   (Apr 3, 2017): Started Project and I used Jeremy's code of Assignment-1.07.
+Day One   (Apr 3, 2017): Understanding Jeremy's code of Assignment-1.07.
+
+Day Two   (Apr 4, 2017): Created and finished construct npc for npc class.
+Day Two   (Apr 4, 2017): Created more fields in character class.
+Day Two   (Apr 4, 2017): Created and finished function static npc *create(dungeon_t *d) for class monster_description.
+Day Two   (Apr 4, 2017): Found and Fixed bug: cannot modify npc class in descriptions unless friend npc.
+
+Day Three (Apr 5, 2017): Created object.h and object.cpp.
+Day Three (Apr 5, 2017): Added object class and functions in object.h
+Day Three (Apr 5, 2017): Finished all functions in object.cpp.
+Day Three (Apr 5, 2017): Added object.o in Makefile.
+
+
+Day Three (Apr 5, 2017): Debugged in linux.
+Day Three (Apr 5, 2017): Finished README and CHANGELOG.

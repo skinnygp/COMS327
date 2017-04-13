@@ -1,0 +1,25 @@
+README
+Author: Yuhan Xiao
+Date: April 5, 2017
+
+included:
+Two more files than Assignment-1.07(object.h and object.cpp).
+this README
+Makefile
+CHANGELOG
+
+Project Description: Loading all of the objects and monsters
+Note:
+* I have changed the color of PC to CYAN.
+* The max number of objects is 100 in a dungeon.
+* In order that you died before found any object, you better set monster to 1.
+
+Relevant Functions:
+All functions in object.h & object.cpp
+gen_monsters(dungeon_t *d) in npc.cpp
+static npc *create(dungeon_t *d); in descriptions.h & description.cpp
+npc(const monster_description &m) in npc class
+
+Relevant Structure
+All structure in object.h
+Added field in character.h

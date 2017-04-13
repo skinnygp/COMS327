@@ -73,7 +73,6 @@ int pc::take_off_object(object *o)
   }
   carry_slot[check_space()] = o;
   io_queue_message("Taking off object %s ...... Done!", o->get_name());
-  //NULL;
   renew_speed();
 
   return 0;
@@ -90,7 +89,6 @@ int pc::drop_object(dungeon_t *d, object *o)
   }
   objpair(position) = o;
   io_queue_message("Droping off object %s ...... Done!", o->get_name());
-  //NULL
   return 0;
 
 }

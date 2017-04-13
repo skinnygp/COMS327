@@ -1,6 +1,6 @@
 README
 Author: Yuhan Xiao
-Date: April 5, 2017
+Date: April 12, 2017
 
 included:
 Same with Assignment-1.08
@@ -28,8 +28,7 @@ Relevant Functions:
 All functions added in pc.h & pc.cpp for picking, wearing ...
 const char *get_description() { return description.c_str(); } in object class.
 All functions added in io.cpp for handle user input.
-npc(const monster_description &m) in npc class
+do_combat and move_character in move.cpp.
 
 Relevant Structure
-All structure in object.h
-Added field in character.h
+Change hp to int32_t

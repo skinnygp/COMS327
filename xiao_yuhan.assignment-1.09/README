@@ -10,6 +10,8 @@ CHANGELOG
 
 Project Description: PC Equipment and Updated Combat
 Note:
+* The default hp of PC is 5000(hard to die).
+
 PC Equipment:
 * Enter w, t, d, x, i, e, I to use the new functions.
 * Once the PC move on to an object, PC will pick it up if there is an empty space in the bag.

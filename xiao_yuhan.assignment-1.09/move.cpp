@@ -14,21 +14,32 @@
 #include "path.h"
 #include "event.h"
 #include "io.h"
+#include "object.h"
 
 void do_combat(dungeon_t *d, character *atk, character *def)
 {
-  if (character_is_alive(def)) {
-    character_die(def);
-    if (def != d->PC) {
-      d->num_monsters--;
+  uint32_t dam = 0;
+  if(atk == d->PC){
+    int i;
+    for(i = 0; i < 12; i++){
+      if(i == 0 && !d->PC->equipment_slot[i]) dam += d->PC->damage->roll();
+      else if(d->PC->equipment_slot[i]) dam += d->PC->equipment_slot[i]->roll_dice();
     }
+  }
+  else{
+    dam += atk->damage->roll();
+  }
+  if(atk == d->PC) io_queue_message("You attacked the %s for %d.", def->name, dam);
+  else io_queue_message("The %s attacked you for %d.", atk->name, dam);
+
+  def->hp -= dam;
+  if(def->hp < 0){
+    def->alive = 0;
+    if(atk == d->PC) d->num_monsters--;
+    charpair(def->position) = NULL;
     character_increment_dkills(atk);
     character_increment_ikills(atk, (character_get_dkills(def) +
                                      character_get_ikills(def)));
-  }
-
-  if (atk == d->PC) {
-    io_queue_message("You smite the %s", character_get_name(def));
   }
 }
 
@@ -37,10 +48,18 @@ void move_character(dungeon_t *d, character *c, pair_t next)
   if (charpair(next) &&
       ((next[dim_y] != character_get_y(c)) ||
        (next[dim_x] != character_get_x(c)))) {
-    do_combat(d, c, charpair(next));
-  } else {
-    /* No character in new position. */
-
+         if(c == d->PC || charpair(next) == d->PC) do_combat(d, c, charpair(next));
+         else{
+           d->character_map[character_get_y(c)][character_get_x(c)] = NULL;
+           character_set_y(charpair(next), character_get_y(c));
+           character_set_x(charpair(next), character_get_x(c));
+           d->character_map[character_get_y(c)][character_get_x(c)] = charpair(next);
+           character_set_y(c, next[dim_y]);
+           character_set_x(c, next[dim_x]);
+           d->character_map[character_get_y(c)][character_get_x(c)] = c;
+         }
+  }
+  else {
     d->character_map[character_get_y(c)][character_get_x(c)] = NULL;
     character_set_y(c, next[dim_y]);
     character_set_x(c, next[dim_x]);

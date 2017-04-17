@@ -759,7 +759,7 @@ uint32_t io_wear_eq(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61];
-  mvprintw(5, 10, "*----------------------Wear Equipment----------------------*");
+  mvprintw(5, 10, "#----------------------Wear Equipment----------------------#");
   for (i = 0; i < MAX_INVENTORY; i++) {
     /* We'll write 12 lines, 10 of inventory, 1 blank, and 1 prompt. *
      * We'll limit width to 60 characters, so very long object names *
@@ -771,7 +771,7 @@ uint32_t io_wear_eq(dungeon_t *d)
   }
   mvprintw(16, 10, "|----------------------------------------------------------|");
   mvprintw(17, 10, "|%-58s|", "Wear which item (ESC to cancel)?");
-  mvprintw(18, 10, "*----------------------------------------------------------*");
+  mvprintw(18, 10, "#----------------------------------------------------------#");
   refresh();
 
   while (1) {
@@ -815,7 +815,7 @@ void io_display_in(dungeon_t *d)
 {
   uint32_t i;
   char s[61];
-  mvprintw(6, 10, "*--------------------Display Inventory---------------------*");
+  mvprintw(6, 10, "#--------------------Display Inventory---------------------#");
   for (i = 0; i < MAX_INVENTORY; i++) {
     io_object_to_string(d->PC->in[i], s, 61);
     mvprintw(i + 7, 10, "|%c) %-55s|", '0' + i, s);
@@ -823,7 +823,7 @@ void io_display_in(dungeon_t *d)
 
   mvprintw(17, 10, "|----------------------------------------------------------|");
   mvprintw(18, 10, "|%-58s|", "Hit any key to continue.");
-  mvprintw(19, 10, "*----------------------------------------------------------*");
+  mvprintw(19, 10, "#----------------------------------------------------------#");
   refresh();
 
   getch();
@@ -835,7 +835,7 @@ uint32_t io_remove_eq(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61], t[61];
-  mvprintw(4, 10, "*---------------------Remove Equipment---------------------*");
+  mvprintw(4, 10, "#---------------------Remove Equipment---------------------#");
   for (i = 0; i < num_eq_slots; i++) {
     sprintf(s, "[%s]", eq_slot_name[i]);
     io_object_to_string(d->PC->eq[i], t, 61);
@@ -843,7 +843,7 @@ uint32_t io_remove_eq(dungeon_t *d)
   }
   mvprintw(17, 10, "|----------------------------------------------------------|");
   mvprintw(18, 10, "|%-58s|", "Take off which item (ESC to cancel)?");
-  mvprintw(19, 10, "*----------------------------------------------------------*");
+  mvprintw(19, 10, "#----------------------------------------------------------#");
   refresh();
 
   while (1) {
@@ -886,7 +886,7 @@ void io_display_eq(dungeon_t *d)
 {
   uint32_t i;
   char s[61], t[61];
-  mvprintw(4, 10, "*--------------------Display Equipment---------------------*");
+  mvprintw(4, 10, "#--------------------Display Equipment---------------------#");
   for (i = 0; i < num_eq_slots; i++) {
     sprintf(s, "[%s]", eq_slot_name[i]);
     io_object_to_string(d->PC->eq[i], t, 61);
@@ -894,7 +894,7 @@ void io_display_eq(dungeon_t *d)
   }
   mvprintw(17, 10, "|----------------------------------------------------------|");
   mvprintw(18, 10, "|%-58s|", "Hit any key to continue.");
-  mvprintw(19, 10, "*----------------------------------------------------------*");
+  mvprintw(19, 10, "#----------------------------------------------------------#");
   refresh();
 
   getch();
@@ -906,14 +906,14 @@ uint32_t io_drop_in(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61];
-  mvprintw(5, 10, "*----------------------Drop Inventory----------------------*");
+  mvprintw(5, 10, "#----------------------Drop Inventory----------------------#");
   for (i = 0; i < MAX_INVENTORY; i++) {
       mvprintw(i + 6, 10, "|%c) %-55s|", '0' + i,
                d->PC->in[i] ? d->PC->in[i]->get_name() : "");
   }
   mvprintw(16, 10, "|----------------------------------------------------------|");
   mvprintw(17, 10, "|%-58s|", "Drop which item (ESC to cancel)?");
-  mvprintw(18, 10, "*----------------------------------------------------------*");
+  mvprintw(18, 10, "#----------------------------------------------------------#");
   refresh();
 
   while (1) {
@@ -993,7 +993,7 @@ static uint32_t io_inspect_in(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61];
-  mvprintw(5, 10, "*--------------------Inspect Inventory---------------------*");
+  mvprintw(5, 10, "#--------------------Inspect Inventory---------------------#");
   for (i = 0; i < MAX_INVENTORY; i++) {
     io_object_to_string(d->PC->in[i], s, 61);
     mvprintw(i + 6, 10, "|%c) %-55s|", '0' + i,
@@ -1001,7 +1001,7 @@ static uint32_t io_inspect_in(dungeon_t *d)
   }
   mvprintw(16, 10, "|----------------------------------------------------------|");
   mvprintw(17, 10, "|%-58s|", "Inspect which item (ESC to cancel, '/' for equipment)?");
-  mvprintw(18, 10, "*----------------------------------------------------------*");
+  mvprintw(18, 10, "#----------------------------------------------------------#");
   refresh();
 
   while (1) {
@@ -1048,7 +1048,7 @@ static uint32_t io_inspect_eq(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61], t[61];
-  mvprintw(4, 10, "*--------------------Inspect Equipment---------------------*");
+  mvprintw(4, 10, "#--------------------Inspect Equipment---------------------#");
   for (i = 0; i < num_eq_slots; i++) {
     sprintf(s, "[%s]", eq_slot_name[i]);
     io_object_to_string(d->PC->eq[i], t, 61);
@@ -1056,7 +1056,7 @@ static uint32_t io_inspect_eq(dungeon_t *d)
   }
   mvprintw(17, 10, "|----------------------------------------------------------|");
   mvprintw(18, 10, "|%-58s|", "Inspect which item (ESC to cancel, '/' for inventory)?");
-  mvprintw(19, 10, "*----------------------------------------------------------*");
+  mvprintw(19, 10, "#----------------------------------------------------------#");
   refresh();
 
   while (1) {
@@ -1102,7 +1102,7 @@ uint32_t io_expunge_in(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61];
-  mvprintw(5, 10, "*--------------------Expunge Inventory---------------------*");
+  mvprintw(5, 10, "#--------------------Expunge Inventory---------------------#");
   for (i = 0; i < MAX_INVENTORY; i++) {
     /* We'll write 12 lines, 10 of inventory, 1 blank, and 1 prompt. *
      * We'll limit width to 60 characters, so very long object names *
@@ -1113,7 +1113,7 @@ uint32_t io_expunge_in(dungeon_t *d)
   }
   mvprintw(16, 10, "|----------------------------------------------------------|");
   mvprintw(17, 10, "|%-58s|", "Destroy which item (ESC to cancel)?");
-  mvprintw(18, 10, "*----------------------------------------------------------*");
+  mvprintw(18, 10, "#----------------------------------------------------------#");
   refresh();
 
   while (1) {

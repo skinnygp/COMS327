@@ -219,7 +219,7 @@ static void io_redisplay_visible_monsters(dungeon_t *d)
 
   pc_offset[dim_y] = d->PC->position[dim_y] - d->io_offset[dim_y] + 1;
   pc_offset[dim_x] = d->PC->position[dim_x] - d->io_offset[dim_x];
-  
+
 
   for (pos[dim_y] = -PC_VISUAL_RANGE;
        pos[dim_y] <= PC_VISUAL_RANGE;
@@ -462,7 +462,7 @@ void io_look_mode(dungeon_t *d)
       io_display(d);
       return;
     }
-    
+
     switch (key) {
     case '1':
     case 'b':
@@ -759,7 +759,7 @@ uint32_t io_wear_eq(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61];
-
+  mvprintw(5, 10, "|----------------------------------------------------------|");
   for (i = 0; i < MAX_INVENTORY; i++) {
     /* We'll write 12 lines, 10 of inventory, 1 blank, and 1 prompt. *
      * We'll limit width to 60 characters, so very long object names *
@@ -767,10 +767,11 @@ uint32_t io_wear_eq(dungeon_t *d)
      * at 10 x and 6 y to start printing things.  Same principal in  *
      * other functions, below.                                       */
     io_object_to_string(d->PC->in[i], s, 61);
-    mvprintw(i + 6, 10, " %c) %-55s ", '0' + i, s);
+    mvprintw(i + 6, 10, "|%c) %-55s|", '0' + i, s);
   }
-  mvprintw(16, 10, " %-58s ", "");
-  mvprintw(17, 10, " %-58s ", "Wear which item (ESC to cancel)?");
+  mvprintw(16, 10, "|----------------------------------------------------------|");
+  mvprintw(17, 10, "|%-58s|", "Wear which item (ESC to cancel)?");
+  mvprintw(18, 10, "|----------------------------------------------------------|");
   refresh();
 
   while (1) {
@@ -783,9 +784,9 @@ uint32_t io_wear_eq(dungeon_t *d)
       if (isprint(key)) {
         snprintf(s, 61, "Invalid input: '%c'.  Enter 0-9 or ESC to cancel.",
                  key);
-        mvprintw(18, 10, " %-58s ", s);
+        mvprintw(19, 10, " %-58s ", s);
       } else {
-        mvprintw(18, 10, " %-58s ",
+        mvprintw(19, 10, " %-58s ",
                  "Invalid input.  Enter 0-9 or ESC to cancel.");
       }
       refresh();
@@ -793,7 +794,7 @@ uint32_t io_wear_eq(dungeon_t *d)
     }
 
     if (!d->PC->in[key - '0']) {
-      mvprintw(18, 10, " %-58s ", "Empty inventory slot.  Try again.");
+      mvprintw(19, 10, " %-58s ", "Empty inventory slot.  Try again.");
       continue;
     }
 
@@ -803,7 +804,7 @@ uint32_t io_wear_eq(dungeon_t *d)
 
     snprintf(s, 61, "Can't wear %s.  Try again.",
              d->PC->in[key - '0']->get_name());
-    mvprintw(18, 10, " %-58s ", s);
+    mvprintw(19, 10, " %-58s ", s);
     refresh();
   }
 
@@ -814,15 +815,15 @@ void io_display_in(dungeon_t *d)
 {
   uint32_t i;
   char s[61];
-
+  mvprintw(6, 10, "*----------------------------------------------------------*");
   for (i = 0; i < MAX_INVENTORY; i++) {
     io_object_to_string(d->PC->in[i], s, 61);
-    mvprintw(i + 7, 10, " %c) %-55s ", '0' + i, s);
+    mvprintw(i + 7, 10, "|%c) %-55s|", '0' + i, s);
   }
 
-  mvprintw(17, 10, " %-58s ", "");
-  mvprintw(18, 10, " %-58s ", "Hit any key to continue.");
-
+  mvprintw(17, 10, "|----------------------------------------------------------|");
+  mvprintw(18, 10, "|%-58s|", "Hit any key to continue.");
+  mvprintw(19, 10, "*----------------------------------------------------------*");
   refresh();
 
   getch();
@@ -834,14 +835,15 @@ uint32_t io_remove_eq(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61], t[61];
-
+  mvprintw(4, 10, "*----------------------------------------------------------*");
   for (i = 0; i < num_eq_slots; i++) {
     sprintf(s, "[%s]", eq_slot_name[i]);
     io_object_to_string(d->PC->eq[i], t, 61);
-    mvprintw(i + 5, 10, " %c %-9s) %-45s ", 'a' + i, s, t);
+    mvprintw(i + 5, 10, "|%c %-9s) %-45s|", 'a' + i, s, t);
   }
-  mvprintw(17, 10, " %-58s ", "");
-  mvprintw(18, 10, " %-58s ", "Take off which item (ESC to cancel)?");
+  mvprintw(17, 10, "|----------------------------------------------------------|");
+  mvprintw(18, 10, "|%-58s|", "Take off which item (ESC to cancel)?");
+  mvprintw(19, 10, "*----------------------------------------------------------*");
   refresh();
 
   while (1) {
@@ -854,9 +856,9 @@ uint32_t io_remove_eq(dungeon_t *d)
       if (isprint(key)) {
         snprintf(s, 61, "Invalid input: '%c'.  Enter a-l or ESC to cancel.",
                  key);
-        mvprintw(18, 10, " %-58s ", s);
+        mvprintw(20, 10, " %-58s ", s);
       } else {
-        mvprintw(18, 10, " %-58s ",
+        mvprintw(20, 10, " %-58s ",
                  "Invalid input.  Enter a-l or ESC to cancel.");
       }
       refresh();
@@ -864,7 +866,7 @@ uint32_t io_remove_eq(dungeon_t *d)
     }
 
     if (!d->PC->eq[key - 'a']) {
-      mvprintw(18, 10, " %-58s ", "Empty equipment slot.  Try again.");
+      mvprintw(20, 10, " %-58s ", "Empty equipment slot.  Try again.");
       continue;
     }
 
@@ -874,7 +876,7 @@ uint32_t io_remove_eq(dungeon_t *d)
 
     snprintf(s, 61, "Can't take off %s.  Try again.",
              d->PC->eq[key - 'a']->get_name());
-    mvprintw(19, 10, " %-58s ", s);
+    mvprintw(20, 10, " %-58s ", s);
   }
 
   return 1;
@@ -884,15 +886,15 @@ void io_display_eq(dungeon_t *d)
 {
   uint32_t i;
   char s[61], t[61];
-
+  mvprintw(4, 10, "*----------------------------------------------------------*");
   for (i = 0; i < num_eq_slots; i++) {
     sprintf(s, "[%s]", eq_slot_name[i]);
     io_object_to_string(d->PC->eq[i], t, 61);
-    mvprintw(i + 5, 10, " %c %-9s) %-45s ", 'a' + i, s, t);
+    mvprintw(i + 5, 10, "|%c %-9s) %-45s|", 'a' + i, s, t);
   }
-  mvprintw(17, 10, " %-58s ", "");
-  mvprintw(18, 10, " %-58s ", "Hit any key to continue.");
-
+  mvprintw(17, 10, "|----------------------------------------------------------|");
+  mvprintw(18, 10, "|%-58s|", "Hit any key to continue.");
+  mvprintw(19, 10, "*----------------------------------------------------------*");
   refresh();
 
   getch();
@@ -904,13 +906,14 @@ uint32_t io_drop_in(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61];
-
+  mvprintw(5, 10, "*----------------------------------------------------------*");
   for (i = 0; i < MAX_INVENTORY; i++) {
-      mvprintw(i + 6, 10, " %c) %-55s ", '0' + i,
+      mvprintw(i + 6, 10, "|%c) %-55s|", '0' + i,
                d->PC->in[i] ? d->PC->in[i]->get_name() : "");
   }
-  mvprintw(16, 10, " %-58s ", "");
-  mvprintw(17, 10, " %-58s ", "Drop which item (ESC to cancel)?");
+  mvprintw(16, 10, "|----------------------------------------------------------|");
+  mvprintw(17, 10, "|%-58s|", "Drop which item (ESC to cancel)?");
+  mvprintw(18, 10, "*----------------------------------------------------------*");
   refresh();
 
   while (1) {
@@ -923,9 +926,9 @@ uint32_t io_drop_in(dungeon_t *d)
       if (isprint(key)) {
         snprintf(s, 61, "Invalid input: '%c'.  Enter 0-9 or ESC to cancel.",
                  key);
-        mvprintw(18, 10, " %-58s ", s);
+        mvprintw(19, 10, " %-58s ", s);
       } else {
-        mvprintw(18, 10, " %-58s ",
+        mvprintw(19, 10, " %-58s ",
                  "Invalid input.  Enter 0-9 or ESC to cancel.");
       }
       refresh();
@@ -933,7 +936,7 @@ uint32_t io_drop_in(dungeon_t *d)
     }
 
     if (!d->PC->in[key - '0']) {
-      mvprintw(18, 10, " %-58s ", "Empty inventory slot.  Try again.");
+      mvprintw(19, 10, " %-58s ", "Empty inventory slot.  Try again.");
       continue;
     }
 
@@ -943,7 +946,7 @@ uint32_t io_drop_in(dungeon_t *d)
 
     snprintf(s, 61, "Can't drop %s.  Try again.",
              d->PC->in[key - '0']->get_name());
-    mvprintw(18, 10, " %-58s ", s);
+    mvprintw(19, 10, " %-58s ", s);
     refresh();
   }
 
@@ -981,7 +984,7 @@ static uint32_t io_display_obj_info(object *o)
   refresh();
   getch();
 
-  return 0;  
+  return 0;
 }
 
 static uint32_t io_inspect_eq(dungeon_t *d);
@@ -990,14 +993,15 @@ static uint32_t io_inspect_in(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61];
-
+  mvprintw(5, 10, "*----------------------------------------------------------*");
   for (i = 0; i < MAX_INVENTORY; i++) {
     io_object_to_string(d->PC->in[i], s, 61);
-    mvprintw(i + 6, 10, " %c) %-55s ", '0' + i,
+    mvprintw(i + 6, 10, "|%c) %-55s|", '0' + i,
              d->PC->in[i] ? d->PC->in[i]->get_name() : "");
   }
-  mvprintw(16, 10, " %-58s ", "");
-  mvprintw(17, 10, " %-58s ", "Inspect which item (ESC to cancel, '/' for equipment)?");
+  mvprintw(16, 10, "|----------------------------------------------------------|");
+  mvprintw(17, 10, "|%-58s|", "Inspect which item (ESC to cancel, '/' for equipment)?");
+  mvprintw(18, 10, "*----------------------------------------------------------*");
   refresh();
 
   while (1) {
@@ -1016,9 +1020,9 @@ static uint32_t io_inspect_in(dungeon_t *d)
       if (isprint(key)) {
         snprintf(s, 61, "Invalid input: '%c'.  Enter 0-9 or ESC to cancel.",
                  key);
-        mvprintw(18, 10, " %-58s ", s);
+        mvprintw(19, 10, " %-58s ", s);
       } else {
-        mvprintw(18, 10, " %-58s ",
+        mvprintw(19, 10, " %-58s ",
                  "Invalid input.  Enter 0-9 or ESC to cancel.");
       }
       refresh();
@@ -1026,7 +1030,7 @@ static uint32_t io_inspect_in(dungeon_t *d)
     }
 
     if (!d->PC->in[key - '0']) {
-      mvprintw(18, 10, " %-58s ", "Empty inventory slot.  Try again.");
+      mvprintw(19, 10, " %-58s ", "Empty inventory slot.  Try again.");
       refresh();
       continue;
     }
@@ -1044,14 +1048,15 @@ static uint32_t io_inspect_eq(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61], t[61];
-
+  mvprintw(4, 10, "*----------------------------------------------------------*");
   for (i = 0; i < num_eq_slots; i++) {
     sprintf(s, "[%s]", eq_slot_name[i]);
     io_object_to_string(d->PC->eq[i], t, 61);
-    mvprintw(i + 5, 10, " %c %-9s) %-45s ", 'a' + i, s, t);
+    mvprintw(i + 5, 10, "|%c %-9s) %-45s|", 'a' + i, s, t);
   }
-  mvprintw(17, 10, " %-58s ", "");
-  mvprintw(18, 10, " %-58s ", "Inspect which item (ESC to cancel, '/' for inventory)?");
+  mvprintw(17, 10, "|----------------------------------------------------------|");
+  mvprintw(18, 10, "|%-58s|", "Inspect which item (ESC to cancel, '/' for inventory)?");
+  mvprintw(19, 10, "*----------------------------------------------------------*");
   refresh();
 
   while (1) {
@@ -1070,9 +1075,9 @@ static uint32_t io_inspect_eq(dungeon_t *d)
       if (isprint(key)) {
         snprintf(s, 61, "Invalid input: '%c'.  Enter a-l or ESC to cancel.",
                  key);
-        mvprintw(18, 10, " %-58s ", s);
+        mvprintw(20, 10, " %-58s ", s);
       } else {
-        mvprintw(18, 10, " %-58s ",
+        mvprintw(20, 10, " %-58s ",
                  "Invalid input.  Enter a-l or ESC to cancel.");
       }
       refresh();
@@ -1080,7 +1085,7 @@ static uint32_t io_inspect_eq(dungeon_t *d)
     }
 
     if (!d->PC->eq[key - 'a']) {
-      mvprintw(18, 10, " %-58s ", "Empty equipment slot.  Try again.");
+      mvprintw(20, 10, " %-58s ", "Empty equipment slot.  Try again.");
       continue;
     }
 
@@ -1097,17 +1102,18 @@ uint32_t io_expunge_in(dungeon_t *d)
 {
   uint32_t i, key;
   char s[61];
-
+  mvprintw(5, 10, "*----------------------------------------------------------*");
   for (i = 0; i < MAX_INVENTORY; i++) {
     /* We'll write 12 lines, 10 of inventory, 1 blank, and 1 prompt. *
      * We'll limit width to 60 characters, so very long object names *
      * will be truncated.  In an 80x24 terminal, this gives offsets  *
      * at 10 x and 6 y to start printing things.                     */
-      mvprintw(i + 6, 10, " %c) %-55s ", '0' + i,
+      mvprintw(i + 6, 10, "|%c) %-55s|", '0' + i,
                d->PC->in[i] ? d->PC->in[i]->get_name() : "");
   }
-  mvprintw(16, 10, " %-58s ", "");
-  mvprintw(17, 10, " %-58s ", "Destroy which item (ESC to cancel)?");
+  mvprintw(16, 10, "|----------------------------------------------------------|");
+  mvprintw(17, 10, "|%-58s|", "Destroy which item (ESC to cancel)?");
+  mvprintw(18, 10, "*----------------------------------------------------------*");
   refresh();
 
   while (1) {
@@ -1120,9 +1126,9 @@ uint32_t io_expunge_in(dungeon_t *d)
       if (isprint(key)) {
         snprintf(s, 61, "Invalid input: '%c'.  Enter 0-9 or ESC to cancel.",
                  key);
-        mvprintw(18, 10, " %-58s ", s);
+        mvprintw(19, 10, " %-58s ", s);
       } else {
-        mvprintw(18, 10, " %-58s ",
+        mvprintw(19, 10, " %-58s ",
                  "Invalid input.  Enter 0-9 or ESC to cancel.");
       }
       refresh();
@@ -1130,7 +1136,7 @@ uint32_t io_expunge_in(dungeon_t *d)
     }
 
     if (!d->PC->in[key - '0']) {
-      mvprintw(18, 10, " %-58s ", "Empty inventory slot.  Try again.");
+      mvprintw(19, 10, " %-58s ", "Empty inventory slot.  Try again.");
       continue;
     }
 
@@ -1142,7 +1148,7 @@ uint32_t io_expunge_in(dungeon_t *d)
 
     snprintf(s, 61, "Can't destroy %s.  Try again.",
              d->PC->in[key - '0']->get_name());
-    mvprintw(18, 10, " %-58s ", s);
+    mvprintw(19, 10, " %-58s ", s);
     refresh();
   }
 

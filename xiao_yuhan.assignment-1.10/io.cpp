@@ -358,7 +358,16 @@ static void io_redisplay_visible_monsters(dungeon_t *d)
 
   refresh();
 }
-
+void io_start(dungeon_t *d)
+{
+  char name[80];
+  mvprintw(10, 10, "Enter Your Name: ");
+  getstr(name);
+  d->PC->name = name;
+  refresh();
+  mvprintw(10, 10, "Welcome %s! Let's Start Your Journey!", d->PC->name);
+  refresh();
+}
 void io_display(dungeon_t *d)
 {
   pair_t pos;

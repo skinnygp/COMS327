@@ -1,4 +1,4 @@
-#ifndef PC_H
+# ifndef PC_H
 # define PC_H
 
 # include <stdint.h>
@@ -36,6 +36,9 @@ class pc : public character {
   unsigned char visible[DUNGEON_Y][DUNGEON_X];
   object *eq[num_eq_slots];
   object *in[MAX_INVENTORY];
+  int rank;
+  int EXP;
+  
 
   uint32_t wear_in(uint32_t slot);
   uint32_t remove_eq(uint32_t slot);

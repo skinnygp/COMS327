@@ -236,7 +236,6 @@ int main(int argc, char *argv[])
   pc_observe_terrain(d.PC, &d);
 
   io_start(&d);
-  io_display(&d);
   while (pc_is_alive(&d) && dungeon_has_npcs(&d) && !d.quit) {
     do_moves(&d);
   }

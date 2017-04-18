@@ -52,7 +52,7 @@ pc::~pc()
       in[i] = NULL;
     }
   }
-    
+
   for (i = 0; i < num_eq_slots; i++) {
     if (eq[i]) {
       delete eq[i];
@@ -80,13 +80,12 @@ void place_pc(dungeon_t *d)
                                     d->rooms->size[dim_y] - 1)));
   character_set_x(d->PC, rand_range(d->rooms->position[dim_x],
                                    (d->rooms->position[dim_x] +
-                                    d->rooms->size[dim_x] - 1))); 
+                                    d->rooms->size[dim_x] - 1)));
   io_calculate_offset(d);
   io_update_offset(d);
 
   pc_init_known_terrain(d->PC);
 
-  io_display(d);
 }
 
 void config_pc(dungeon_t *d)
@@ -106,6 +105,8 @@ void config_pc(dungeon_t *d)
   d->PC->color.push_back(COLOR_WHITE);
   d->PC->damage = &pc_dice;
   d->PC->name = "Isabella Garcia-Shapiro";
+  d->PC->EXP = 0;
+  d->PC->rank = 1;
 
   d->character_map[character_get_y(d->PC)][character_get_x(d->PC)] = d->PC;
 
@@ -300,7 +301,7 @@ void pc_observe_terrain(pc *p, dungeon_t *d)
     can_see(d, p->position, where, 1, 1);
     where[dim_y] = y_max;
     can_see(d, p->position, where, 1, 1);
-  }       
+  }
 }
 
 int32_t is_illuminated(pc *p, int16_t y, int16_t x)

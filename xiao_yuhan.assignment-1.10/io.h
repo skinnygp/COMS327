@@ -4,6 +4,7 @@
 typedef struct dungeon dungeon_t;
 
 void io_start(dungeon_t *d);
+void io_welcome(dungeon_t *d);
 void io_init_terminal(void);
 void io_reset_terminal(void);
 void io_display(dungeon_t *d);

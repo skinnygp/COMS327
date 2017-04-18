@@ -360,13 +360,22 @@ static void io_redisplay_visible_monsters(dungeon_t *d)
 }
 void io_start(dungeon_t *d)
 {
-  char name[80];
-  mvprintw(10, 10, "Enter Your Name: ");
+  clear();
+  char *name;
+  mvprintw(10, 10, "Enter Your Name (Press Enter to Finish): ");
   getstr(name);
   d->PC->name = name;
   refresh();
+  io_welcome(d);
+}
+void io_welcome(dungeon_t *d)
+{
+  clear();
   mvprintw(10, 10, "Welcome %s! Let's Start Your Journey!", d->PC->name);
   refresh();
+  mvprintw(11, 10, "Press any key to continue.");
+  getch();
+  io_display(d);
 }
 void io_display(dungeon_t *d)
 {
@@ -452,9 +461,8 @@ void io_display(dungeon_t *d)
     }
   }
 
-  mvprintw(23, 0, "PC position is (%3d,%2d); offset is (%3d,%2d).",
-           character_get_x(d->PC), character_get_y(d->PC),
-           d->io_offset[dim_x], d->io_offset[dim_y]);
+  mvprintw(23, 0, "%s [Rank: %d] [EXP: %d] [HP: %d] [Speed: %d]",
+           d->PC->name,d->PC->rank, d->PC->EXP, d->PC->hp, d->PC->speed);
 
   io_print_message_queue(0, 0);
 

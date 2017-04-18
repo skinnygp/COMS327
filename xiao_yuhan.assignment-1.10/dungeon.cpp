@@ -695,7 +695,7 @@ void delete_dungeon(dungeon_t *d)
   uint8_t y, x;
 
   free(d->rooms);
-  free(d->portal);
+  free(d->portals);
   heap_delete(&d->events);
   memset(d->character_map, 0, sizeof (d->character_map));
   for (y = 0; y < DUNGEON_Y; y++) {

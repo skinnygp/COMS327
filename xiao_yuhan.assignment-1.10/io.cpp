@@ -365,7 +365,7 @@ static void io_redisplay_visible_monsters(dungeon_t *d)
 void io_start(dungeon_t *d)
 {
   clear();
-  char *name;
+  char name[24];
   mvprintw(10, 10, "Enter Your Name (Press Enter to Finish): ");
   getstr(name);
   d->PC->name = name;
@@ -1250,6 +1250,9 @@ void io_handle_input(dungeon_t *d)
       break;
     case '<':
       fail_code = move_pc(d, '<');
+      break;
+    case '$':
+      fail_code = move_pc(d, '$');
       break;
     case 'Q':
       d->quit = 1;

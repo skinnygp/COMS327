@@ -262,11 +262,31 @@ static void new_dungeon_level(dungeon_t *d, uint32_t dir)
   }
 }
 
+static void pc_portal(dungeon_t *d)
+{
+  pair_t next;
+  next[dim_y] = character_get_y(d->PC);
+  next[dim_x] = character_get_x(d->PC);
+  int i = rand_range(0, d->num_portals-1);
+  while(next[dim_y] == d->portals[i].position[dim_y]
+        && next[dim_x] == d->portals[i].position[dim_x]){
+          i = rand_range(0, d->num_portals-1);
+  }
+  next[dim_y] = d->portals[i].position[dim_y];
+  next[dim_x] = d->portals[i].position[dim_x];
+  move_character(d, d->PC, next);
+  io_calculate_offset(d);
+  dijkstra(d);
+  dijkstra_tunnel(d);
+  d->PC->pick_up(d);
+}
+
 
 uint32_t move_pc(dungeon_t *d, uint32_t dir)
 {
   pair_t next;
   uint32_t was_stairs = 0;
+  uint32_t was_portals = 0;
 
   next[dim_y] = character_get_y(d->PC);
   next[dim_x] = character_get_x(d->PC);
@@ -315,13 +335,24 @@ uint32_t move_pc(dungeon_t *d, uint32_t dir)
       new_dungeon_level(d, '>');
     }
     break;
+  case '$':
+    if (mappair(character_get_pos(d->PC)) == ter_portal) {
+      was_portals = 1;
+      pc_portal(d);
+    }
+    break;
   }
+
 
   if (was_stairs) {
     return 0;
   }
 
-  if ((dir != '>') && (dir != '<') && (mappair(next) >= ter_floor)) {
+  if(was_portals) {
+    return 0;
+  }
+
+  if ((dir != '$') && (dir != '>') && (dir != '<') && (mappair(next) >= ter_floor)) {
     move_character(d, d->PC, next);
     io_update_offset(d);
     dijkstra(d);

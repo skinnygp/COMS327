@@ -461,8 +461,8 @@ void io_display(dungeon_t *d)
     }
   }
 
-  mvprintw(23, 0, "%s [Rank: %d] [EXP: %d] [HP: %d] [Speed: %d]",
-           d->PC->name,d->PC->rank, d->PC->EXP, d->PC->hp, d->PC->speed);
+  mvprintw(23, 0, "[Rank: %d] [EXP: %d] [HP: %d] [Speed: %d]",
+           d->PC->rank, d->PC->EXP, d->PC->hp, d->PC->speed);
 
   io_print_message_queue(0, 0);
 

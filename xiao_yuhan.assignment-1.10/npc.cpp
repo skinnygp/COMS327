@@ -752,4 +752,6 @@ npc::npc(dungeon_t *d, const monster_description &m)
   for (i = 0; i < num_kill_types; i++) {
     kills[i] = 0;
   }
+  EXP = 0;
+  rank = rand_range(1, 100);
 }

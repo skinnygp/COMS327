@@ -2,8 +2,9 @@
 # define IO_H
 
 typedef struct dungeon dungeon_t;
+class character;
 
-void io_combat(dungeon_t *d);
+void io_combat(dungeon_t *d, character *c);
 void io_start(dungeon_t *d);
 void io_welcome(dungeon_t *d);
 void io_init_terminal(void);

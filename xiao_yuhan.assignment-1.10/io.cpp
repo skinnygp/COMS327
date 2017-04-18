@@ -760,14 +760,14 @@ static void io_list_monsters(dungeon_t *d)
 
 void io_display_ch(dungeon_t *d)
 {
-  mvprintw(8, 33,  "#-----------------------#", d->PC->rank);
+  mvprintw(8, 33,  "#-----------------------#");
   mvprintw(9, 33,  "|Rank:  %16d|", d->PC->rank);
   mvprintw(10, 33, "|EXP:   %16d|", d->PC->EXP);
   mvprintw(11, 33, "|HP:    %16d|", d->PC->hp);
   mvprintw(12, 33, "|Speed: %16d|", d->PC->speed);
-  mvprintw(13, 33, "#-----------------------#", d->PC->rank);
+  mvprintw(13, 33, "#-----------------------#");
   mvprintw(14, 27, "|Hit any key to continue|");
-  mvprintw(15, 33, "#-----------------------#", d->PC->rank);
+  mvprintw(15, 33, "#-----------------------#");
   refresh();
   getch();
   io_display(d);
@@ -1361,4 +1361,22 @@ void io_handle_input(dungeon_t *d)
       fail_code = 1;
     }
   } while (fail_code);
+}
+
+
+void io_combat(dungeon_t *d, character *c)
+{
+  clear();
+  mvprintw(6, 33, "#-----------------------#");
+  mvprintw(7, 33, "|%23s|", c->name);
+  mvprintw(15, 5, "|Rank:  %16d|", c->rank);
+  mvprintw(8, 33, "|HP:    %16d|", c->hp);
+  mvprintw(9, 33, "#-----------------------#");
+
+  mvprintw(13, 5, "#-----------------------#");
+  mvprintw(14, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
+  mvprintw(15, 5, "|Rank:  %16d|", d->PC->rank);
+  mvprintw(16, 5, "|HP:    %16d|", d->PC->hp);
+  mvprintw(17, 5, "#-----------------------#");
+  refresh();
 }

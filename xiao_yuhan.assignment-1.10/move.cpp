@@ -18,8 +18,9 @@
 
 void do_combat(dungeon_t *d, character *atk, character *def)
 {
+
   uint32_t damage, i;
-  
+
   if (character_is_alive(def)) {
     if (atk != d->PC) {
       damage = atk->damage->roll();
@@ -81,10 +82,13 @@ void move_character(dungeon_t *d, character *c, pair_t next)
   if (charpair(next) &&
       ((next[dim_y] != c->position[dim_y]) ||
        (next[dim_x] != c->position[dim_x]))) {
-    if ((charpair(next) == d->PC) ||
-        c == d->PC) {
-      do_combat(d, c, charpair(next));
-    } else {
+    if (charpair(next) == d->PC) {
+      io_combat(d, c);
+      //do_combat(d, c, charpair(next));
+    }
+    else if(c == d->PC){
+      io_combat(d, charpair(next));
+    }else {
       /* Easiest way for a monster to displace another monster is *
        * to swap them.  This could lead to some strangeness where *
        * two monsters of the exact same speed continually         *

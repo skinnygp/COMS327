@@ -753,6 +753,8 @@ static void io_list_monsters(dungeon_t *d)
 
 void io_display_ch(dungeon_t *d)
 {
+  mvprintw(9, 33, " Rank:    %5d ", d->PC->rank);
+  mvprintw(10, 33, " EXP: %5d ", d->PC->EXP);
   mvprintw(11, 33, " HP:    %5d ", d->PC->hp);
   mvprintw(12, 33, " Speed: %5d ", d->PC->speed);
   mvprintw(14, 27, " Hit any key to continue. ");

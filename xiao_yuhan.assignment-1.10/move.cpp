@@ -19,7 +19,7 @@
 void do_combat(dungeon_t *d, character *atk, character *def)
 {
   uint32_t damage, i;
-
+  
   if (character_is_alive(def)) {
     if (atk != d->PC) {
       damage = atk->damage->roll();

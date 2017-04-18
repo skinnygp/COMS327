@@ -3,6 +3,7 @@
 
 typedef struct dungeon dungeon_t;
 
+void io_combat(dungeon_t *d);
 void io_start(dungeon_t *d);
 void io_welcome(dungeon_t *d);
 void io_init_terminal(void);

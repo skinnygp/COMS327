@@ -345,6 +345,10 @@ static void io_redisplay_visible_monsters(dungeon_t *d)
           mvaddch(pc_offset[dim_y] + pos[dim_y] + 1,
                   pc_offset[dim_x] + pos[dim_x], '>');
           break;
+        case ter_portal:
+          mvaddch(pc_offset[dim_y] + pos[dim_y] + 1,
+                  pc_offset[dim_x] + pos[dim_x], '$');
+          break;
         default:
  /* Use zero as an error symbol, since it stands out somewhat, and it's *
   * not otherwise used.                                                 */
@@ -448,6 +452,9 @@ void io_display(dungeon_t *d)
           break;
         case ter_stairs_down:
           mvaddch(pos[dim_y] + 1, pos[dim_x], '>');
+          break;
+        case ter_portal:
+          mvaddch(pos[dim_y] + 1, pos[dim_x], '$');
           break;
         default:
  /* Use zero as an error symbol, since it stands out somewhat, and it's *

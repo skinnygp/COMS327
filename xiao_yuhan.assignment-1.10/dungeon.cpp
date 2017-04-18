@@ -58,7 +58,7 @@ static void dijkstra_corridor(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-  
+
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -157,7 +157,7 @@ static void dijkstra_corridor_inv(dungeon_t *d, pair_t from, pair_t to)
     }
     initialized = 1;
   }
-  
+
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
@@ -617,10 +617,33 @@ static void place_stairs(dungeon_t *d)
            (p[dim_x] = rand_range(1, DUNGEON_X - 2)) &&
            ((mappair(p) < ter_floor)                 ||
             (mappair(p) > ter_stairs)))
-      
+
       ;
     mappair(p) = ter_stairs_up;
   } while (rand_under(3, 4));
+}
+
+static void place_portals(dungeon_t *d)
+{
+  uint32_t i;
+  for (i = 30; i < 100 && rand_under(6, 8); i++)
+    ;
+  d->num_portals = i;
+  if (d->portals) { /* We're here on a "do over" */
+    free(d->portals);
+  }
+  d->portals = (portal_t *) malloc(sizeof (*d->portals) * d->num_portals);
+  for(i = 0; i < d->num_portals; i++) {
+    pair_t p;
+    while ((p[dim_y] = rand_range(1, DUNGEON_Y - 2)) &&
+           (p[dim_x] = rand_range(1, DUNGEON_X - 2)) &&
+           ((mappair(p) < ter_floor)                 ||
+            (mappair(p) > ter_stairs)))
+      ;
+    mappair(p) = ter_portal;
+    d->portals[i].position[dim_y] = p[dim_y];
+    d->portals[i].position[dim_x] = p[dim_x];
+  }
 }
 
 int gen_dungeon(dungeon_t *d)
@@ -630,7 +653,7 @@ int gen_dungeon(dungeon_t *d)
   } while (place_rooms(d));
   connect_rooms(d);
   place_stairs(d);
-
+  place_portals(d);
   return 0;
 }
 /*
@@ -672,6 +695,7 @@ void delete_dungeon(dungeon_t *d)
   uint8_t y, x;
 
   free(d->rooms);
+  free(d->portal);
   heap_delete(&d->events);
   memset(d->character_map, 0, sizeof (d->character_map));
   for (y = 0; y < DUNGEON_Y; y++) {

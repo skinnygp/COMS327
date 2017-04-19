@@ -753,6 +753,6 @@ npc::npc(dungeon_t *d, const monster_description &m)
     kills[i] = 0;
   }
   EXP = 0;
-  rank = rand_range(1, 100);
+  rank = rand_range(2, 20);
   hp = hp * rank * 0.5;
 }

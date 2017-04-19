@@ -36,8 +36,6 @@ class pc : public character {
   unsigned char visible[DUNGEON_Y][DUNGEON_X];
   object *eq[num_eq_slots];
   object *in[MAX_INVENTORY];
-  
-
 
   uint32_t wear_in(uint32_t slot);
   uint32_t remove_eq(uint32_t slot);

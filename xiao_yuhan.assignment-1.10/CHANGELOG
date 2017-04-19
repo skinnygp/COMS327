@@ -6,15 +6,14 @@ Day One   (Apr 17, 2017): Started Project and I used Jeremy's code of Assignment
 Day One   (Apr 17, 2017): Understanding Jeremy's code of Assignment-1.09.
 
 Day One   (Apr 17, 2017): Created rank and EXP in character class.
-Day One   (Apr 17, 2017): Made monsters have random rank when generating. 
+Day One   (Apr 17, 2017): Made monsters have random rank when generating.
 Day One   (Apr 17, 2017): Created teaser at the beginning to ask player for name.
 Day One   (Apr 17, 2017): Created a new terrain_type_t called portal.
 Day One   (Apr 17, 2017): Finished all functions related to portal and made it works.
 
 Day Two   (Apr 18, 2017): Updated new combat view.
-Day Two   (Apr 18, 2017): PC rank up when killing
-Day Two   (Apr 18, 2017): Finished new combat.
-Day Two   (Apr 18, 2017): Fixed the case when monster move to another monster. Their position will swap.
+Day Two   (Apr 18, 2017): PC's EXP increasing when killing a monster.
+Day Two   (Apr 18, 2017): PC rank up when EXP hits some points.
+Day Two   (Apr 18, 2017): PC's hp and speed will renew when rank up with values related to rank.
 
-Day Three (Apr 19, 2017): Debugged in linux.
 Day Three (Apr 19, 2017): Finished README and CHANGELOG.

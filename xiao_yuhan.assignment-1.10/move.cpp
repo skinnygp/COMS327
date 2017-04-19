@@ -16,10 +16,10 @@
 #include "io.h"
 #include "object.h"
 
-void do_combat(dungeon_t *d, character *atk, character *def)
+uint32_t do_combat(dungeon_t *d, character *atk, character *def)
 {
 
-  uint32_t damage, i;
+  uint32_t damage = 0, i = 0;
 
   if (character_is_alive(def)) {
     if (atk != d->PC) {
@@ -60,6 +60,7 @@ void do_combat(dungeon_t *d, character *atk, character *def)
       d->num_monsters--;
     }
   }
+  return damage;
 }
 
 void move_character(dungeon_t *d, character *c, pair_t next)
@@ -84,7 +85,6 @@ void move_character(dungeon_t *d, character *c, pair_t next)
        (next[dim_x] != c->position[dim_x]))) {
     if (charpair(next) == d->PC) {
       io_combat(d, c);
-      //do_combat(d, c, charpair(next));
     }
     else if(c == d->PC){
       io_combat(d, charpair(next));

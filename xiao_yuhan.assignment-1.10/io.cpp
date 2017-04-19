@@ -1367,16 +1367,92 @@ void io_handle_input(dungeon_t *d)
 void io_combat(dungeon_t *d, character *c)
 {
   clear();
-  mvprintw(6, 33, "#-----------------------#");
-  mvprintw(7, 33, "|%23s|", c->name);
-  mvprintw(15, 5, "|Rank:  %16d|", c->rank);
-  mvprintw(8, 33, "|HP:    %16d|", c->hp);
-  mvprintw(9, 33, "#-----------------------#");
+  mvprintw(3, 33, "#-----------------------#");
+  mvprintw(4, 33, "|%23s|", c->name);
+  mvprintw(5, 33, "|Rank:  %16d|", c->rank);
+  mvprintw(6, 33, "|HP:    %16d|", c->hp);
+  mvprintw(7, 33, "#-----------------------#");
 
-  mvprintw(13, 5, "#-----------------------#");
-  mvprintw(14, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
-  mvprintw(15, 5, "|Rank:  %16d|", d->PC->rank);
-  mvprintw(16, 5, "|HP:    %16d|", d->PC->hp);
-  mvprintw(17, 5, "#-----------------------#");
+  mvprintw(8, 5, "#-----------------------#");
+  mvprintw(9, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
+  mvprintw(10, 5, "|Rank:  %16d|", d->PC->rank);
+  mvprintw(11, 5, "|HP:    %16d|", d->PC->hp);
+  mvprintw(12, 5, "#-----------------------#");
+
+  mvprintw(16, 5, "#-----------------------------------------------------#");
+  mvprintw(17, 5, "|Wild %38s appeared!|", c->name);
+  mvprintw(18, 5, "|               Hit any key to continue               |");
+  mvprintw(19, 5, "#-----------------------------------------------------#");
+  refresh();
+  getch();
+
+  mvprintw(16, 5, "#-----------------------------------------------------#");
+  mvprintw(17, 5, "|1. Show It Whom It Should Fear!                      |");
+  mvprintw(18, 5, "|2. Run Away Like A Loser!                            |");
+  mvprintw(19, 5, "#-----------------------------------------------------#");
+  refresh();
+  int key;
+  while(1){
+    if ((key = getch()) == 49 /* 1 */) {
+
+      while(d->PC->alive && c->alive){
+        if(c->speed > d->PC->speed){
+          mvprintw(16, 5, "#-----------------------------------------------------#");
+          mvprintw(17, 5, "|You are hitted for %d!                               |", do_combat(d, c, d->PC));
+          mvprintw(18, 5, "|               Hit any key to continue               |");
+          mvprintw(19, 5, "#-----------------------------------------------------#");
+          refresh();
+          getch();
+        }
+        mvprintw(16, 5, "#----------------------Your Turn----------------------#");
+        mvprintw(17, 5, "|1. Normal Attack                                     |");
+        mvprintw(18, 5, "|2. Use Skills                                        |");
+        mvprintw(19, 5, "#-----------------------------------------------------#");
+        refresh();
+
+        int second_key;
+        while(1){
+          if ((second_key = getch()) == 49 /* 1 */) {
+            mvprintw(16, 5, "#-----------------------------------------------------#");
+            mvprintw(17, 5, "|You hit for %d!                                      |", do_combat(d, c, d->PC));
+            mvprintw(18, 5, "|               Hit any key to continue               |");
+            mvprintw(19, 5, "#-----------------------------------------------------#");
+            refresh();
+            getch();
+            break;
+          }
+          if ((second_key = getch()) == 50 /* 1 */) {
+            mvprintw(16, 5, "#-----------------------------------------------------#");
+            mvprintw(17, 5, "|You hit for %d!                                      |", do_combat(d, c, d->PC));
+            mvprintw(18, 5, "|               Hit any key to continue               |");
+            mvprintw(19, 5, "#-----------------------------------------------------#");
+            refresh();
+            getch();
+            break;
+          }
+        }
+
+        if(c->speed < d->PC->speed){
+          mvprintw(16, 5, "#-----------------------------------------------------#");
+          mvprintw(17, 5, "|You are hitted for %d!                               |", do_combat(d, c, d->PC));
+          mvprintw(18, 5, "|               Hit any key to continue               |");
+          mvprintw(19, 5, "#-----------------------------------------------------#");
+          refresh();
+          getch();
+        }
+      }
+      return;
+    }
+    if ((key = getch()) == 50 /* 2 */) {
+      mvprintw(16, 5, "#-----------------------------------------------------#");
+      mvprintw(17, 5, "|You are hitted for %d!                               |", do_combat(d, c, d->PC));
+      mvprintw(18, 5, "|               Hit any key to continue               |");
+      mvprintw(19, 5, "#-----------------------------------------------------#");
+      refresh();
+      getch();
+      io_display(d);
+      return;
+    }
+  }
   refresh();
 }

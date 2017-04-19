@@ -1417,6 +1417,12 @@ void io_combat(dungeon_t *d, character *c)
           refresh();
           getch();
         }
+
+        if(!d->PC->alive){
+          io_display(d);
+          return;
+        }
+
         clear();
         mvprintw(3, 33, "#-----------------------#");
         mvprintw(4, 33, "|%23s|", c->name);

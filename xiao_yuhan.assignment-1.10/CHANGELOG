@@ -1,0 +1,22 @@
+CHANGELOG
+Author: Yuhan Xiao
+
+Day One   (Apr 11, 2017): Started reading the description of this assignment.
+Day One   (Apr 11, 2017): Started Project and I used Jeremy's code of Assignment-1.08.
+Day One   (Apr 11, 2017): Understanding Jeremy's code of Assignment-1.08.
+
+Day One   (Apr 11, 2017): Created two object array in construct of PC.
+Day One   (Apr 11, 2017): Created and finished functions in pc.h and pc.cpp for picking, wearing ... inspecting objects.
+Day One   (Apr 11, 2017): Changed hp in character.h to signed int32_t.
+Day One   (Apr 11, 2017): Found and Fixed bug: For function wear_object, the input cannot be an object pointer
+                          because we want to replace the object in bag with object in equipment (and it won't change).
+                          So the way to fix this is change the input from an object pointer to a index in the bag.
+
+Day Two   (Apr 12, 2017): Created and finished functions in io.cpp to handle user input for objects.
+Day Two   (Apr 12, 2017): Found and Fixed bug: memory leak when user pick up an object and quit the game.
+                          Since I didn't delete those objects before terminate the game.
+Day Two   (Apr 12, 2017): Finished new combat.
+Day Two   (Apr 12, 2017): Fixed the case when monster move to another monster. Their position will swap.
+
+Day Two   (Apr 12, 2017): Debugged in linux.
+Day Two   (Apr 12, 2017): Finished README and CHANGELOG.

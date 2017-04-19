@@ -1,0 +1,36 @@
+README
+Author: Yuhan Xiao
+Date: April 12, 2017
+
+included:
+Same with Assignment-1.08
+this README
+Makefile
+CHANGELOG
+
+Project Description: PC Equipment and Updated Combat
+Note:
+* The default hp of PC is 5000(hard to die).
+
+PC Equipment:
+* Enter w, t, d, x, i, e, I to use the new functions.
+* Once the PC move on to an object, PC will pick it up if there is an empty space in the bag.
+  Otherwise, shows the bag is full and object is still there.
+* When dropping objects, objects will be dropped on the PC's position and you can see it when you move the pc.
+  If there is an object on the floor already, it won't drop and shows unable to drop.
+* When inspecting an object, the description will showed on the top and it can only show 80 characters of the description.
+* Shows PC's speed at the button for you to check updated.
+
+Updated Combat:
+* When a monster move to another monster, their position will swap.
+* Every time a character attacked another character, shows the damage on the top.
+* Shows PC's hp at the button for you to check updated.
+
+Relevant Functions:
+All functions added in pc.h & pc.cpp for picking, wearing ...
+const char *get_description() { return description.c_str(); } in object class.
+All functions added in io.cpp for handle user input.
+do_combat and move_character in move.cpp.
+
+Relevant Structure
+Change hp to int32_t

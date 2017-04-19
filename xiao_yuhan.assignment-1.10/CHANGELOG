@@ -11,7 +11,7 @@ Day One   (Apr 17, 2017): Created teaser at the beginning to ask player for name
 Day One   (Apr 17, 2017): Created a new terrain_type_t called portal.
 Day One   (Apr 17, 2017): Finished all functions related to portal and made it works.
 
-Day Two   (Apr 18, 2017): Updated new combat view.
+Day Two   (Apr 18, 2017): Updated new combat mode.
 Day Two   (Apr 18, 2017): PC's EXP increasing when killing a monster.
 Day Two   (Apr 18, 2017): PC rank up when EXP hits some points.
 Day Two   (Apr 18, 2017): PC's hp and speed will renew when rank up with values related to rank.

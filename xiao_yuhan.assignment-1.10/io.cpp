@@ -366,7 +366,9 @@ void io_start(dungeon_t *d)
 {
   clear();
   char name[24];
-  mvprintw(10, 10, "Enter Your Name (Press Enter to Finish): ");
+  mvprintw(9, 10,  "#-----------------------------------------#");
+  mvprintw(10, 10, "|Enter Your Name (Press Enter to Finish): |");
+  mvprintw(11, 10, "#-----------------------------------------#");
   getstr(name);
   d->PC->name = name;
   refresh();
@@ -375,9 +377,11 @@ void io_start(dungeon_t *d)
 void io_welcome(dungeon_t *d)
 {
   clear();
-  mvprintw(10, 10, "Welcome %s! Let's Start Your Journey!", d->PC->name);
+  mvprintw(9, 10,  "#-------------------------------------------#");
+  mvprintw(10, 10, "|Welcome %8s! Let's Start Your Journey!|", d->PC->name);
   refresh();
-  mvprintw(11, 10, "Press any key to continue.");
+  mvprintw(11, 10, "|         Press any key to continue.        |");
+  mvprintw(12, 10, "#-------------------------------------------#");
   getch();
   io_display(d);
 }

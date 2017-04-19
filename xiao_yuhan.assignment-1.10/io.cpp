@@ -468,8 +468,8 @@ void io_display(dungeon_t *d)
     }
   }
 
-  mvprintw(23, 0, "[Rank: %d] [EXP: %d] [HP: %d] [Speed: %d]",
-           d->PC->rank, d->PC->EXP, d->PC->hp, d->PC->speed);
+  mvprintw(23, 0, "[Rank: %d] [EXP: %d/%d] [HP: %d] [Speed: %d]",
+           d->PC->rank, d->PC->EXP, (100 * d->PC->rank * d->PC->rank), d->PC->hp, d->PC->speed);
 
   io_print_message_queue(0, 0);
 
@@ -762,7 +762,7 @@ void io_display_ch(dungeon_t *d)
 {
   mvprintw(8, 33,  "#-----------------------#");
   mvprintw(9, 33,  "|Rank:  %16d|", d->PC->rank);
-  mvprintw(10, 33, "|EXP:   %16d|", d->PC->EXP);
+  mvprintw(10, 33, "|EXP:   %5d/%5d     |", d->PC->EXP, (100 * d->PC->rank * d->PC->rank));
   mvprintw(11, 33, "|HP:    %16d|", d->PC->hp);
   mvprintw(12, 33, "|Speed: %16d|", d->PC->speed);
   mvprintw(13, 33, "#-----------------------#");

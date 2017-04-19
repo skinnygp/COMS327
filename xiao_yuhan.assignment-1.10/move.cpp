@@ -23,7 +23,7 @@ uint32_t do_combat(dungeon_t *d, character *atk, character *def)
 
   if (character_is_alive(def)) {
     if (atk != d->PC) {
-      damage = atk->damage->roll() + 10 * atk->rank;
+      damage = atk->damage->roll() * atk->rank * 0.6;
     } else {
       damage += 10 * atk->rank;
       for (i = damage = 0; i < num_eq_slots; i++) {
@@ -45,8 +45,10 @@ uint32_t do_combat(dungeon_t *d, character *atk, character *def)
         while(atk->EXP > (100 * atk->rank * atk->rank)){
           atk->EXP -= (100 * atk->rank * atk->rank);
           atk->rank ++;
+          io_queue_message("Rank Up!");
         }
         atk->hp = 1000 * atk->rank * 0.8;
+        atk->speed += 10 * atk->rank;
       }
       def->hp = 0;
       def->alive = 0;

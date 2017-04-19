@@ -1411,7 +1411,7 @@ void io_combat(dungeon_t *d, character *c)
           mvprintw(12, 5, "#-----------------------#");
 
           mvprintw(16, 5, "#-----------------------------------------------------#");
-          mvprintw(17, 5, "|You are hitted for %d!                               |", do_combat(d, c, d->PC));
+          mvprintw(17, 5, "|You are hitted for %5d!                            |", do_combat(d, c, d->PC));
           mvprintw(18, 5, "|               Hit any key to continue               |");
           mvprintw(19, 5, "#-----------------------------------------------------#");
           refresh();
@@ -1433,7 +1433,8 @@ void io_combat(dungeon_t *d, character *c)
         mvprintw(16, 5, "#----------------------Your Turn----------------------#");
         mvprintw(17, 5, "|1. Normal Attack                                     |");
         mvprintw(18, 5, "|2. Use Skills                                        |");
-        mvprintw(19, 5, "#-----------------------------------------------------#");
+        mvprintw(19, 5, "|3. Run Away Like A Loser                             |");
+        mvprintw(20, 5, "#-----------------------------------------------------#");
         refresh();
 
         int second_key;
@@ -1453,7 +1454,7 @@ void io_combat(dungeon_t *d, character *c)
             mvprintw(12, 5, "#-----------------------#");
 
             mvprintw(16, 5, "#-----------------------------------------------------#");
-            mvprintw(17, 5, "|You hit for %d!                                       |", do_combat(d, d->PC, c));
+            mvprintw(17, 5, "|You hit for %5d!                                   |", do_combat(d, d->PC, c));
             mvprintw(18, 5, "|               Hit any key to continue               |");
             mvprintw(19, 5, "#-----------------------------------------------------#");
             refresh();
@@ -1475,13 +1476,37 @@ void io_combat(dungeon_t *d, character *c)
             mvprintw(12, 5, "#-----------------------#");
 
             mvprintw(16, 5, "#-----------------------------------------------------#");
-            mvprintw(17, 5, "|You hit for %d!                                       |", do_combat(d, d->PC, c));
+            mvprintw(17, 5, "|You hit for %5d!                                   |", do_combat(d, d->PC, c));
             mvprintw(18, 5, "|               Hit any key to continue               |");
             mvprintw(19, 5, "#-----------------------------------------------------#");
             refresh();
             getch();
             break;
           }
+          if ((key = getch()) == 51 /* 3 */) {
+            clear();
+            mvprintw(3, 33, "#-----------------------#");
+            mvprintw(4, 33, "|%23s|", c->name);
+            mvprintw(5, 33, "|Rank:  %16d|", c->rank);
+            mvprintw(6, 33, "|HP:    %16d|", c->hp);
+            mvprintw(7, 33, "#-----------------------#");
+
+            mvprintw(8, 5, "#-----------------------#");
+            mvprintw(9, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
+            mvprintw(10, 5, "|Rank:  %16d|", d->PC->rank);
+            mvprintw(11, 5, "|HP:    %16d|", d->PC->hp);
+            mvprintw(12, 5, "#-----------------------#");
+
+            mvprintw(16, 5, "#-----------------------------------------------------#");
+            mvprintw(17, 5, "|You are hitted for %5d!                            |", do_combat(d, c, d->PC));
+            mvprintw(18, 5, "|               Hit any key to continue               |");
+            mvprintw(19, 5, "#-----------------------------------------------------#");
+            refresh();
+            getch();
+            io_display(d);
+            return;
+          }
+
         }
 
         if(c->speed < d->PC->speed){
@@ -1499,7 +1524,7 @@ void io_combat(dungeon_t *d, character *c)
           mvprintw(12, 5, "#-----------------------#");
 
           mvprintw(16, 5, "#-----------------------------------------------------#");
-          mvprintw(17, 5, "|You are hitted for %d!                               |", do_combat(d, c, d->PC));
+          mvprintw(17, 5, "|You are hitted for %5d!                            |", do_combat(d, c, d->PC));
           mvprintw(18, 5, "|               Hit any key to continue               |");
           mvprintw(19, 5, "#-----------------------------------------------------#");
           refresh();
@@ -1523,7 +1548,7 @@ void io_combat(dungeon_t *d, character *c)
       mvprintw(12, 5, "#-----------------------#");
 
       mvprintw(16, 5, "#-----------------------------------------------------#");
-      mvprintw(17, 5, "|You are hitted for %d!                               |", do_combat(d, c, d->PC));
+      mvprintw(17, 5, "|You are hitted for %5d!                            |", do_combat(d, c, d->PC));
       mvprintw(18, 5, "|               Hit any key to continue               |");
       mvprintw(19, 5, "#-----------------------------------------------------#");
       refresh();

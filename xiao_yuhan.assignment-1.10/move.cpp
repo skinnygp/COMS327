@@ -24,7 +24,7 @@ uint32_t do_combat(dungeon_t *d, character *atk, character *def)
   if (character_is_alive(def)) {
     if (atk != d->PC) {
       damage = atk->damage->roll();
-      io_queue_message("The %s hits you for %d.", atk->name, damage);
+      // io_queue_message("The %s hits you for %d.", atk->name, damage);
     } else {
       for (i = damage = 0; i < num_eq_slots; i++) {
         if (i == eq_slot_weapon && !d->PC->eq[i]) {
@@ -33,7 +33,7 @@ uint32_t do_combat(dungeon_t *d, character *atk, character *def)
           damage += d->PC->eq[i]->roll_dice();
         }
       }
-      io_queue_message("You hit the %s for %d.", def->name, damage);
+      // io_queue_message("You hit the %s for %d.", def->name, damage);
     }
 
     if (damage >= def->hp) {

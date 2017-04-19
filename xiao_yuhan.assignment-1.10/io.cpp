@@ -1387,7 +1387,7 @@ void io_combat(dungeon_t *d, character *c)
   getch();
 
   mvprintw(16, 5, "#-----------------------------------------------------#");
-  mvprintw(17, 5, "|1. Show It Whom It Should Fear!                      |");
+  mvprintw(17, 5, "|1. Fight it!                                         |");
   mvprintw(18, 5, "|2. Run Away Like A Loser!                            |");
   mvprintw(19, 5, "#-----------------------------------------------------#");
   refresh();
@@ -1397,6 +1397,19 @@ void io_combat(dungeon_t *d, character *c)
 
       while(d->PC->alive && c->alive){
         if(c->speed > d->PC->speed){
+          clear();
+          mvprintw(3, 33, "#-----------------------#");
+          mvprintw(4, 33, "|%23s|", c->name);
+          mvprintw(5, 33, "|Rank:  %16d|", c->rank);
+          mvprintw(6, 33, "|HP:    %16d|", c->hp);
+          mvprintw(7, 33, "#-----------------------#");
+
+          mvprintw(8, 5, "#-----------------------#");
+          mvprintw(9, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
+          mvprintw(10, 5, "|Rank:  %16d|", d->PC->rank);
+          mvprintw(11, 5, "|HP:    %16d|", d->PC->hp);
+          mvprintw(12, 5, "#-----------------------#");
+
           mvprintw(16, 5, "#-----------------------------------------------------#");
           mvprintw(17, 5, "|You are hitted for %d!                               |", do_combat(d, c, d->PC));
           mvprintw(18, 5, "|               Hit any key to continue               |");
@@ -1404,6 +1417,19 @@ void io_combat(dungeon_t *d, character *c)
           refresh();
           getch();
         }
+        clear();
+        mvprintw(3, 33, "#-----------------------#");
+        mvprintw(4, 33, "|%23s|", c->name);
+        mvprintw(5, 33, "|Rank:  %16d|", c->rank);
+        mvprintw(6, 33, "|HP:    %16d|", c->hp);
+        mvprintw(7, 33, "#-----------------------#");
+
+        mvprintw(8, 5, "#-----------------------#");
+        mvprintw(9, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
+        mvprintw(10, 5, "|Rank:  %16d|", d->PC->rank);
+        mvprintw(11, 5, "|HP:    %16d|", d->PC->hp);
+        mvprintw(12, 5, "#-----------------------#");
+
         mvprintw(16, 5, "#----------------------Your Turn----------------------#");
         mvprintw(17, 5, "|1. Normal Attack                                     |");
         mvprintw(18, 5, "|2. Use Skills                                        |");
@@ -1413,8 +1439,21 @@ void io_combat(dungeon_t *d, character *c)
         int second_key;
         while(1){
           if ((second_key = getch()) == 49 /* 1 */) {
+            clear();
+            mvprintw(3, 33, "#-----------------------#");
+            mvprintw(4, 33, "|%23s|", c->name);
+            mvprintw(5, 33, "|Rank:  %16d|", c->rank);
+            mvprintw(6, 33, "|HP:    %16d|", c->hp);
+            mvprintw(7, 33, "#-----------------------#");
+
+            mvprintw(8, 5, "#-----------------------#");
+            mvprintw(9, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
+            mvprintw(10, 5, "|Rank:  %16d|", d->PC->rank);
+            mvprintw(11, 5, "|HP:    %16d|", d->PC->hp);
+            mvprintw(12, 5, "#-----------------------#");
+
             mvprintw(16, 5, "#-----------------------------------------------------#");
-            mvprintw(17, 5, "|You hit for %d!                                      |", do_combat(d, c, d->PC));
+            mvprintw(17, 5, "|You hit for %d!                                      |", do_combat(d, d->PC, c));
             mvprintw(18, 5, "|               Hit any key to continue               |");
             mvprintw(19, 5, "#-----------------------------------------------------#");
             refresh();
@@ -1422,8 +1461,21 @@ void io_combat(dungeon_t *d, character *c)
             break;
           }
           if ((second_key = getch()) == 50 /* 1 */) {
+            clear();
+            mvprintw(3, 33, "#-----------------------#");
+            mvprintw(4, 33, "|%23s|", c->name);
+            mvprintw(5, 33, "|Rank:  %16d|", c->rank);
+            mvprintw(6, 33, "|HP:    %16d|", c->hp);
+            mvprintw(7, 33, "#-----------------------#");
+
+            mvprintw(8, 5, "#-----------------------#");
+            mvprintw(9, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
+            mvprintw(10, 5, "|Rank:  %16d|", d->PC->rank);
+            mvprintw(11, 5, "|HP:    %16d|", d->PC->hp);
+            mvprintw(12, 5, "#-----------------------#");
+
             mvprintw(16, 5, "#-----------------------------------------------------#");
-            mvprintw(17, 5, "|You hit for %d!                                      |", do_combat(d, c, d->PC));
+            mvprintw(17, 5, "|You hit for %d!                                      |", do_combat(d, d->PC, c));
             mvprintw(18, 5, "|               Hit any key to continue               |");
             mvprintw(19, 5, "#-----------------------------------------------------#");
             refresh();
@@ -1433,6 +1485,19 @@ void io_combat(dungeon_t *d, character *c)
         }
 
         if(c->speed < d->PC->speed){
+          clear();
+          mvprintw(3, 33, "#-----------------------#");
+          mvprintw(4, 33, "|%23s|", c->name);
+          mvprintw(5, 33, "|Rank:  %16d|", c->rank);
+          mvprintw(6, 33, "|HP:    %16d|", c->hp);
+          mvprintw(7, 33, "#-----------------------#");
+
+          mvprintw(8, 5, "#-----------------------#");
+          mvprintw(9, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
+          mvprintw(10, 5, "|Rank:  %16d|", d->PC->rank);
+          mvprintw(11, 5, "|HP:    %16d|", d->PC->hp);
+          mvprintw(12, 5, "#-----------------------#");
+
           mvprintw(16, 5, "#-----------------------------------------------------#");
           mvprintw(17, 5, "|You are hitted for %d!                               |", do_combat(d, c, d->PC));
           mvprintw(18, 5, "|               Hit any key to continue               |");
@@ -1444,6 +1509,19 @@ void io_combat(dungeon_t *d, character *c)
       return;
     }
     if ((key = getch()) == 50 /* 2 */) {
+      clear();
+      mvprintw(3, 33, "#-----------------------#");
+      mvprintw(4, 33, "|%23s|", c->name);
+      mvprintw(5, 33, "|Rank:  %16d|", c->rank);
+      mvprintw(6, 33, "|HP:    %16d|", c->hp);
+      mvprintw(7, 33, "#-----------------------#");
+
+      mvprintw(8, 5, "#-----------------------#");
+      mvprintw(9, 5, "|@@@@@@@@@@@@@@@@@@@@@@@|");
+      mvprintw(10, 5, "|Rank:  %16d|", d->PC->rank);
+      mvprintw(11, 5, "|HP:    %16d|", d->PC->hp);
+      mvprintw(12, 5, "#-----------------------#");
+      
       mvprintw(16, 5, "#-----------------------------------------------------#");
       mvprintw(17, 5, "|You are hitted for %d!                               |", do_combat(d, c, d->PC));
       mvprintw(18, 5, "|               Hit any key to continue               |");

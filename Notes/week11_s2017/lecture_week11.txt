@@ -1,0 +1,84 @@
+Week 11
+
+* More on references: representation
+  References are (almost) exactly pointers internally.  They provide you with
+  "syntactic sugar" so that you don't have to use pointer syntax.
+  Convention: If you want to change a variable inside a function, pass it in
+              by address (pointer).
+              If you are not going to change it, pass it by constant reference.
+* Static members and methods
+  Like in C, a global static does not get external linkage from that
+  compilation unit
+  Static variables inside functions or methods also work exactly as in C.
+  A class variable declared static is accessible without an instance of the
+  class.  Storage has to be created external to the class.
+  Static methods also may bbe called outside of an instance of the class.
+
+* More useful C++ STL stuff
+** Containers
+*** vector
+    Similar to Java ArrayLists.
+    Built in an array with dynamic resize.
+    add is O(1) when this is space.  O(n) when we need to double.  Amortized
+    O(1).  O(1) indexing, O(n) insert at arbitrary index.  Array semantics.
+*** list
+    Doubly linked
+    O(1) insert both ends, O(n) indexing
+*** stack
+    Implemented on a double-ended queue
+    Constant time performance on stack operations
+*** queue
+    Also implemented on a double-ended queue
+    Constant time performance on queue operations
+*** set
+    Contains unique elements in order
+    Implemented on binary search trees. (just about) everything is O(lg n)
+*** map
+    Associative array.  Stores key/value pairs.
+    Also implemented on BSTs, so you get BST performance characteristics
+* Inheritance
+  Can inherit three different ways:
+    public
+    protected
+    private
+** virtual functions
+** pure virtual functions
+** casts
+   syntax (same for all 4):
+   dynamic_cast<type to cast to>(thing that you want to cast)
+*** dynamic_cast
+    Runtime cast
+    allows only casts between objects of related (polymorphic) types
+    returns NULL if the cast is invalid and a valid pointer if the cast
+    is good
+*** static_cast
+    allows only casts between objects of related (polymorphic) types
+*** reinterpret_cast
+    cast anything to any other thing
+*** const_cast
+    Let's you cast const items to non-const and vice versa
+** typeid
+   runtime type checking
+   Returns an object of type std::type_info which implements a name() method.
+   Resolved at compile-time when possible.
+* Polymorphism and inheritance
+** Constructor calls
+   Base class's constructor is called first, and derived class last
+   destructors run in opposite order
+** Multiple inheritance
+   class derived : public base1, public base2...
+*** Diamond problem
+    The diamond problem refers to the ambiguity of the derivation of a type
+    which inherits a common ancestor from more than one direct ancestor.  By
+    default, the derived type inherits an instance of the common ancestor
+    from each direct ancestor.  Explicit scope resolution (using ::) is
+    required to disambiguate.
+*** Virtual inheritance
+    If derived types inherit virtually from a base, only one instance of the
+    base will be created.  This seems to solve the diamond problem; however,
+    what if the derived classes require different configurations of the base
+    in order to work properly?
+** Virtual function tables
+   When an object is created, it gets a pointer to it's virtual function
+   table, or vtable.  This allows the runtime to call the appropriate method
+   when the type is not known.

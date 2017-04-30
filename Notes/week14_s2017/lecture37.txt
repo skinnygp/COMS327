@@ -1,0 +1,47 @@
+Lecture 37-38
+
+* Networking Basics
+  There are two sides of every network connection: Client and Server
+** Server
+   We'll do the server first so that we have something for our client to
+   connect to.
+   There are four system calls that every network server must make (of
+   course, they'll make others, but *all* of them have these four):
+*** int socket(int domain, int type, int protocol);
+    Creates a socket.  A socket is one end of a virtual connection.
+*** int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+    Give the socket a name.  This makes the socket addressable.
+*** int listen(int sockfd, int backlog);
+    Make it possible for somebody to connect to the socket.  Creates a queue
+    for handling connections.
+*** int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+    Creates another socket, this one corresponding with a single connection.
+** Client
+   The client requires two main system calls:
+*** socket()
+    Same as above
+*** int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+    Connect to a server at the specified address.  Server must be
+    listen()ing.  Server will accept() your connection, creating a two-sided
+    conversation.
+** Then, to communicate between the two ends of the socket:
+*** ssize_t read(int fd, void *buf, size_t count);
+    Low-level system call on which all input functions are based in UNIX.
+    scanf() calls this.  fread() calls this.  cin.operator>>() calls this...
+*** ssize_t write(int fd, const void *buf, size_t count);
+    Low-level system call on which all output functions are based in UNIX.
+    printf() calls this.  fwrite() calls this.  cout.operator<<() calls this...
+*** There are good reasons why we don't actually want to call read() and
+    write() directly.  Standard practice is to wrap them with functions that
+    retry on certain types of errors.
+** Very useful call, if we have time:
+*** int select(int nfds, fd_set *readfds, fd_set *writefds,
+               fd_set *exceptfds, struct timeval *timeout);
+    Select provides a means to multiplex IO among many different sources.
+    readfds, writefds, and exceptfds and sets of file descriptors that are
+    monitored.  The user is notified when any file descriptor in any set is
+    ready.  Sets are configured with macros FD_CLR(), FD_SET(), and
+    FD_ZERO(), and tested with FD_ISSET().  ndfs is must be one higher than
+    the highest file descriptor value in all of the sets.  NULL timeout means
+    wait indefinately, else select returns when timeout expires.  With three
+    NULL fd_sets, select is often used as a very high resolution sleep timer.

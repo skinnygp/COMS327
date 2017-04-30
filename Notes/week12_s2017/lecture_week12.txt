@@ -1,0 +1,65 @@
+Week 12
+
+* Templates
+  Templated types and methods are declared by prefacing their declaration
+  with "template <class T>", where T is a type variable, not a literal T.
+  The template declaration may have multiple type variables, seperated by
+  commas.  
+  T is then used in place of a type name in the definition.  All operations
+  on items of type T must be defined, or the code will fail to compile.
+  Templates are generally written entirely within headers because the full
+  templated implementation is needed at compile time.
+  Both classes and functions may be templated
+  Templated functions may be specialized
+* Exceptions
+  There is an std::exception class.  The STL throws exceptions of this type.
+  However, exceptions in C++ can be of any type.  In order to catch it, you
+  must have a catch block which is looking for the appropriate type.
+  catch(...) can catch anything.
+  "throw;" (no arguments) in a catch block will rethrow a caught exception.
+** std::exception
+   implements "virtual const char *what() const throw()" which returns
+   a textual description of the exception.
+*** throw() in function declaration means that the function doesn't throw
+    anything.  
+    throw(<type>) means it throws only <type>
+    No "throw()" means it can throw anything
+
+
+    int func(args); // can throw any type of exception
+    int func(args) throw (type); // It only throws exceptions of type type
+    int func(args) throw(); // Function will not throw an exception
+    int func(argc) noexcept; // Function will not throw an exception (C++11)
+
+* "function objects"
+  Objects that overload operator().  An instance of such objects can be
+  "called" by applying the operator.  Example in algo.cpp.
+* <algorithm>
+  The algorithm header contains template implementations of many common
+  algorithms that you might want to use on items in a container.  These
+  implementations work on any container, so long as the container implements
+  the appropriate iterators and the contained objects implement the necessary
+  operations.
+** min, max, minmax (C++11)
+   min() and max() work as you expect, take a pair of iterators marking the
+   range that you want to search.
+   minmax() has a clever algorithm that can find both min and max with 3n/2
+   operations: Compare pairs, then compare smaller to min and larger to max.
+** sort
+   Sorts objects between two iterators according to < or an optional comparitor
+** find
+   Finds an item between two iterators according to ==
+** find_if
+   Finds an item between two iterators according to a predicate.  Predicate
+   can be a function pointer or a function object.
+** for_each
+   Applies a function to every element
+** make_heap
+   heapifies a container
+** push_heap
+   Adds a new item to a heap
+** pop_heap
+   removes the first item from a heap
+
+
+More next time...

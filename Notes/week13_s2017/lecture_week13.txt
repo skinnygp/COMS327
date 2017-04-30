@@ -1,0 +1,118 @@
+Weeks 13 & 14
+
+* Design Patterns
+** The Singleton Pattern
+   Used to ensure that no more than one instance of a class may exist
+   Requires private constructor, copy constructor and assignment operator
+     Otherwise the compiler will automatically create public default methods
+   Static instance pointer within class definition
+   Static method to get the instance (of create it if it's still NULL)
+
+** The Observer Pattern
+   Used when you need to notify a number of "observers" of a state state
+   change.  Obvious solution involves manually doing each update when the
+   monitored information changes, for example:
+
+   class speedometer {
+     int speed, oldspeed;
+     update_speed() {
+       if (speed != old_speed) {
+         trip.update_speed(speed);
+         dashboard.update_speed(speed);
+         wheels.update_speed(speed);
+         stats.update_speed(speed);
+         ...
+       }
+     }
+
+  The Observer pattern implements a method to register observers, so it's
+  impossible to forget an observer.
+
+   class speedometer {
+     int speed, oldspeed;
+     std::list<observer *> observers;
+     update_speed() {
+       if (speed != old_speed) {
+       foreach observer i
+         i->update(speed);
+     }
+   }
+
+  register_observer(observer *o)
+  {
+    observers.push_back(o);
+  }
+
+
+  unregister_observer(observer *o)
+  {
+
+    it = find(o in observers);
+    observers.remove(it);
+  }
+
+  ** Decorator Pattern
+   Wrap "decorations" around an object to get new functionality without
+   changing the base object.  Internally uses a has-a, rathen than an is-a
+   relationship.
+   Deriving many subtypes from a base type can become complex, especially
+   when types begin to multiply inherit.  With decorator pattern, a decerator
+   class is derived from the base class, and all decorators are derived from
+   that decorator base.
+   Compare heirarchy of derived classes to decorator.
+
+  ** Add visitor pattern here
+
+* Networking Basics
+  There are two sides of every network connection: Client and Server
+** Server
+   We'll do the server first so that we have something for our client to
+   connect to.
+   There are four system calls that every network server must make (of
+   course, they'll make others, but *all* of them have these four):
+*** int socket(int domain, int type, int protocol);
+    Creates a socket.  A socket is one end of a virtual connection.
+*** int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+    Give the socket a name.  This makes the socket addressable.
+*** int listen(int sockfd, int backlog);
+    Make it possible for somebody to connect to the socket.  Creates a queue
+    for handling connections.
+*** int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+    Creates another socket, this one corresponding with a single connection.
+** Client
+   The client requires two main system calls:
+*** socket()
+    Same as above
+*** int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+    Connect to a server at the specified address.  Server must be
+    listen()ing.  Server will accept() your connection, creating a two-sided
+    conversation.
+** Then, to communicate between the two ends of the socket:
+*** ssize_t read(int fd, void *buf, size_t count);
+    Low-level system call on which all input functions are based in UNIX.
+    scanf() calls this.  fread() calls this.  cin.operator>>() calls this...
+*** ssize_t write(int fd, const void *buf, size_t count);
+    Low-level system call on which all output functions are based in UNIX.
+    printf() calls this.  fwrite() calls this.  cout.operator<<() calls this...
+*** There are good reasons why we don't actually want to call read() and
+    write() directly.  Standard practice is to wrap them with functions that
+    retry on certain types of errors.
+** Very useful call, if we have time:
+*** int select(int nfds, fd_set *readfds, fd_set *writefds,
+               fd_set *exceptfds, struct timeval *timeout);
+    Select provides a means to multiplex IO among many different sources.
+    readfds, writefds, and exceptfds and sets of file descriptors that are
+    monitored.  The user is notified when any file descriptor in any set is
+    ready.  Sets are configured with macros FD_CLR(), FD_SET(), and
+    FD_ZERO(), and tested with FD_ISSET().  ndfs is must be one higher than
+    the highest file descriptor value in all of the sets.  NULL timeout means
+    wait indefinately, else select returns when timeout expires.  With three
+    NULL fd_sets, select is often used as a very high resolution sleep timer.
+* Bignums
+** GNU Multiple Precision library (GMP)
+*** Google it for documentation.
+    #include <gmp.h>
+    link with libgmp
+*** Two demo programs:
+    collatz_mp.c ("solves" the 3n+1 problem)
+    dice.c (calculates probability tables for dice rolls)

@@ -36,14 +36,14 @@ public:
 
 int main(int argc, char *argv[])
 {
-  /*
+  
   A a;
   a.print();
   B b;
   b.print();
   C c;
   c.print();
-  */
+  
 
   D d;
   d.print();

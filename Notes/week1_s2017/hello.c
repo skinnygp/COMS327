@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <math.h>
+
 int main()
 {
 double w=1234.789;

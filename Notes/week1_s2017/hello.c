@@ -1,17 +1,20 @@
-#include <stdio.h>
-
-int main()
-{
-double w=1234.789;
-double x=0;
-double y;
-double *z;
- z=(double *)&w;
- scanf("%f", &y);
- *z=sqrt(w);
- y=y*2.0;
- printf("y=%f, *z=%f\n", y, *z);
- y=y/x;
- w=y*z;
- return 0;
+#include<pthread.h>
+#include<stdio.h>
+void *hello(void) { 
+		printf( "hello " );
+		pthread_exit(0);
+} 
+void *world(void) { 
+		printf( "world" );
+		pthread_exit(0);
 }
+int main(int argc, char *argv[])
+{
+pthread_t t1, t2;
+pthread_create(&t1, NULL , &hello, NULL);
+pthread_create(&t2, NULL , &world, NULL);
+pthread_join(t1, NULL);
+pthread_join(t2, NULL);
+printf("\n"); 
+}
+
